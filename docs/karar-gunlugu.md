@@ -1,5 +1,19 @@
 # Karar günlüğü
 
+## 2026-09-22 — Concurrency artifact aritmetik tutarlılık kapısı
+
+- Kanıt: JSON Schema alan tiplerini ve sınırlarını doğruluyordu; ancak farklı
+  alanların toplam istek, hata sınıfı, percentile ve throughput ilişkisini
+  doğrulamıyordu.
+- Karar: Matrix writer diske yazmadan önce `successful + error = total`, hata
+  sınıfı toplamı, `p50 <= p95 <= p99` ve elapsed/throughput ilişkisini kontrol
+  etsin.
+- Provenance/güvenlik: Sorgu veya belge metni açığa çıkmaz; yalnızca ölçüm
+  artifact'inin yanlış birleştirilmesini önler.
+- Geriye uyumluluk/rollback: Yeni writer semantically bozuk eski sonuçları
+  aggregate'a almaz; geçerli sonuç formatı değişmez. Kontrol kaldırılırsa hatalı
+  kapasite sonuçlarının raporlanma riski geri gelir.
+
 ## 2026-09-22 — Concurrency sonucu yeniden üretim parametreleri
 
 - Kanıt: Concurrency sonucu worker seviyesi, toplam istek ve provenance taşıyor;

@@ -1485,6 +1485,18 @@ def write_concurrency_matrix_results(
         raise ValueError("concurrency matrix results must have unique levels")
     for result in results:
         validate_schema(result.to_dict(), "concurrency-result.schema.json")
+        if result.successful_requests + result.error_count != result.total_requests:
+            raise ValueError("concurrency result request counts are inconsistent")
+        if sum(result.error_types.values()) != result.error_count:
+            raise ValueError("concurrency result error types are inconsistent")
+        if not (
+            result.latency_p50_ms <= result.latency_p95_ms <= result.latency_p99_ms
+        ):
+            raise ValueError("concurrency result latency percentiles are inconsistent")
+        if result.elapsed_seconds == 0.0 and result.throughput_per_second != 0.0:
+            raise ValueError("concurrency result throughput is inconsistent")
+        if result.elapsed_seconds > 0.0 and result.throughput_per_second <= 0.0:
+            raise ValueError("concurrency result throughput is inconsistent")
     _ensure_provenance_consistency(results)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(

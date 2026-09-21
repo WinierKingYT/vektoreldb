@@ -1805,6 +1805,34 @@ def test_concurrency_writer_rejects_invalid_schema_before_writing(tmp_path: Path
     assert not output.exists()
 
 
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (lambda result: replace(result, error_count=result.error_count + 1), "request counts"),
+        (
+            lambda result: replace(result, error_types={"RuntimeError": 99}),
+            "error types",
+        ),
+        (lambda result: replace(result, latency_p95_ms=0.0), "percentiles"),
+        (
+            lambda result: replace(result, elapsed_seconds=1.0, throughput_per_second=0.0),
+            "throughput",
+        ),
+    ],
+)
+def test_concurrency_writer_rejects_inconsistent_metrics(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    result = run_concurrency_probe(
+        [QueryCase("q1", "query", frozenset())], FakeSearcher(), concurrency=1
+    )
+
+    with pytest.raises(ValueError, match=message):
+        write_concurrency_matrix_results(tmp_path / "invalid-metrics.json", [mutation(result)])
+
+    assert not (tmp_path / "invalid-metrics.json").exists()
+
+
 def test_concurrency_probe_budget_check_happens_before_work_expansion() -> None:
     class ExplodingCases(list):
         def __mul__(self, _other):

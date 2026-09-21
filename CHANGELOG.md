@@ -15,6 +15,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   kapsayan hafif regresyon testi eklendi; bu gerçek belge kalite ölçümü değildir.
 - Concurrency sonuçlarında yeniden üretilebilirlik için `k` ve `repetitions`
   parametreleri de saklanmaya başlandı.
+- Concurrency matrix writer'ı artık istek sayıları, hata türleri, latency
+  yüzdelikleri ve throughput arasındaki aritmetik tutarlılığı da doğruluyor.
 - DOCX ZIP paketlerinde üye sayısı 4.096 ile sınırlandırıldı; bu, açılmış toplam
   boyut ve güvenli üye kontrollerini tamamlar ancak ZIP merkez dizininin ilk
   okunması sırasında bellek sınırı veya process izolasyonu sağlamaz.

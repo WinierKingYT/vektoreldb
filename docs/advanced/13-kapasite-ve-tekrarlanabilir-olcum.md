@@ -137,7 +137,9 @@ raporlanmamasını doğrular; çıktı yalnızca `ConcurrencyResult.to_dict()` a
 taşır.
 Tekil benchmark ve concurrency matrix writer'ları sırasıyla
 `benchmark-result.schema.json` ve `concurrency-result.schema.json` ile
-fail-closed doğrulanır; bozuk veya eksik artefact diske yazılmaz.
+fail-closed doğrulanır. Writer ayrıca toplam/başarılı/hata sayıları, hata türü
+toplamı, latency percentile sırası ve elapsed-throughput ilişkisini çapraz alan
+olarak kontrol eder; bozuk veya eksik artefact diske yazılmaz.
 Tekrarlı koşular ve matrix seviyeleri arasında fixture/corpus/model provenance
 değerleri farklıysa aggregate yazımı da reddedilir.
 
