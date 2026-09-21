@@ -321,6 +321,7 @@ def test_corpus_quality_summary_is_format_level_and_privacy_safe(tmp_path: Path)
 
     report = summarize_corpus_inventory(inventory_sources(root))
 
+    assert report["schema_version"] == "corpus-quality-report-v2"
     assert report["source_count"] == 2
     assert report["parsed_source_count"] == 1
     assert report["failed_source_count"] == 1
