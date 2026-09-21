@@ -622,6 +622,25 @@ def test_final_readiness_cli_reports_missing_fixture_without_paths(tmp_path, cap
     assert json.loads(capsys.readouterr().out)["overall_status"] == "incomplete"
 
 
+def test_final_readiness_strict_fails_closed(tmp_path, capsys) -> None:
+    with pytest.raises(SystemExit) as error:
+        cli.main(
+            [
+                "final-readiness",
+                "--inventory",
+                str(tmp_path / "inventory.json"),
+                "--fixture",
+                str(tmp_path / "queries.json"),
+                "--fixture-manifest",
+                str(tmp_path / "manifest.json"),
+                "--strict",
+            ]
+        )
+
+    assert error.value.code == 2
+    assert json.loads(capsys.readouterr().out)["overall_status"] == "incomplete"
+
+
 def test_concurrency_probe_cli_prints_machine_readable_json(tmp_path, monkeypatch, capsys) -> None:
     fixture = tmp_path / "queries.json"
     fixture.write_text(
