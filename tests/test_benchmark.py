@@ -136,6 +136,7 @@ def test_benchmark_can_emit_privacy_safe_abstention_scores(tmp_path: Path) -> No
     cases = [
         QueryCase("q1", "a query", frozenset({"chunk-a"}), split="validation"),
         QueryCase("q2", "no hit", frozenset(), query_type="negative", split="validation"),
+        QueryCase("q3", "development query", frozenset({"chunk-a"}), split="development"),
     ]
     scores: dict[str, float] = {}
     run_benchmark(cases, FakeSearcher(), k=1, score_sink=scores)
@@ -147,6 +148,7 @@ def test_benchmark_can_emit_privacy_safe_abstention_scores(tmp_path: Path) -> No
         scores,
         fixture_checksum="sha256:" + "a" * 64,
         embedding_manifest_id="local:model@r1",
+        split="validation",
     )
 
     artifact = load_abstention_score_artifact(output)

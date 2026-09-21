@@ -93,16 +93,22 @@ def write_abstention_score_artifact(
     fixture_checksum: str,
     embedding_manifest_id: str,
     retrieval_mode: str = "dense",
+    split: str = "validation",
 ) -> None:
     """Write per-query maximum scores without query or document text."""
 
     if retrieval_mode != "dense":
         raise ValueError("abstention scores are supported only for dense retrieval")
-    expected_ids = {case.query_id for case in cases}
-    if set(scores_by_query_id) != expected_ids:
-        raise ValueError("abstention score output is incomplete or has unknown query_id")
+    if split not in {"development", "validation", "test"}:
+        raise ValueError("score artifact split must be development, validation, or test")
+    selected_cases = [case for case in cases if case.split == split]
+    if not selected_cases:
+        raise ValueError("score artifact split has no fixture cases")
+    expected_ids = {case.query_id for case in selected_cases}
+    if not expected_ids.issubset(scores_by_query_id):
+        raise ValueError("abstention score output is incomplete for the selected split")
     scores = []
-    for case in cases:
+    for case in selected_cases:
         score = scores_by_query_id[case.query_id]
         if isinstance(score, bool) or not isinstance(score, (int, float)):
             raise ValueError("abstention scores must be numeric")

@@ -26,6 +26,9 @@ taşıdığı için benchmark'a `--scores-output` bağlandı. Bu seçenek yalnı
 tekrarlı, eşiksiz ve rerank'siz dense koşulda çalışır; hata içeren benchmark'ta
 eksik skor artifact'i yazılmaz. Böylece threshold calibration girdisi doğrudan
 aynı retrieval sözleşmesinden üretilebilir.
+Fixture tüm split'leri içerdiğinde artifact'in varsayılan olarak yalnızca
+validation split'ini alması kararlaştırıldı; development/test skorları ancak
+`--scores-split` ile açıkça seçilir ve calibration split binding bozulmaz.
 
 ## 2026-09-22 — RAG evaluation özeti için offline CLI sınırı
 

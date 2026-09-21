@@ -127,9 +127,11 @@ uv run vdb abstention-calibrate `
 ```
 
 Gerçek dense benchmark koşusunda bu artifact'i doğrudan üretmek için benchmark'a
-`--scores-output` eklenebilir. Bu seçenek bilinçli olarak `repeat=1`, eşiksiz ve
-rerank kapalı dense koşulla sınırlıdır; böylece calibration girdisi önceden
-uygulanmış bir eşik veya reranker skoru olmaz.
+`--scores-output` eklenebilir; varsayılan olarak yalnızca validation split'i
+yazılır, başka split için `--scores-split development|test` seçilebilir. Bu
+seçenek bilinçli olarak `repeat=1`, eşiksiz ve rerank kapalı dense koşulla
+sınırlıdır; böylece calibration girdisi önceden uygulanmış bir eşik veya
+reranker skoru olmaz.
 
 ## Dokümanlar
 

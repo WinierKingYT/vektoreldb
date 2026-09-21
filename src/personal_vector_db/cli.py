@@ -192,6 +192,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="write privacy-safe dense per-query maximum scores for abstention calibration",
     )
+    benchmark.add_argument(
+        "--scores-split",
+        choices=("development", "validation", "test"),
+        default="validation",
+        help="fixture split to include in --scores-output",
+    )
     concurrency_probe = subparsers.add_parser(
         "concurrency-probe", help="run a bounded concurrent retrieval probe"
     )
@@ -567,6 +573,7 @@ def main(argv: list[str] | None = None) -> None:
                     fixture_checksum=fixture_checksum,
                     embedding_manifest_id=provider.manifest.manifest_id,
                     retrieval_mode=settings.retrieval_mode,
+                    split=args.scores_split,
                 )
             if args.output is not None:
                 if len(results) == 1:

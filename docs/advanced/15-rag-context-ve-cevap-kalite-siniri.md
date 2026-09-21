@@ -115,7 +115,9 @@ ayrı kalır.
   hybrid/late skorlarını dense cosine eşiği gibi yorumlamaz.
   `vdb benchmark --scores-output ...` seçeneği, eşiksiz ve rerank'siz dense
   benchmark koşusundaki maksimum skorları aynı sözleşmeyle üretebilir; tekrar,
-  mevcut threshold veya reranking açıkken artifact yazımı reddedilir.
+  mevcut threshold veya reranking açıkken artifact yazımı reddedilir. Fixture
+  birden fazla split içeriyorsa varsayılan çıktı yalnızca validation split'idir;
+  `--scores-split` ile başka split açıkça seçilebilir.
 
 ## Değerlendirme katmanları
 

@@ -51,6 +51,7 @@ def test_cli_parser_supports_core_commands() -> None:
         ["benchmark", "--scores-output", "scores.json"]
     )
     assert score_output_args.scores_output.name == "scores.json"
+    assert score_output_args.scores_split == "validation"
     matrix_args = build_parser().parse_args(
         ["concurrency-probe", "--fixture", "q.json", "--concurrency-levels", "1", "2", "4"]
     )
