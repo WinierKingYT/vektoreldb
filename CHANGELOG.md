@@ -8,6 +8,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   satır/row akışıyla okuyacak şekilde iyileştirildi; kanonik çıktı/provenance değişmedi.
 - Inventory kayıtlarından kaynak yolu, hash ve chunk kimliği taşımadan format bazlı
   extraction kalite özeti üreten `corpus-quality` CLI komutu ve şeması eklendi.
+- `corpus-quality` raporuna kaynak ve format düzeyinde privacy-safe parse elapsed
+  süreleri eklendi; bu değerler peak-RAM veya process timeout kanıtı olarak
+  yorumlanmamalı.
 - Dense validation skorlarını fixture split'i ve provenance ile birebir bağlayıp
   negative-success/positive-acceptance tabanlarına göre eşik seçen privacy-safe
   `abstention-calibrate` CLI akışı ve `abstention-scores-v1` şeması eklendi.

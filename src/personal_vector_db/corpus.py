@@ -4,6 +4,7 @@ import hashlib
 import json
 from collections import Counter
 from pathlib import Path
+from time import perf_counter
 
 from personal_vector_db.chunking import CHUNKING_VERSION, chunk_document
 from personal_vector_db.parsers import SUPPORTED_SUFFIXES, parse_source
@@ -98,6 +99,7 @@ def inventory_sources(
             "size_bucket": _size_bucket(path.stat().st_size),
             "content_hash": None,
         }
+        started = perf_counter()
         try:
             validated_path = validate_source_path(
                 path, resolved_root, max_bytes=max_source_bytes
@@ -135,6 +137,8 @@ def inventory_sources(
                     ),
                 }
             )
+        finally:
+            record["parse_elapsed_ms"] = round((perf_counter() - started) * 1000, 6)
         records.append(record)
     # Duplicate bytes are common in personal exports (backup folders, synced
     # copies, and renamed notes).  Surface them for review without merging or
@@ -219,6 +223,12 @@ def summarize_corpus_inventory(records: list[dict[str, object]]) -> dict[str, ob
                 int(row.get("extracted_char_count", 0)) for row in parsed
             ),
             "total_chunks": sum(int(row.get("chunk_count", 0)) for row in parsed),
+            "total_parse_elapsed_ms": round(
+                sum(float(row.get("parse_elapsed_ms", 0.0)) for row in rows), 6
+            ),
+            "max_parse_elapsed_ms": round(
+                max(float(row.get("parse_elapsed_ms", 0.0)) for row in rows), 6
+            ),
             "parser_versions": sorted(
                 {str(row["parser_version"]) for row in parsed if row.get("parser_version")}
             ),
@@ -244,6 +254,13 @@ def summarize_corpus_inventory(records: list[dict[str, object]]) -> dict[str, ob
             int(row.get("chunk_count", 0))
             for row in records
             if row.get("status") == "parsed"
+        ),
+        "total_parse_elapsed_ms": round(
+            sum(float(row.get("parse_elapsed_ms", 0.0)) for row in records), 6
+        ),
+        "max_parse_elapsed_ms": round(
+            max((float(row.get("parse_elapsed_ms", 0.0)) for row in records), default=0.0),
+            6,
         ),
         "formats": {
             suffix: format_summary(rows) for suffix, rows in sorted(by_suffix.items())

@@ -7,7 +7,7 @@
   "required": [
     "schema_version", "source_count", "parsed_source_count", "failed_source_count",
     "empty_extraction_count", "duplicate_count", "total_bytes", "total_extracted_chars",
-    "total_chunks", "formats", "privacy_classification"
+    "total_chunks", "total_parse_elapsed_ms", "max_parse_elapsed_ms", "formats", "privacy_classification"
   ],
   "properties": {
     "schema_version": {"type": "string", "const": "corpus-quality-report-v1"},
@@ -19,6 +19,8 @@
     "total_bytes": {"type": "integer", "minimum": 0},
     "total_extracted_chars": {"type": "integer", "minimum": 0},
     "total_chunks": {"type": "integer", "minimum": 0},
+    "total_parse_elapsed_ms": {"type": "number", "minimum": 0},
+    "max_parse_elapsed_ms": {"type": "number", "minimum": 0},
     "formats": {
       "type": "object",
       "additionalProperties": {
@@ -27,6 +29,7 @@
         "required": [
           "source_count", "parsed_count", "failed_count", "empty_extraction_count",
           "duplicate_count", "total_bytes", "total_extracted_chars", "total_chunks",
+          "total_parse_elapsed_ms", "max_parse_elapsed_ms",
           "parser_versions", "failure_types"
         ],
         "properties": {
@@ -38,6 +41,8 @@
           "total_bytes": {"type": "integer", "minimum": 0},
           "total_extracted_chars": {"type": "integer", "minimum": 0},
           "total_chunks": {"type": "integer", "minimum": 0},
+          "total_parse_elapsed_ms": {"type": "number", "minimum": 0},
+          "max_parse_elapsed_ms": {"type": "number", "minimum": 0},
           "parser_versions": {"type": "array", "items": {"type": "string"}},
           "failure_types": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
         }

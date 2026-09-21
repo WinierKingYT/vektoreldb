@@ -327,5 +327,7 @@ def test_corpus_quality_summary_is_format_level_and_privacy_safe(tmp_path: Path)
     assert report["formats"][".md"]["parsed_count"] == 1
     assert report["formats"][".md"]["failed_count"] == 1
     assert report["formats"][".md"]["failure_types"] == {"ValueError": 1}
+    assert report["total_parse_elapsed_ms"] >= 0
+    assert report["formats"][".md"]["max_parse_elapsed_ms"] >= 0
     assert "relative_path" not in json.dumps(report)
     assert "content_hash" not in json.dumps(report)

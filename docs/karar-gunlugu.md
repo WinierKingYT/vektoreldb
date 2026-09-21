@@ -1,5 +1,13 @@
 # Karar günlüğü
 
+## 2026-09-22 — Corpus kalite raporuna parse süresi sinyali
+
+`corpus-quality` raporuna kaynak ve format düzeyinde toplam/maksimum parse
+elapsed süreleri eklendi. Bu alanlar kaynak metni, path, hash veya chunk kimliği
+taşımayan hafif bir runtime görünürlüğüdür; peak-RAM, process timeout ve üretim
+kapasitesi kanıtı değildir. Bu nedenle gerçek corpus final turunda ayrıca
+worker/process izolasyonu gerekip gerekmediği ölçülecektir.
+
 ## 2026-09-22 — Final ölçüm runbook'u
 
 Geliştirme primitive'leri tamamlandığı halde gerçek corpus, 300+ reviewed label,

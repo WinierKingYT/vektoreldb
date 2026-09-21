@@ -42,7 +42,9 @@ yayımlamadan veya benchmark fixture'ına bağlamadan önce metadata'yı ayrıca
 kopyalarda `duplicate_of` alanı daha sığ kanonik adayı gösterir; bu alan yalnızca
 inceleme içindir, otomatik silme veya birleştirme yapmaz. Komut çıktısındaki
 `formats` ve `failure_types` alanları format dağılımını ve parser hata özetini
-metin taşımadan gösterir. `fixture-coverage` komutuna `--corpus-manifest`
+metin taşımadan gösterir. `corpus-quality` ayrıca format bazında parse süresi
+toplamı/maksimumunu raporlar; bu hafif runtime sinyalidir, peak-RAM veya process
+timeout ölçümü değildir. `fixture-coverage` komutuna `--corpus-manifest`
 verilirse relevance chunk ID'lerinin ve fixture corpus checksum'ının güncel
 corpus'a bağlanıp bağlanmadığı kontrol edilir.
 Çıktıdaki `coverage_complete` alanı yalnızca dağılım hazırlığının tamamlanıp
