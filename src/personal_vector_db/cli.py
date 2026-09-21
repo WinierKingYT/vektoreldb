@@ -40,6 +40,7 @@ from .embeddings import create_embedding_provider
 from .ingest import IngestService, validate_document_id
 from .planner import SelectivityQueryPlanner
 from .rag import load_rag_answer_evaluations, summarize_rag_answer_evaluations
+from .readiness import build_final_readiness_report
 from .reranking import LexicalOverlapReranker
 from .retrieval import RetrievalService
 from .storage import (
@@ -275,6 +276,26 @@ def build_parser() -> argparse.ArgumentParser:
     corpus_quality.add_argument(
         "--output", type=Path, default=Path("data/derived/corpus-quality-report.json")
     )
+    readiness = subparsers.add_parser(
+        "final-readiness", help="check final corpus and fixture gates without runtime services"
+    )
+    readiness.add_argument(
+        "--inventory", type=Path, default=Path("data/derived/corpus-inventory.json")
+    )
+    readiness.add_argument(
+        "--fixture", type=Path, default=Path("data/benchmarks/queries-v1.json")
+    )
+    readiness.add_argument(
+        "--fixture-manifest",
+        type=Path,
+        default=Path("data/benchmarks/query-fixture-manifest.json"),
+    )
+    readiness.add_argument("--labels", type=Path)
+    readiness.add_argument("--corpus-manifest", type=Path)
+    readiness.add_argument("--output", type=Path)
+    readiness.add_argument(
+        "--strict", action="store_true", help="return exit code 2 when readiness is incomplete"
+    )
     search = subparsers.add_parser("search", help="search indexed chunks")
     search.add_argument("query")
     search.add_argument("--limit", type=int, default=8)
@@ -334,6 +355,26 @@ def main(argv: list[str] | None = None) -> None:
             print(f"corpus quality report failed: {error}", file=sys.stderr)
             raise SystemExit(2) from None
         print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+        return
+    if args.command == "final-readiness":
+        try:
+            report = build_final_readiness_report(
+                inventory_path=args.inventory,
+                fixture_path=args.fixture,
+                fixture_manifest_path=args.fixture_manifest,
+                labels_path=args.labels,
+                corpus_manifest_path=args.corpus_manifest,
+            )
+        except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+            print(f"final readiness failed: {type(error).__name__}", file=sys.stderr)
+            raise SystemExit(2) from None
+        encoded = json.dumps(report, ensure_ascii=False, sort_keys=True)
+        if args.output is not None:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(encoded + "\n", encoding="utf-8")
+        print(encoded)
+        if args.strict and report["overall_status"] != "ready":
+            raise SystemExit(2)
         return
     if args.command == "abstention-calibrate":
         cases = _load_fixture_or_exit(args.fixture)

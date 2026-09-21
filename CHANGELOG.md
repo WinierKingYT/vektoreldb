@@ -12,6 +12,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   süreleri eklendi; bu değerler peak-RAM veya process timeout kanıtı olarak
   yorumlanmamalı. Zorunlu alan eklenmesi nedeniyle rapor sözleşmesi açıkça
   `corpus-quality-report-v2` olarak sürümlendi.
+- Qdrant veya embedding başlatmadan corpus ve fixture final kapılarını birlikte
+  kontrol eden privacy-safe `final-readiness` CLI raporu eklendi; eksik kapılar
+  `incomplete`, `--strict` ile de çıkış kodu 2 olarak görünür.
 - Dense validation skorlarını fixture split'i ve provenance ile birebir bağlayıp
   negative-success/positive-acceptance tabanlarına göre eşik seçen privacy-safe
   `abstention-calibrate` CLI akışı ve `abstention-scores-v1` şeması eklendi.

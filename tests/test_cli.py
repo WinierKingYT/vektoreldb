@@ -597,6 +597,31 @@ def test_fixture_coverage_cli_writes_privacy_safe_report(tmp_path, capsys) -> No
     assert json.loads(capsys.readouterr().out)["query_count"] == 1
 
 
+def test_final_readiness_cli_reports_missing_fixture_without_paths(tmp_path, capsys) -> None:
+    output = tmp_path / "readiness.json"
+
+    cli.main(
+        [
+            "final-readiness",
+            "--inventory",
+            str(tmp_path / "inventory.json"),
+            "--fixture",
+            str(tmp_path / "missing-queries.json"),
+            "--fixture-manifest",
+            str(tmp_path / "missing-manifest.json"),
+            "--output",
+            str(output),
+        ]
+    )
+
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert report["schema_version"] == "final-readiness-report-v1"
+    assert report["overall_status"] == "incomplete"
+    assert report["fixture"]["status"] == "missing"
+    assert str(tmp_path) not in output.read_text(encoding="utf-8")
+    assert json.loads(capsys.readouterr().out)["overall_status"] == "incomplete"
+
+
 def test_concurrency_probe_cli_prints_machine_readable_json(tmp_path, monkeypatch, capsys) -> None:
     fixture = tmp_path / "queries.json"
     fixture.write_text(

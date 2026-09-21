@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/final-readiness-report.schema.json",
+  "title": "Privacy-safe final measurement readiness report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "privacy_classification", "corpus", "fixture", "overall_status"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "final-readiness-report-v1"},
+    "privacy_classification": {"type": "string", "const": "private-local"},
+    "overall_status": {"enum": ["ready", "incomplete"]},
+    "corpus": {"type": "object", "additionalProperties": true},
+    "fixture": {"type": "object", "additionalProperties": true}
+  }
+}

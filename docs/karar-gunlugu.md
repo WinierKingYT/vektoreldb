@@ -1,5 +1,13 @@
 # Karar günlüğü
 
+## 2026-09-22 — Final readiness preflight
+
+Corpus kalite raporu ile fixture kabul kapılarının runtime başlatmadan birlikte
+kontrol edilmesi için privacy-safe `final-readiness` CLI akışı eklendi. Komut
+kaynak metni/path/hash taşımaz; eksik kapıda rapor üretir, `--strict` seçilirse
+ölçüm zincirini çıkış kodu 2 ile durdurur. Bu preflight, uzun benchmark veya
+Docker smoke testinin yerine geçmez.
+
 ## 2026-09-22 — Corpus kalite raporuna parse süresi sinyali
 
 `corpus-quality` raporuna kaynak ve format düzeyinde toplam/maksimum parse

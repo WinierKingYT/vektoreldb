@@ -21,6 +21,11 @@ uv run vdb corpus-inventory `
   --root data\sources `
   --output data\derived\corpus-inventory.json `
   --manifest data\manifests\corpus-manifest.json
+uv run vdb final-readiness `
+  --inventory data\derived\corpus-inventory.json `
+  --fixture data\benchmarks\queries-v1.json `
+  --fixture-manifest data\benchmarks\query-fixture-manifest.json `
+  --output data\derived\final-readiness.json
 # Preparation report; it does not start Qdrant or embeddings:
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --labels data\benchmarks\labels-v1.json
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --output data\benchmarks\results\fixture-coverage.json
@@ -44,7 +49,9 @@ inceleme içindir, otomatik silme veya birleştirme yapmaz. Komut çıktısında
 `formats` ve `failure_types` alanları format dağılımını ve parser hata özetini
 metin taşımadan gösterir. `corpus-quality` ayrıca format bazında parse süresi
 toplamı/maksimumunu raporlar; bu hafif runtime sinyalidir, peak-RAM veya process
-timeout ölçümü değildir. `fixture-coverage` komutuna `--corpus-manifest`
+timeout ölçümü değildir. `final-readiness` corpus kalite ve fixture kabulünü
+Qdrant/embedding başlatmadan tek privacy-safe raporda birleştirir; `--strict`
+ile eksik kapıda çıkış kodu 2 alınır. `fixture-coverage` komutuna `--corpus-manifest`
 verilirse relevance chunk ID'lerinin ve fixture corpus checksum'ının güncel
 corpus'a bağlanıp bağlanmadığı kontrol edilir.
 Çıktıdaki `coverage_complete` alanı yalnızca dağılım hazırlığının tamamlanıp
