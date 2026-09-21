@@ -11,6 +11,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 - Final fixture kabulinde corpus manifestinin her chunk için `chunk_size_buckets`
   provenance'ı taşıması ve pozitif sorguların boyut etiketleriyle eşleşmesi zorunlu
   hale getirildi; eski/eksik mapping'ler coverage aşamasında raporlanır.
+- PDF, DOCX ve HTML parser dispatch'i için aynı recursive corpus inventory akışını
+  kapsayan hafif regresyon testi eklendi; bu gerçek belge kalite ölçümü değildir.
 - DOCX ZIP paketlerinde üye sayısı 4.096 ile sınırlandırıldı; bu, açılmış toplam
   boyut ve güvenli üye kontrollerini tamamlar ancak ZIP merkez dizininin ilk
   okunması sırasında bellek sınırı veya process izolasyonu sağlamaz.

@@ -1,5 +1,8 @@
 import json
+import sys
+import zipfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -39,6 +42,46 @@ def test_repository_corpus_covers_multiple_formats_and_medium_bucket() -> None:
     } <= suffixes
     assert any(record["size_bucket"] == "medium" for record in records)
     assert all(record["status"] == "parsed" for record in records)
+
+
+def test_inventory_dispatches_pdf_docx_and_html_together(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class FakePage:
+        def extract_text(self) -> str:
+            return "PDF inventory evidence"
+
+    class FakePdfReader:
+        def __init__(self, _path: str) -> None:
+            self.pages = [FakePage()]
+            self.metadata = SimpleNamespace(title="Inventory PDF")
+            self.is_encrypted = False
+
+    monkeypatch.setitem(sys.modules, "pypdf", SimpleNamespace(PdfReader=FakePdfReader))
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "page.html").write_text(
+        "<html><body><h1>Inventory HTML</h1><p>Visible content</p></body></html>",
+        encoding="utf-8",
+    )
+    (root / "report.pdf").write_bytes(b"synthetic pdf")
+    with zipfile.ZipFile(root / "notes.docx", "w") as archive:
+        archive.writestr(
+            "word/document.xml",
+            '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+            "<w:body><w:p><w:r><w:t>Inventory DOCX</w:t></w:r></w:p></w:body>"
+            "</w:document>",
+        )
+
+    records = inventory_sources(root)
+
+    by_suffix = {record["suffix"]: record for record in records}
+    assert by_suffix[".pdf"]["status"] == "parsed"
+    assert by_suffix[".pdf"]["parser_version"] == "pdf-v2"
+    assert by_suffix[".docx"]["status"] == "parsed"
+    assert by_suffix[".docx"]["parser_version"] == "docx-v4"
+    assert by_suffix[".html"]["status"] == "parsed"
+    assert by_suffix[".html"]["parser_version"] == "html-v4"
 
 
 def test_inventory_classifies_a_large_source_without_reading_source_text(
