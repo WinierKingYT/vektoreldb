@@ -1,5 +1,16 @@
 # Karar günlüğü
 
+## 2026-09-22 — RAG insan değerlendirme artifact'i
+
+RAG context ve citation sınırı retrieval kanıtının bütünlüğünü ölçüyordu, ancak
+cevap katmanı için insan puanlarını provenance'a bağlı ve ham metinsiz saklayan
+bir sözleşme yoktu. `rag-answer-evaluations.schema.json` ve loader/summary
+fonksiyonları eklendi. Relevance, faithfulness, citation correctness ve
+abstention correctness puanlarıyla tutuluyor; sorgu/cevap/source metni ve serbest
+not saklanmıyor. Fixture, corpus veya embedding provenance'ı karışan kayıtlar
+özetlenmiyor. Bu artifact final 300+ ölçümünde doldurulacak; otomatik judge veya
+citation coverage factuality yerine geçmiyor.
+
 ## 2026-09-22 — Harici provider seçim audit'i
 
 Harici embedding sözleşmesi dış provider kullanımının ayrı bir audit olayı

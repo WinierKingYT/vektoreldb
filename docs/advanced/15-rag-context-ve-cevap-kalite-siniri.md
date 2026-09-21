@@ -124,6 +124,18 @@ set'i, split disiplini ve hata örnekleriyle birlikte değerlendirilir. Bu proje
 ilk aşamada context/provenance sözleşmesini sağlar; uzun süreli cevap kalitesi
 ölçümü 300+ sorgu fixture'ı hazırlandıktan sonra yapılacaktır.
 
+### Privacy-safe cevap değerlendirme artifact'i
+
+`rag-answer-evaluations.schema.json` yalnızca insan değerlendirmesi için şu
+alanları saklar: `query_id`, evaluator/zaman, `answered` veya `abstained`
+durumu, 0–2 arası relevance/faithfulness/citation-correctness puanları,
+abstention correctness ve fixture/corpus/embedding/generation provenance'ı.
+Ham cevap, kaynak metni, sorgu metni veya serbest not alanı artifact'e alınmaz.
+`load_rag_answer_evaluations` şemayı ve duplicate query kimliklerini doğrular;
+`summarize_rag_answer_evaluations` farklı corpus/fixture/model koşullarının
+yanlışlıkla tek özette birleştirilmesini reddeder. Bu özet insan yargısının
+kanıtıdır; otomatik factuality veya faithfulness üretmez.
+
 ## RAG entegrasyon rollback'u
 
 RAG adapter'ı bozulursa vector DB retrieval endpoint'i bağımsız çalışmaya devam

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/rag-answer-evaluations.schema.json",
+  "title": "Privacy-safe human RAG answer evaluations",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["query_id", "evaluator", "evaluated_at", "answer_status", "relevance", "faithfulness", "citation_correctness", "abstention_correctness", "fixture_checksum", "corpus_checksum", "embedding_manifest_id", "generation_model"],
+    "properties": {
+      "query_id": {"type": "string", "minLength": 1},
+      "evaluator": {"type": "string", "minLength": 1},
+      "evaluated_at": {"type": "string", "minLength": 1},
+      "answer_status": {"enum": ["answered", "abstained"]},
+      "relevance": {"type": "integer", "minimum": 0, "maximum": 2},
+      "faithfulness": {"type": "integer", "minimum": 0, "maximum": 2},
+      "citation_correctness": {"type": "integer", "minimum": 0, "maximum": 2},
+      "abstention_correctness": {"type": ["boolean", "null"]},
+      "fixture_checksum": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+      "corpus_checksum": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+      "embedding_manifest_id": {"type": "string", "minLength": 1},
+      "generation_model": {"type": "string", "minLength": 1}
+    }
+  }
+}

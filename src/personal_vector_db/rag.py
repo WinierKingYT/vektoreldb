@@ -1,11 +1,14 @@
 """RAG context packaging without generation or instruction execution."""
 
+import json
 import re
 from dataclasses import dataclass
 from html import escape
+from pathlib import Path
 from xml.sax.saxutils import quoteattr
 
 from personal_vector_db.retrieval import RetrievalResult
+from personal_vector_db.validation import validate_schema
 
 
 @dataclass(frozen=True)
@@ -68,6 +71,103 @@ class CitationCoverage:
     cited_chunk_ids: tuple[str, ...]
     missing_chunk_ids: tuple[str, ...]
     coverage: float
+
+
+@dataclass(frozen=True)
+class RAGAnswerEvaluation:
+    """Privacy-safe human judgment; it never stores the answer or source text."""
+
+    query_id: str
+    evaluator: str
+    evaluated_at: str
+    answer_status: str
+    relevance: int
+    faithfulness: int
+    citation_correctness: int
+    abstention_correctness: bool | None
+    fixture_checksum: str
+    corpus_checksum: str
+    embedding_manifest_id: str
+    generation_model: str
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "query_id": self.query_id,
+            "evaluator": self.evaluator,
+            "evaluated_at": self.evaluated_at,
+            "answer_status": self.answer_status,
+            "relevance": self.relevance,
+            "faithfulness": self.faithfulness,
+            "citation_correctness": self.citation_correctness,
+            "abstention_correctness": self.abstention_correctness,
+            "fixture_checksum": self.fixture_checksum,
+            "corpus_checksum": self.corpus_checksum,
+            "embedding_manifest_id": self.embedding_manifest_id,
+            "generation_model": self.generation_model,
+        }
+
+
+def load_rag_answer_evaluations(path: Path) -> list[dict[str, object]]:
+    """Load strict human judgments without reading answer or source text."""
+
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("RAG answer evaluation file could not be read") from error
+    if not isinstance(raw, list) or not raw:
+        raise ValueError("RAG answer evaluations must be a non-empty list")
+    validate_schema(raw, "rag-answer-evaluations.schema.json")
+    query_ids = [str(record["query_id"]) for record in raw]
+    if len(query_ids) != len(set(query_ids)):
+        raise ValueError("RAG answer evaluations contain duplicate query_id")
+    return raw
+
+
+def summarize_rag_answer_evaluations(
+    evaluations: list[dict[str, object]],
+) -> dict[str, object]:
+    """Summarize human judgments while preserving provenance and privacy."""
+
+    if not evaluations:
+        raise ValueError("RAG answer evaluations cannot be empty")
+    required_provenance = ("fixture_checksum", "corpus_checksum", "embedding_manifest_id")
+    for field in required_provenance:
+        if len({record[field] for record in evaluations}) != 1:
+            raise ValueError(f"RAG answer evaluations must share {field}")
+    status_counts = {
+        status: sum(record["answer_status"] == status for record in evaluations)
+        for status in ("answered", "abstained")
+    }
+    abstention_labels = [
+        record["abstention_correctness"]
+        for record in evaluations
+        if record["abstention_correctness"] is not None
+    ]
+    return {
+        "evaluation_count": len(evaluations),
+        "answered_count": status_counts["answered"],
+        "abstained_count": status_counts["abstained"],
+        "relevance_mean": round(
+            sum(int(record["relevance"]) for record in evaluations) / len(evaluations), 6
+        ),
+        "faithfulness_mean": round(
+            sum(int(record["faithfulness"]) for record in evaluations) / len(evaluations), 6
+        ),
+        "citation_correctness_mean": round(
+            sum(int(record["citation_correctness"]) for record in evaluations)
+            / len(evaluations),
+            6,
+        ),
+        "abstention_accuracy": (
+            sum(bool(value) for value in abstention_labels) / len(abstention_labels)
+            if abstention_labels
+            else None
+        ),
+        "fixture_checksum": evaluations[0]["fixture_checksum"],
+        "corpus_checksum": evaluations[0]["corpus_checksum"],
+        "embedding_manifest_id": evaluations[0]["embedding_manifest_id"],
+        "generation_models": sorted({str(record["generation_model"]) for record in evaluations}),
+    }
 
 
 # Accept the documented bare/bracketed marker forms without matching a marker

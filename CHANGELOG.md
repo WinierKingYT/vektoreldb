@@ -4,6 +4,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- RAG için ham cevap/source metni taşımayan, provenance'a bağlı insan evaluation
+  schema'sı ve privacy-safe özetleyici eklendi; otomatik factuality iddiası üretmez.
 - Harici embedding provider başarıyla seçildiğinde ham veri ve API key içermeyen
   `external_embedding_provider_selected` audit olayı eklenerek opt-in egress görünürlüğü güçlendirildi.
 - TOML kaynakları `tomllib` tabanlı `toml-v1` deterministic parser ve kanonik

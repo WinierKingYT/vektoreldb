@@ -1,4 +1,6 @@
+import json
 from dataclasses import replace
+from pathlib import Path
 from xml.etree import ElementTree
 
 import pytest
@@ -7,6 +9,8 @@ from personal_vector_db.rag import (
     assess_rag_generation,
     build_rag_context,
     evaluate_rag_citation_coverage,
+    load_rag_answer_evaluations,
+    summarize_rag_answer_evaluations,
     validate_rag_answer_citations,
 )
 from personal_vector_db.retrieval import RetrievalResult
@@ -226,3 +230,55 @@ def test_rag_citation_check_marks_missing_or_unknown_markers_invalid() -> None:
     unknown = validate_rag_answer_citations("Sonuç [E99].", context)
     assert unknown.valid is False
     assert unknown.invalid_ids == ("E99",)
+
+
+def test_rag_answer_evaluation_is_privacy_safe_and_provenance_bound(tmp_path: Path) -> None:
+    checksum = "sha256:" + "a" * 64
+    records = [
+        {
+            "query_id": "q1",
+            "evaluator": "local-user",
+            "evaluated_at": "2026-09-22T00:00:00Z",
+            "answer_status": "answered",
+            "relevance": 2,
+            "faithfulness": 1,
+            "citation_correctness": 2,
+            "abstention_correctness": None,
+            "fixture_checksum": checksum,
+            "corpus_checksum": checksum,
+            "embedding_manifest_id": "local:model@r1",
+            "generation_model": "test-generator",
+        },
+        {
+            "query_id": "q2",
+            "evaluator": "local-user",
+            "evaluated_at": "2026-09-22T00:01:00Z",
+            "answer_status": "abstained",
+            "relevance": 2,
+            "faithfulness": 2,
+            "citation_correctness": 0,
+            "abstention_correctness": True,
+            "fixture_checksum": checksum,
+            "corpus_checksum": checksum,
+            "embedding_manifest_id": "local:model@r1",
+            "generation_model": "test-generator",
+        },
+    ]
+    path = tmp_path / "rag-evaluations.json"
+    path.write_text(json.dumps(records), encoding="utf-8")
+
+    loaded = load_rag_answer_evaluations(path)
+    summary = summarize_rag_answer_evaluations(loaded)
+
+    assert summary["evaluation_count"] == 2
+    assert summary["answered_count"] == 1
+    assert summary["abstained_count"] == 1
+    assert summary["relevance_mean"] == 2.0
+    assert summary["abstention_accuracy"] == 1.0
+    assert "test-generator" in json.dumps(summary)
+    assert "Gizli cevap metni" not in path.read_text(encoding="utf-8")
+
+    mismatched = [*loaded]
+    mismatched[1] = {**mismatched[1], "corpus_checksum": "sha256:" + "b" * 64}
+    with pytest.raises(ValueError, match="share corpus_checksum"):
+        summarize_rag_answer_evaluations(mismatched)
