@@ -1,3 +1,5 @@
+import pytest
+
 from personal_vector_db.config import Settings
 from personal_vector_db.embeddings import factory
 
@@ -46,3 +48,25 @@ def test_factory_passes_external_embedding_settings(monkeypatch) -> None:
         "endpoint_host": "localhost",
         "dimension": 3,
     }
+
+
+def test_factory_does_not_audit_failed_external_provider_creation(monkeypatch) -> None:
+    events: list[str] = []
+
+    def fail_provider(*_args: object, **_kwargs: object) -> None:
+        raise RuntimeError("provider unavailable")
+
+    monkeypatch.setattr(factory, "OpenAIEmbeddingProvider", fail_provider)
+    monkeypatch.setattr(factory, "emit_audit_event", lambda event, **_fields: events.append(event))
+    settings = Settings(
+        embedding_provider="openai",
+        embedding_model="external-model",
+        vector_dimension=3,
+        embedding_base_url="http://localhost:9000/v1",
+        _env_file=None,
+    )
+
+    with pytest.raises(RuntimeError, match="provider unavailable"):
+        factory.create_embedding_provider(settings)
+
+    assert events == []
