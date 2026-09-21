@@ -1267,7 +1267,10 @@ def test_query_labels_validate_as_separate_annotation_records(tmp_path: Path) ->
     assert labels["q1"]["annotator"] == "local-user"
 
 
-def test_fixture_validation_binds_labels_to_case_and_manifest(tmp_path: Path) -> None:
+@pytest.mark.parametrize("label_source", ["manual", "reviewed"])
+def test_fixture_validation_binds_labels_to_case_and_manifest(
+    tmp_path: Path, label_source: str
+) -> None:
     checksum = "sha256:" + "d" * 64
     manifest = {
         "schema_version": "query-fixture-manifest-v1",
@@ -1297,7 +1300,7 @@ def test_fixture_validation_binds_labels_to_case_and_manifest(tmp_path: Path) ->
                     "relevant_chunk_ids": ["chunk-a"],
                     "annotator": "local-user",
                     "annotated_at": "2026-09-13T00:00:00Z",
-                    "source": "manual",
+                    "source": label_source,
                     "decision_note": "direct evidence",
                     "corpus_checksum": checksum,
                     "parser_version": "plain-text-v1",
