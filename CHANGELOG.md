@@ -10,7 +10,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   extraction kalite özeti üreten `corpus-quality` CLI komutu ve şeması eklendi.
 - `corpus-quality` raporuna kaynak ve format düzeyinde privacy-safe parse elapsed
   süreleri eklendi; bu değerler peak-RAM veya process timeout kanıtı olarak
-  yorumlanmamalı.
+  yorumlanmamalı. Zorunlu alan eklenmesi nedeniyle rapor sözleşmesi açıkça
+  `corpus-quality-report-v2` olarak sürümlendi.
 - Dense validation skorlarını fixture split'i ve provenance ile birebir bağlayıp
   negative-success/positive-acceptance tabanlarına göre eşik seçen privacy-safe
   `abstention-calibrate` CLI akışı ve `abstention-scores-v1` şeması eklendi.

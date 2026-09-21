@@ -8,6 +8,10 @@ taşımayan hafif bir runtime görünürlüğüdür; peak-RAM, process timeout v
 kapasitesi kanıtı değildir. Bu nedenle gerçek corpus final turunda ayrıca
 worker/process izolasyonu gerekip gerekmediği ölçülecektir.
 
+Zorunlu yeni alanların eski kalite raporlarıyla sessizce karışmaması için rapor
+şema sürümü `corpus-quality-report-v2` yapıldı. Eski `v1` artifact'leri yerinde
+güncellenmiş kabul edilmez; gerekiyorsa inventory'den yeniden üretilir.
+
 ## 2026-09-22 — Final ölçüm runbook'u
 
 Geliştirme primitive'leri tamamlandığı halde gerçek corpus, 300+ reviewed label,

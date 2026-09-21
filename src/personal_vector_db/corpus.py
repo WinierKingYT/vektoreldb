@@ -236,7 +236,7 @@ def summarize_corpus_inventory(records: list[dict[str, object]]) -> dict[str, ob
         }
 
     report: dict[str, object] = {
-        "schema_version": "corpus-quality-report-v1",
+        "schema_version": "corpus-quality-report-v2",
         "source_count": len(records),
         "parsed_source_count": sum(row.get("status") == "parsed" for row in records),
         "failed_source_count": sum(row.get("status") == "failed" for row in records),

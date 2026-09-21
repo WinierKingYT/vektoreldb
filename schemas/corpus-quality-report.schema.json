@@ -10,7 +10,7 @@
     "total_chunks", "total_parse_elapsed_ms", "max_parse_elapsed_ms", "formats", "privacy_classification"
   ],
   "properties": {
-    "schema_version": {"type": "string", "const": "corpus-quality-report-v1"},
+    "schema_version": {"type": "string", "const": "corpus-quality-report-v2"},
     "source_count": {"type": "integer", "minimum": 0},
     "parsed_source_count": {"type": "integer", "minimum": 0},
     "failed_source_count": {"type": "integer", "minimum": 0},
