@@ -43,6 +43,12 @@ provider/test-double sözleşmesi varsayılan akışta değişmez.
 
 ## Harici embedding
 
+`VDB_EMBEDDING_PROVIDER=openai` seçildiğinde başarılı provider oluşturma sırasında
+privacy-safe `external_embedding_provider_selected` audit olayı üretilir. Olay
+yalnızca provider türü, model, endpoint scheme/host ve dimension metadata'sını
+taşır; API key, endpoint path, sorgu/belge metni ve embedding yazılmaz. Provider
+oluşturulamazsa başarılı seçim olayı üretilmez ve hata fail-closed kalır.
+
 Harici OpenAI-compatible endpoint gerekiyorsa `VDB_EMBEDDING_BASE_URL`,
 `VDB_EMBEDDING_TIMEOUT_SECONDS`, `VDB_EMBEDDING_MAX_RETRIES` ve
 `VDB_EMBEDDING_BATCH_SIZE` ve `VDB_EMBEDDING_CACHE_SIZE` ayarlanabilir. Batch

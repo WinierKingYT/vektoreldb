@@ -1,5 +1,15 @@
 # Karar günlüğü
 
+## 2026-09-22 — Harici provider seçim audit'i
+
+Harici embedding sözleşmesi dış provider kullanımının ayrı bir audit olayı
+olmasını gerektiriyordu; factory bu olayı üretmiyordu. Başarılı OpenAI-compatible
+provider oluşturma sonrasında `external_embedding_provider_selected` olayı eklendi.
+Olay yalnızca provider/model, URL scheme/hostname ve dimension taşır; API key,
+endpoint path ve ham içerik taşınmaz. Constructor başarısızsa seçim olayı yazılmaz.
+Rollback yalnızca factory audit çağrısını kaldırır; adapter'ın ağ güvenlik sınırları
+değişmez.
+
 ## 2026-09-22 — TOML yapılandırılmış kaynak desteği
 
 Kişisel corpus'larda ayar ve proje metadata'sı sık görüldüğü için ek bağımlılık

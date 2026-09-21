@@ -4,6 +4,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- Harici embedding provider başarıyla seçildiğinde ham veri ve API key içermeyen
+  `external_embedding_provider_selected` audit olayı eklenerek opt-in egress görünürlüğü güçlendirildi.
 - TOML kaynakları `tomllib` tabanlı `toml-v1` deterministic parser ve kanonik
   `source_type=toml` sözleşmesiyle desteklendi; yorum/biçimlendirme provenance'a
   alınmaz ve mevcut dense/RAG akışı değişmez.

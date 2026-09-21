@@ -1,7 +1,9 @@
 """Embedding provider composition with explicit opt-in boundaries."""
 
 import os
+from urllib.parse import urlsplit
 
+from personal_vector_db.audit import emit_audit_event
 from personal_vector_db.config import Settings
 from personal_vector_db.contracts import EmbeddingProvider
 
@@ -18,7 +20,7 @@ def create_embedding_provider(settings: Settings) -> EmbeddingProvider:
             offline=settings.embedding_offline,
         )
     if settings.embedding_provider == "openai":
-        return OpenAIEmbeddingProvider(
+        provider = OpenAIEmbeddingProvider(
             settings.embedding_model,
             dimension=settings.vector_dimension,
             api_key=os.getenv("OPENAI_API_KEY"),
@@ -28,4 +30,14 @@ def create_embedding_provider(settings: Settings) -> EmbeddingProvider:
             batch_size=settings.embedding_batch_size,
             cache_size=settings.embedding_cache_size,
         )
+        endpoint = urlsplit(settings.embedding_base_url)
+        emit_audit_event(
+            "external_embedding_provider_selected",
+            provider="openai-compatible",
+            model=settings.embedding_model,
+            endpoint_scheme=endpoint.scheme,
+            endpoint_host=endpoint.hostname or "",
+            dimension=settings.vector_dimension,
+        )
+        return provider
     raise ValueError(f"unsupported embedding provider {settings.embedding_provider!r}")

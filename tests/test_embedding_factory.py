@@ -4,6 +4,7 @@ from personal_vector_db.embeddings import factory
 
 def test_factory_passes_external_embedding_settings(monkeypatch) -> None:
     captured: dict[str, object] = {}
+    audit: dict[str, object] = {}
 
     class FakeProvider:
         def __init__(self, model_name: str, **kwargs: object) -> None:
@@ -11,6 +12,11 @@ def test_factory_passes_external_embedding_settings(monkeypatch) -> None:
             captured.update(kwargs)
 
     monkeypatch.setattr(factory, "OpenAIEmbeddingProvider", FakeProvider)
+    monkeypatch.setattr(
+        factory,
+        "emit_audit_event",
+        lambda event, **fields: audit.update({"event": event, **fields}),
+    )
     settings = Settings(
         embedding_provider="openai",
         embedding_model="external-model",
@@ -32,3 +38,11 @@ def test_factory_passes_external_embedding_settings(monkeypatch) -> None:
     assert captured["max_retries"] == 4
     assert captured["batch_size"] == 7
     assert captured["cache_size"] == 11
+    assert audit == {
+        "event": "external_embedding_provider_selected",
+        "provider": "openai-compatible",
+        "model": "external-model",
+        "endpoint_scheme": "http",
+        "endpoint_host": "localhost",
+        "dimension": 3,
+    }
