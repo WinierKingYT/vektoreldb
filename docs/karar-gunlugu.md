@@ -1,5 +1,19 @@
 # Karar günlüğü
 
+## 2026-09-22 — Concurrency sonucu yeniden üretim parametreleri
+
+- Kanıt: Concurrency sonucu worker seviyesi, toplam istek ve provenance taşıyor;
+  ancak aynı fixture checksum'ı altında kullanılan `k` ve `repetitions` sonucu
+  artifact'ten doğrudan yeniden kurulamıyordu.
+- Karar: Her `ConcurrencyResult` içinde `k` ve `repetitions` alanlarını zorunlu
+  ve şema doğrulamalı taşı. Matrix bu alanları her seviyede aynı şekilde yazar.
+- Provenance: Sorgu/belge metni eklenmez; yalnızca ölçüm konfigürasyonu görünür
+  olur. Mevcut bounded istek bütçesi, worker sınırı ve fixture/corpus/model
+  binding'i değişmez.
+- Geriye uyumluluk/rollback: Yeni sonuç artifact'leri yeni şemayı kullanır;
+  eski sonuçlar yeniden yazılmadan yeni matrix aggregate'ına alınmaz. Alanları
+  kaldırmak sonucu yeniden üretilebilirlik açığını geri getirir.
+
 ## 2026-09-22 — Final fixture kabulinde label ve corpus manifesti zorunluluğu
 
 - Kanıt: `validate_fixture_requirements` label dosyasını isteğe bağlı yüklüyor,

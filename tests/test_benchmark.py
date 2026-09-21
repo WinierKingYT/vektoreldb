@@ -1676,6 +1676,8 @@ def test_concurrency_probe_reports_success_and_errors_without_text() -> None:
     )
 
     assert result.total_requests == 4
+    assert result.k == 1
+    assert result.repetitions == 2
     assert result.successful_requests == 2
     assert result.error_count == 2
     assert result.error_types == {"RuntimeError": 2}

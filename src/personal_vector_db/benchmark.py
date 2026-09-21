@@ -230,6 +230,8 @@ class ConcurrencyResult:
     """Privacy-safe latency/throughput summary for concurrent search probes."""
 
     concurrency: int
+    k: int
+    repetitions: int
     total_requests: int
     successful_requests: int
     error_count: int
@@ -246,6 +248,8 @@ class ConcurrencyResult:
     def to_dict(self) -> dict[str, object]:
         return {
             "concurrency": self.concurrency,
+            "k": self.k,
+            "repetitions": self.repetitions,
             "total_requests": self.total_requests,
             "successful_requests": self.successful_requests,
             "error_count": self.error_count,
@@ -1400,6 +1404,8 @@ def run_concurrency_probe(
     )
     return ConcurrencyResult(
         concurrency=concurrency,
+        k=k,
+        repetitions=repetitions,
         total_requests=len(outcomes),
         successful_requests=successful,
         error_count=len(outcomes) - successful,

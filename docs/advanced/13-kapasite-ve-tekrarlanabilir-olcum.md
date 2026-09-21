@@ -114,8 +114,8 @@ vdb benchmark --fixture data/benchmarks/queries.json --limit 5 --repeat 3 `
 Kapasite matrisi için worker seviyeleri ayrı probe koşuları olarak yürütülür;
 her koşu aynı fixture ve `k` değeriyle çalıştırılır. Matrix yardımcı fonksiyonu
 seviyeleri sıralı/tekil tutar, her probe'un bounded istek bütçesini korur ve
-sonuçlarda yalnızca worker sayısı, istek sayısı, hata türü sayıları ve latency
-özetlerini taşır. Her probe/matrix sonucu ayrıca opsiyonel fixture checksum,
+sonuçlarda yalnızca worker sayısı, `k`, tekrar sayısı, istek sayısı, hata türü
+sayıları ve latency özetlerini taşır. Her probe/matrix sonucu ayrıca opsiyonel fixture checksum,
 corpus checksum ve embedding manifest kimliğini taşır; bu alanlar aynı ölçümün
 yanlış veri/model ile karşılaştırılmasını önler. Sorgu veya belge metni matrix
 çıktısına alınmaz. Gerçek final
