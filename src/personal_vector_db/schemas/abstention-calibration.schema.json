@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/abstention-calibration.schema.json",
+  "title": "Privacy-safe abstention calibration result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "fixture_checksum", "embedding_manifest_id", "retrieval_mode", "split", "score_count", "min_positive_acceptance", "min_negative_success", "result"],
+  "properties": {
+    "schema_version": {"const": "abstention-calibration-v1"},
+    "fixture_checksum": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "embedding_manifest_id": {"type": "string", "minLength": 1},
+    "retrieval_mode": {"const": "dense"},
+    "split": {"enum": ["development", "validation", "test"]},
+    "score_count": {"type": "integer", "minimum": 1},
+    "min_positive_acceptance": {"type": "number", "minimum": 0, "maximum": 1},
+    "min_negative_success": {"type": "number", "minimum": 0, "maximum": 1},
+    "result": {
+      "type": "object", "additionalProperties": false,
+      "required": ["threshold", "positive_query_count", "negative_query_count", "positive_acceptance_rate", "negative_success_rate", "false_abstention_rate", "false_acceptance_rate"],
+      "properties": {
+        "threshold": {"type": "number", "minimum": -1, "maximum": 1},
+        "positive_query_count": {"type": "integer", "minimum": 0},
+        "negative_query_count": {"type": "integer", "minimum": 0},
+        "positive_acceptance_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "negative_success_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "false_abstention_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "false_acceptance_rate": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  }
+}

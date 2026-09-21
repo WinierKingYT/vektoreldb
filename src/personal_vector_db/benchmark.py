@@ -71,6 +71,61 @@ class AbstentionThresholdResult:
         }
 
 
+def load_abstention_score_artifact(path: Path) -> dict[str, object]:
+    """Load privacy-safe per-query maximum scores for threshold calibration."""
+
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("abstention score artifact could not be read") from error
+    validate_schema(raw, "abstention-scores.schema.json")
+    query_ids = [str(item["query_id"]) for item in raw["scores"]]
+    if len(query_ids) != len(set(query_ids)):
+        raise ValueError("abstention score artifact contains duplicate query_id")
+    return raw
+
+
+def calibrate_abstention_threshold(
+    cases: Sequence[QueryCase],
+    score_artifact: dict[str, object],
+    *,
+    split: str = "validation",
+    min_positive_acceptance: float = 0.9,
+    min_negative_success: float = 0.8,
+) -> dict[str, object]:
+    """Choose a dense threshold from a privacy-safe validation score artifact."""
+
+    if split not in FIXTURE_SPLITS or split == "unspecified":
+        raise ValueError("split must be development, validation, or test")
+    scores = score_artifact.get("scores")
+    if not isinstance(scores, list):
+        raise ValueError("abstention score artifact scores must be a list")
+    selected = [case for case in cases if case.split == split]
+    by_query_id = {str(item["query_id"]): float(item["max_score"]) for item in scores}
+    selected_ids = {case.query_id for case in selected}
+    if set(by_query_id) != selected_ids:
+        raise ValueError("abstention scores must match the selected fixture split")
+    result = choose_abstention_threshold(
+        selected,
+        [[by_query_id[case.query_id]] for case in selected],
+        min_positive_acceptance=min_positive_acceptance,
+        min_negative_success=min_negative_success,
+    )
+    summary = {
+        "schema_version": "abstention-calibration-v1",
+        "fixture_checksum": score_artifact["fixture_checksum"],
+        "embedding_manifest_id": score_artifact["embedding_manifest_id"],
+        "retrieval_mode": score_artifact["retrieval_mode"],
+        "split": split,
+        "score_count": len(selected),
+        "min_positive_acceptance": min_positive_acceptance,
+        "min_negative_success": min_negative_success,
+        "result": result.to_dict(),
+    }
+    validate_schema(summary, "abstention-calibration.schema.json")
+    return summary
+
+
 def evaluate_abstention_threshold(
     cases: Sequence[QueryCase],
     score_lists: Sequence[Sequence[float]],

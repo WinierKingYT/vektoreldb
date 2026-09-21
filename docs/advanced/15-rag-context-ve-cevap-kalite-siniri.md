@@ -107,6 +107,12 @@ ayrı kalır.
 - Threshold seçimi için validation skorları üzerinde pozitif kabul ve negative
   başarı tabanlarını birlikte değerlendiren bounded helper kullanılabilir; uygun
   eşik yoksa RAG katmanı sessiz bir değer uydurmaz.
+- Bu seçimi tekrarlanabilir kılmak için `abstention-scores-v1` privacy-safe
+  artifact'i ve `vdb abstention-calibrate` komutu kullanılabilir. Artifact yalnızca
+  sorgu ID'si, maksimum skor, fixture checksum'ı, embedding manifest'i ve dense
+  retrieval kipini içerir; komut skorların seçilen validation split'iyle birebir
+  eşleşmesini ister. Bu sonuç gerçek corpus/model ölçümünün yerine geçmez ve
+  hybrid/late skorlarını dense cosine eşiği gibi yorumlamaz.
 
 ## Değerlendirme katmanları
 

@@ -9,7 +9,9 @@ from pathlib import Path
 
 from .backup import read_backup_manifest, write_backup_manifest
 from .benchmark import (
+    calibrate_abstention_threshold,
     fixture_coverage_report,
+    load_abstention_score_artifact,
     load_query_cases,
     merge_query_fixture_files,
     merge_query_label_files,
@@ -199,6 +201,17 @@ def build_parser() -> argparse.ArgumentParser:
     concurrency_probe.add_argument("--fixture-manifest", type=Path)
     concurrency_probe.add_argument("--corpus-manifest", type=Path)
     concurrency_probe.add_argument("--labels", type=Path)
+    abstention = subparsers.add_parser(
+        "abstention-calibrate", help="calibrate a dense threshold from validation scores"
+    )
+    abstention.add_argument("--fixture", type=Path, required=True)
+    abstention.add_argument("--scores", type=Path, required=True)
+    abstention.add_argument(
+        "--split", choices=("development", "validation", "test"), default="validation"
+    )
+    abstention.add_argument("--min-positive-acceptance", type=float, default=0.9)
+    abstention.add_argument("--min-negative-success", type=float, default=0.8)
+    abstention.add_argument("--output", type=Path)
     fixture_validate = subparsers.add_parser(
         "fixture-validate", help="validate a labeled fixture against its acceptance manifest"
     )
@@ -309,6 +322,26 @@ def main(argv: list[str] | None = None) -> None:
             print(f"corpus quality report failed: {error}", file=sys.stderr)
             raise SystemExit(2) from None
         print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+        return
+    if args.command == "abstention-calibrate":
+        cases = _load_fixture_or_exit(args.fixture)
+        try:
+            artifact = load_abstention_score_artifact(args.scores)
+            summary = calibrate_abstention_threshold(
+                cases,
+                artifact,
+                split=args.split,
+                min_positive_acceptance=args.min_positive_acceptance,
+                min_negative_success=args.min_negative_success,
+            )
+        except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+            print(f"abstention calibration failed: {error}", file=sys.stderr)
+            raise SystemExit(2) from None
+        encoded = json.dumps(summary, ensure_ascii=False, sort_keys=True)
+        if args.output is not None:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(encoded + "\n", encoding="utf-8")
+        print(encoded)
         return
     if args.command == "fixture-validate":
         cases = _load_fixture_or_exit(args.fixture)

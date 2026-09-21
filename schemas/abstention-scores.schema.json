@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/abstention-scores.schema.json",
+  "title": "Privacy-safe abstention score artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "fixture_checksum", "embedding_manifest_id", "retrieval_mode", "scores"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "abstention-scores-v1"},
+    "fixture_checksum": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "embedding_manifest_id": {"type": "string", "minLength": 1},
+    "retrieval_mode": {"enum": ["dense"]},
+    "scores": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["query_id", "max_score"],
+        "properties": {
+          "query_id": {"type": "string", "minLength": 1},
+          "max_score": {"type": "number", "minimum": -1, "maximum": 1}
+        }
+      }
+    }
+  }
+}

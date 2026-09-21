@@ -112,6 +112,20 @@ uv run vdb corpus-quality `
 Kalite raporu yalnızca sayım, byte/karakter/chunk toplamı, parser sürümü ve hata
 sınıfı taşır; kaynak yolu, hash, chunk kimliği ve metin taşımaz.
 
+Dense validation skorlarından eşik seçimi de Qdrant başlatmadan yapılabilir.
+`abstention-scores-v1` artifact'i yalnızca sorgu kimliği ve maksimum cosine
+skorlarını taşır; komut seçilen split'in sorgu kimlikleriyle birebir eşleşme
+arar ve pozitif kabul/negative abstention tabanlarını sağlayan en yüksek eşiği
+üretir:
+
+```powershell
+uv run vdb abstention-calibrate `
+  --fixture data/benchmarks/queries.json `
+  --scores data/benchmarks/abstention-scores.json `
+  --split validation `
+  --output data/benchmarks/results/abstention-calibration.json
+```
+
 ## Dokümanlar
 
 - [Geliştirme roadmap'i](docs/roadmap.md)

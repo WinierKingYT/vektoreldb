@@ -8,9 +8,11 @@ from personal_vector_db.benchmark import (
     BenchmarkResult,
     QueryCase,
     assert_regression_within,
+    calibrate_abstention_threshold,
     choose_abstention_threshold,
     evaluate_abstention_threshold,
     fixture_coverage_report,
+    load_abstention_score_artifact,
     load_query_cases,
     load_query_labels,
     merge_query_fixture_files,
@@ -1669,6 +1671,46 @@ def test_abstention_threshold_selector_chooses_highest_feasible_floor() -> None:
     assert result.threshold == 0.95
     assert result.positive_acceptance_rate == 0.5
     assert result.negative_success_rate == 1.0
+
+
+def test_abstention_calibration_binds_scores_to_validation_split(tmp_path: Path) -> None:
+    cases = [
+        QueryCase("positive", "private query", frozenset({"chunk-a"}), split="validation"),
+        QueryCase(
+            "negative",
+            "unrelated query",
+            frozenset(),
+            query_type="negative",
+            split="validation",
+        ),
+    ]
+    path = tmp_path / "scores.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "abstention-scores-v1",
+                "fixture_checksum": "sha256:" + "a" * 64,
+                "embedding_manifest_id": "local:model@r1",
+                "retrieval_mode": "dense",
+                "scores": [
+                    {"query_id": "positive", "max_score": 0.9},
+                    {"query_id": "negative", "max_score": 0.2},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    artifact = load_abstention_score_artifact(path)
+    summary = calibrate_abstention_threshold(cases, artifact, min_positive_acceptance=1.0)
+
+    assert summary["split"] == "validation"
+    assert summary["score_count"] == 2
+    assert summary["result"]["threshold"] == 0.9
+    assert summary["result"]["negative_success_rate"] == 1.0
+
+    with pytest.raises(ValueError, match="match the selected fixture split"):
+        calibrate_abstention_threshold(cases, {**artifact, "scores": artifact["scores"][:-1]})
 
 
 def test_abstention_threshold_rejects_invalid_scores_and_unsatisfiable_floor() -> None:

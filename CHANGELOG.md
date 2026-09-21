@@ -8,6 +8,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   satır/row akışıyla okuyacak şekilde iyileştirildi; kanonik çıktı/provenance değişmedi.
 - Inventory kayıtlarından kaynak yolu, hash ve chunk kimliği taşımadan format bazlı
   extraction kalite özeti üreten `corpus-quality` CLI komutu ve şeması eklendi.
+- Dense validation skorlarını fixture split'i ve provenance ile birebir bağlayıp
+  negative-success/positive-acceptance tabanlarına göre eşik seçen privacy-safe
+  `abstention-calibrate` CLI akışı ve `abstention-scores-v1` şeması eklendi.
 - RAG için ham cevap/source metni taşımayan, provenance'a bağlı insan evaluation
   schema'sı ve privacy-safe özetleyici eklendi; otomatik factuality iddiası üretmez.
 - Bu evaluation artifact'i Qdrant/embedding başlatmadan doğrulayıp özetleyen

@@ -10,6 +10,17 @@ sürümü ve hata sınıfı üretir. Kaynak yolu, content hash, chunk ID ve meti
 girmez. Bu rapor extraction kalitesini gözden geçirmeyi kolaylaştırır; runtime,
 peak-RAM veya insan doğrulamasının yerine geçmez.
 
+## 2026-09-22 — Dense abstention kalibrasyon artifact'i
+
+Eşik seçici kodu vardı; ancak gerçek validation skorlarını fixture split'i ve
+embedding provenance'ı ile tekrarlanabilir biçimde bağlayan offline giriş/çıktı
+sözleşmesi yoktu. `abstention-scores-v1` yalnızca query ID ve maksimum cosine
+skoru saklar; `abstention-calibrate` seçilen split ile kimlikleri birebir
+eşleştirir ve pozitif kabul/negative başarı tabanlarını karşılayan en yüksek
+validation eşiğini üretir. Sadece dense kip kabul edilir; hybrid/late skorları
+bilinçli olarak kapsam dışıdır. Bu artifact ölçüm altyapısıdır, gerçek corpus
+kalibrasyon kanıtı değildir.
+
 ## 2026-09-22 — RAG evaluation özeti için offline CLI sınırı
 
 İnsan değerlendirme artifact'inin yalnızca Python API'siyle kullanılabilmesi

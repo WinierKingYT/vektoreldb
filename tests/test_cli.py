@@ -51,6 +51,11 @@ def test_cli_parser_supports_core_commands() -> None:
         ["concurrency-probe", "--fixture", "q.json", "--concurrency-levels", "1", "2", "4"]
     )
     assert matrix_args.concurrency_levels == [1, 2, 4]
+    abstention_args = build_parser().parse_args(
+        ["abstention-calibrate", "--fixture", "q.json", "--scores", "scores.json"]
+    )
+    assert abstention_args.command == "abstention-calibrate"
+    assert abstention_args.split == "validation"
     coverage_args = build_parser().parse_args(
         [
             "fixture-coverage",
@@ -163,6 +168,65 @@ def test_rag_evaluation_summary_fails_without_traceback(tmp_path, capsys) -> Non
 
     assert error.value.code == 2
     assert capsys.readouterr().err.startswith("RAG evaluation summary failed:")
+
+
+def test_abstention_calibration_cli_is_offline_and_writes_summary(tmp_path, capsys) -> None:
+    fixture = tmp_path / "fixture.json"
+    fixture.write_text(
+        json.dumps(
+            [
+                {
+                    "query_id": "positive",
+                    "text": "private query",
+                    "relevant_chunk_ids": ["chunk-a"],
+                    "split": "validation",
+                },
+                {
+                    "query_id": "negative",
+                    "text": "unrelated query",
+                    "relevant_chunk_ids": [],
+                    "query_type": "negative",
+                    "split": "validation",
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    scores = tmp_path / "scores.json"
+    scores.write_text(
+        json.dumps(
+            {
+                "schema_version": "abstention-scores-v1",
+                "fixture_checksum": "sha256:" + "a" * 64,
+                "embedding_manifest_id": "local:model@r1",
+                "retrieval_mode": "dense",
+                "scores": [
+                    {"query_id": "positive", "max_score": 0.9},
+                    {"query_id": "negative", "max_score": 0.2},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "calibration.json"
+
+    cli.main(
+        [
+            "abstention-calibrate",
+            "--fixture",
+            str(fixture),
+            "--scores",
+            str(scores),
+            "--min-positive-acceptance",
+            "1.0",
+            "--output",
+            str(output),
+        ]
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert summary == json.loads(output.read_text(encoding="utf-8"))
+    assert summary["result"]["threshold"] == 0.9
 
 
 def test_fixture_loading_reports_malformed_json_without_traceback(tmp_path, capsys) -> None:
