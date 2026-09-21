@@ -113,6 +113,9 @@ ayrı kalır.
   retrieval kipini içerir; komut skorların seçilen validation split'iyle birebir
   eşleşmesini ister. Bu sonuç gerçek corpus/model ölçümünün yerine geçmez ve
   hybrid/late skorlarını dense cosine eşiği gibi yorumlamaz.
+  Calibration ayrıca seçilen split'te en az bir pozitif ve bir gerçek negative
+  sorgu yoksa fail-closed reddeder; tek sınıflı bir veriyle abstention başarısı
+  üretilmez.
   `vdb benchmark --scores-output ...` seçeneği, eşiksiz ve rerank'siz dense
   benchmark koşusundaki maksimum skorları aynı sözleşmeyle üretebilir; tekrar,
   mevcut threshold veya reranking açıkken artifact yazımı reddedilir. Fixture

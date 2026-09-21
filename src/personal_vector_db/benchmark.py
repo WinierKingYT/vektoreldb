@@ -147,6 +147,10 @@ def calibrate_abstention_threshold(
     selected_ids = {case.query_id for case in selected}
     if set(by_query_id) != selected_ids:
         raise ValueError("abstention scores must match the selected fixture split")
+    if not any(case.query_type == "negative" for case in selected):
+        raise ValueError("abstention calibration requires a negative query")
+    if not any(case.query_type != "negative" for case in selected):
+        raise ValueError("abstention calibration requires a positive query")
     result = choose_abstention_threshold(
         selected,
         [[by_query_id[case.query_id]] for case in selected],

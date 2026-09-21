@@ -14,6 +14,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 - Dense benchmark'a eşiksiz/rerank'siz koşullarda aynı privacy-safe skor
   artifact'ini üreten `--scores-output` seçeneği eklendi; varsayılan validation
   split'i ve açık `--scores-split` seçimi destekleniyor.
+- Abstention calibration artık seçilen split'te hem pozitif hem gerçek negative
+  sorgu bulunmadıkça eşik üretmiyor; tek sınıflı ölçüm fail-closed reddediliyor.
 - RAG için ham cevap/source metni taşımayan, provenance'a bağlı insan evaluation
   schema'sı ve privacy-safe özetleyici eklendi; otomatik factuality iddiası üretmez.
 - Bu evaluation artifact'i Qdrant/embedding başlatmadan doğrulayıp özetleyen

@@ -29,6 +29,9 @@ aynı retrieval sözleşmesinden üretilebilir.
 Fixture tüm split'leri içerdiğinde artifact'in varsayılan olarak yalnızca
 validation split'ini alması kararlaştırıldı; development/test skorları ancak
 `--scores-split` ile açıkça seçilir ve calibration split binding bozulmaz.
+Ek olarak calibration kapısı hem pozitif hem negative örnek ister. Böylece
+negative başarı veya pozitif kabul oranı tek sınıflı, anlamsız bir validation
+paketinden türetilmez; eksik sınıf durumu açık hata olarak kalır.
 
 ## 2026-09-22 — RAG evaluation özeti için offline CLI sınırı
 

@@ -1741,6 +1741,13 @@ def test_abstention_calibration_binds_scores_to_validation_split(tmp_path: Path)
     with pytest.raises(ValueError, match="match the selected fixture split"):
         calibrate_abstention_threshold(cases, {**artifact, "scores": artifact["scores"][:-1]})
 
+    positive_only = [cases[0]]
+    with pytest.raises(ValueError, match="requires a negative query"):
+        calibrate_abstention_threshold(
+            positive_only,
+            {**artifact, "scores": [artifact["scores"][0]]},
+        )
+
 
 def test_abstention_threshold_rejects_invalid_scores_and_unsatisfiable_floor() -> None:
     case = [QueryCase("q1", "query", frozenset())]
