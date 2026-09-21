@@ -264,6 +264,7 @@ PDF, HTML, harici provider, hybrid search ve reranking bu dikey dilim doğrulanm
 - [V1.7 kapasite ve tekrarlanabilir ölçüm deney kartı](advanced/13-kapasite-ve-tekrarlanabilir-olcum.md)
 - [Gelişim goal'u kabul matrisi](advanced/16-gelisim-goal-kabul-matrisi.md)
 - [V1.7 ileri seviye final audit](advanced/17-v1.7-final-audit.md)
+- [V1.7 final ölçüm runbook'u](advanced/18-v1.7-final-olcum-runbook.md)
 
 ## 8. Aktif gelişim goal'u — sade ileri seviye yükseltme
 

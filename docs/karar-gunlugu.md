@@ -1,5 +1,15 @@
 # Karar günlüğü
 
+## 2026-09-22 — Final ölçüm runbook'u
+
+Geliştirme primitive'leri tamamlandığı halde gerçek corpus, 300+ reviewed label,
+dense calibration, uzun concurrency, RAG answer review ve Docker smoke testleri
+farklı koşullarda yürütülecekti. Sıralama hatasını ve eski artifact kullanma
+riskini azaltmak için `docs/advanced/18-v1.7-final-olcum-runbook.md` eklendi.
+Runbook önce corpus/fixture kabulünü, sonra dense baseline ve validation
+calibration'ı, ardından kapasite/RAG/provider ölçümlerini ve en son Docker smoke
+ile kapanışı zorunlu kılar. Gerçek çıktılar private-local kalır.
+
 ## 2026-09-22 — Format bazlı corpus kalite özeti
 
 Inventory zaten toplam kaynak/chunk/hata bilgisi üretiyordu; ancak gerçek kişisel

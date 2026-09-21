@@ -137,6 +137,7 @@ reranker skoru olmaz.
 
 - [Geliştirme roadmap'i](docs/roadmap.md)
 - [V1.7 ileri seviye final audit](docs/advanced/17-v1.7-final-audit.md)
+- [V1.7 final ölçüm runbook'u](docs/advanced/18-v1.7-final-olcum-runbook.md)
 - [V1 kodlama öncesi kapsam tanımı](docs/v1-kapsam-tanimi.md)
 - [Kodlama öncesi teknik karar önerileri](docs/kodlama-oncesi-teknik-karar-onerileri.md)
 - [Local runtime smoke testi](docs/runtime-smoke-testi.md)

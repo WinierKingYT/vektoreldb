@@ -16,6 +16,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   split'i ve açık `--scores-split` seçimi destekleniyor.
 - Abstention calibration artık seçilen split'te hem pozitif hem gerçek negative
   sorgu bulunmadıkça eşik üretmiyor; tek sınıflı ölçüm fail-closed reddediliyor.
+- Gerçek corpus/fixture kabulünden dense baseline, abstention, kapasite, RAG,
+  provider ve Docker kapanışına kadar final ölçüm sırasını açıklayan V1.7 runbook'u
+  eklendi; gerçek artifact'ler private-local olarak korunuyor.
 - RAG için ham cevap/source metni taşımayan, provenance'a bağlı insan evaluation
   schema'sı ve privacy-safe özetleyici eklendi; otomatik factuality iddiası üretmez.
 - Bu evaluation artifact'i Qdrant/embedding başlatmadan doğrulayıp özetleyen
