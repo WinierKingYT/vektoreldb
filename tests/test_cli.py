@@ -21,6 +21,11 @@ def test_cli_parser_supports_core_commands() -> None:
     assert search_args.limit == 3
     assert search_args.min_score == 0.7
     assert build_parser().parse_args(["delete", "doc_abc"]).document_id == "doc_abc"
+    evaluation_args = build_parser().parse_args(
+        ["rag-evaluation-summary", "--input", "evaluations.json"]
+    )
+    assert evaluation_args.command == "rag-evaluation-summary"
+    assert evaluation_args.output is None
     assert (
         build_parser()
         .parse_args(["reindex", "notes.md", "--document-id", "doc_abc"])
@@ -108,6 +113,53 @@ def test_fixture_validation_reports_contract_errors_without_traceback(capsys) ->
 
     assert error.value.code == 2
     assert capsys.readouterr().err.startswith("fixture validation failed:")
+
+
+def test_rag_evaluation_summary_writes_privacy_safe_output(tmp_path, capsys) -> None:
+    checksum = "sha256:" + "a" * 64
+    source = tmp_path / "evaluations.json"
+    output = tmp_path / "results" / "summary.json"
+    source.write_text(
+        json.dumps(
+            [
+                {
+                    "query_id": "q1",
+                    "evaluator": "local-user",
+                    "evaluated_at": "2026-09-22T00:00:00Z",
+                    "answer_status": "answered",
+                    "relevance": 2,
+                    "faithfulness": 2,
+                    "citation_correctness": 1,
+                    "abstention_correctness": None,
+                    "fixture_checksum": checksum,
+                    "corpus_checksum": checksum,
+                    "embedding_manifest_id": "local:model@r1",
+                    "generation_model": "test-generator",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    cli.main(["rag-evaluation-summary", "--input", str(source), "--output", str(output)])
+
+    printed = json.loads(capsys.readouterr().out)
+    written = json.loads(output.read_text(encoding="utf-8"))
+    assert printed == written
+    assert written["evaluation_count"] == 1
+    assert written["relevance_mean"] == 2.0
+    assert "answer" not in written
+
+
+def test_rag_evaluation_summary_fails_without_traceback(tmp_path, capsys) -> None:
+    source = tmp_path / "broken.json"
+    source.write_text("{not-json", encoding="utf-8")
+
+    with pytest.raises(SystemExit) as error:
+        cli.main(["rag-evaluation-summary", "--input", str(source)])
+
+    assert error.value.code == 2
+    assert capsys.readouterr().err.startswith("RAG evaluation summary failed:")
 
 
 def test_fixture_loading_reports_malformed_json_without_traceback(tmp_path, capsys) -> None:

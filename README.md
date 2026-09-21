@@ -89,6 +89,18 @@ ingest edilmez ve corpus checksum'ına dahil edilmez.
 4. Vektörleri Qdrant koleksiyonunda, payload filtrelerini indeksleyerek sakla.
 5. Önce exact/ground-truth arama ile ölç, sonra HNSW parametrelerini optimize et.
 
+RAG cevapları için ham soru/cevap/source metni saklamayan insan değerlendirme
+artifact'ini doğrulamak ve özetlemek için:
+
+```powershell
+uv run vdb rag-evaluation-summary `
+  --input data/benchmarks/rag-evaluations.json `
+  --output data/benchmarks/results/rag-evaluation-summary.json
+```
+
+Bu komut embedding sağlayıcısı veya Qdrant başlatmaz; yalnızca şema, duplicate
+`query_id` ve provenance tutarlılığını kontrol eder.
+
 ## Dokümanlar
 
 - [Geliştirme roadmap'i](docs/roadmap.md)

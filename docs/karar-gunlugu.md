@@ -1,5 +1,14 @@
 # Karar günlüğü
 
+## 2026-09-22 — RAG evaluation özeti için offline CLI sınırı
+
+İnsan değerlendirme artifact'inin yalnızca Python API'siyle kullanılabilmesi
+operasyonel incelemeyi gereksiz yere Qdrant ve embedding bağımlılığına bağlıyordu.
+`rag-evaluation-summary` komutu loader/summary sözleşmesini yeniden kullanıyor,
+Qdrant veya provider başlatmadan şema, duplicate kimlik ve provenance
+tutarlılığını kontrol ediyor. Çıktı ham soru, cevap veya kaynak metni içermez;
+final 300+ değerlendirme sonucunun yerine geçmez.
+
 ## 2026-09-22 — Satır tabanlı parser bellek iyileştirmesi
 
 JSONL/NDJSON ve CSV parser'ları önce tüm kaynak dosyasını string olarak belleğe

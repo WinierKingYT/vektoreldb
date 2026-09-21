@@ -136,6 +136,11 @@ Ham cevap, kaynak metni, sorgu metni veya serbest not alanı artifact'e alınmaz
 yanlışlıkla tek özette birleştirilmesini reddeder. Bu özet insan yargısının
 kanıtıdır; otomatik factuality veya faithfulness üretmez.
 
+Bu artifact'i Qdrant veya embedding başlatmadan kontrol etmek için `vdb
+rag-evaluation-summary --input <evaluations.json> --output <summary.json>`
+komutu kullanılabilir. Komut yalnızca privacy-safe özeti stdout'a ve seçilen
+çıktı dosyasına yazar; ham değerlendirme metni üretmez.
+
 ## RAG entegrasyon rollback'u
 
 RAG adapter'ı bozulursa vector DB retrieval endpoint'i bağımsız çalışmaya devam

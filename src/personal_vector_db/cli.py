@@ -35,6 +35,7 @@ from .corpus import (
 from .embeddings import create_embedding_provider
 from .ingest import IngestService, validate_document_id
 from .planner import SelectivityQueryPlanner
+from .rag import load_rag_answer_evaluations, summarize_rag_answer_evaluations
 from .reranking import LexicalOverlapReranker
 from .retrieval import RetrievalService
 from .storage import (
@@ -152,6 +153,12 @@ def build_parser() -> argparse.ArgumentParser:
     ingest_dir.add_argument("path", type=Path)
     delete = subparsers.add_parser("delete", help="delete all chunks for a document")
     delete.add_argument("document_id")
+    rag_evaluation = subparsers.add_parser(
+        "rag-evaluation-summary",
+        help="validate and summarize privacy-safe human RAG evaluations",
+    )
+    rag_evaluation.add_argument("--input", type=Path, required=True)
+    rag_evaluation.add_argument("--output", type=Path)
     reindex = subparsers.add_parser("reindex", help="replace a document's indexed chunks")
     reindex.add_argument("path", type=Path)
     reindex.add_argument("--document-id")
@@ -271,6 +278,19 @@ def main(argv: list[str] | None = None) -> None:
         finally:
             store.close()
         print(f"deleted document={args.document_id}")
+        return
+    if args.command == "rag-evaluation-summary":
+        try:
+            evaluations = load_rag_answer_evaluations(args.input)
+            summary = summarize_rag_answer_evaluations(evaluations)
+        except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+            print(f"RAG evaluation summary failed: {error}", file=sys.stderr)
+            raise SystemExit(2) from None
+        encoded = json.dumps(summary, ensure_ascii=False, sort_keys=True)
+        if args.output is not None:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(encoded + "\n", encoding="utf-8")
+        print(encoded)
         return
     if args.command == "fixture-validate":
         cases = _load_fixture_or_exit(args.fixture)
