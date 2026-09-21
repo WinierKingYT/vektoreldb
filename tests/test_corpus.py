@@ -10,6 +10,7 @@ from personal_vector_db.corpus import (
     count_excluded_files,
     inventory_sources,
     read_corpus_manifest,
+    summarize_corpus_inventory,
     summarize_unsupported_files,
     write_corpus_inventory,
     write_corpus_manifest,
@@ -309,3 +310,22 @@ def test_corpus_manifest_persists_format_failure_and_duplicate_summary(tmp_path:
     assert manifest["format_counts"] == {".jsonl": 2, ".md": 1}
     assert manifest["failure_types"] == {}
     assert manifest["duplicate_count"] == 1
+
+
+def test_corpus_quality_summary_is_format_level_and_privacy_safe(tmp_path: Path) -> None:
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "note.md").write_text("note", encoding="utf-8")
+    broken = root / "too-large.md"
+    broken.write_bytes(b"x" * 10_000_001)
+
+    report = summarize_corpus_inventory(inventory_sources(root))
+
+    assert report["source_count"] == 2
+    assert report["parsed_source_count"] == 1
+    assert report["failed_source_count"] == 1
+    assert report["formats"][".md"]["parsed_count"] == 1
+    assert report["formats"][".md"]["failed_count"] == 1
+    assert report["formats"][".md"]["failure_types"] == {"ValueError": 1}
+    assert "relative_path" not in json.dumps(report)
+    assert "content_hash" not in json.dumps(report)

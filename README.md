@@ -101,6 +101,17 @@ uv run vdb rag-evaluation-summary `
 Bu komut embedding sağlayıcısı veya Qdrant başlatmaz; yalnızca şema, duplicate
 `query_id` ve provenance tutarlılığını kontrol eder.
 
+Inventory oluşturulduktan sonra format bazlı extraction kalite özetini almak için:
+
+```powershell
+uv run vdb corpus-quality `
+  --inventory data/derived/corpus-inventory.json `
+  --output data/derived/corpus-quality-report.json
+```
+
+Kalite raporu yalnızca sayım, byte/karakter/chunk toplamı, parser sürümü ve hata
+sınıfı taşır; kaynak yolu, hash, chunk kimliği ve metin taşımaz.
+
 ## Dokümanlar
 
 - [Geliştirme roadmap'i](docs/roadmap.md)

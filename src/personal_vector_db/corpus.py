@@ -179,6 +179,94 @@ def write_corpus_inventory(
     return records
 
 
+def summarize_corpus_inventory(records: list[dict[str, object]]) -> dict[str, object]:
+    """Build a privacy-safe, format-level extraction quality report.
+
+    The report intentionally contains only counts, byte/character totals,
+    parser versions, and error class names.  Relative paths, hashes, chunk
+    identifiers, and source text stay in the inventory and never cross this
+    aggregation boundary.
+    """
+
+    if not isinstance(records, list):
+        raise ValueError("corpus inventory must be a list")
+    by_suffix: dict[str, list[dict[str, object]]] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            raise ValueError("corpus inventory records must be objects")
+        suffix = record.get("suffix")
+        if not isinstance(suffix, str) or not suffix:
+            raise ValueError("corpus inventory record has an invalid suffix")
+        by_suffix.setdefault(suffix, []).append(record)
+
+    def format_summary(rows: list[dict[str, object]]) -> dict[str, object]:
+        parsed = [row for row in rows if row.get("status") == "parsed"]
+        failures = Counter(
+            str(row["error_type"])
+            for row in rows
+            if row.get("status") == "failed" and row.get("error_type")
+        )
+        return {
+            "source_count": len(rows),
+            "parsed_count": len(parsed),
+            "failed_count": len(rows) - len(parsed),
+            "empty_extraction_count": sum(
+                row.get("extraction_status") == "empty" for row in rows
+            ),
+            "duplicate_count": sum(bool(row.get("duplicate_of")) for row in rows),
+            "total_bytes": sum(int(row.get("byte_size", 0)) for row in rows),
+            "total_extracted_chars": sum(
+                int(row.get("extracted_char_count", 0)) for row in parsed
+            ),
+            "total_chunks": sum(int(row.get("chunk_count", 0)) for row in parsed),
+            "parser_versions": sorted(
+                {str(row["parser_version"]) for row in parsed if row.get("parser_version")}
+            ),
+            "failure_types": dict(sorted(failures.items())),
+        }
+
+    report: dict[str, object] = {
+        "schema_version": "corpus-quality-report-v1",
+        "source_count": len(records),
+        "parsed_source_count": sum(row.get("status") == "parsed" for row in records),
+        "failed_source_count": sum(row.get("status") == "failed" for row in records),
+        "empty_extraction_count": sum(
+            row.get("extraction_status") == "empty" for row in records
+        ),
+        "duplicate_count": sum(bool(row.get("duplicate_of")) for row in records),
+        "total_bytes": sum(int(row.get("byte_size", 0)) for row in records),
+        "total_extracted_chars": sum(
+            int(row.get("extracted_char_count", 0))
+            for row in records
+            if row.get("status") == "parsed"
+        ),
+        "total_chunks": sum(
+            int(row.get("chunk_count", 0))
+            for row in records
+            if row.get("status") == "parsed"
+        ),
+        "formats": {
+            suffix: format_summary(rows) for suffix, rows in sorted(by_suffix.items())
+        },
+        "privacy_classification": "private-local",
+    }
+    validate_schema(report, "corpus-quality-report.schema.json")
+    return report
+
+
+def write_corpus_quality_report(inventory_path: Path, output: Path) -> dict[str, object]:
+    """Read an inventory and write its privacy-safe quality aggregation."""
+
+    try:
+        raw = json.loads(inventory_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("corpus inventory could not be read") from error
+    report = summarize_corpus_inventory(raw)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    return report
+
+
 def read_corpus_manifest(path: Path) -> dict[str, object]:
     """Read a validated, text-free corpus manifest for backup provenance."""
 

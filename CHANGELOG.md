@@ -6,6 +6,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 - JSONL/NDJSON ve CSV parser'ları ham dosyayı önce tam string'e kopyalamadan
   satır/row akışıyla okuyacak şekilde iyileştirildi; kanonik çıktı/provenance değişmedi.
+- Inventory kayıtlarından kaynak yolu, hash ve chunk kimliği taşımadan format bazlı
+  extraction kalite özeti üreten `corpus-quality` CLI komutu ve şeması eklendi.
 - RAG için ham cevap/source metni taşımayan, provenance'a bağlı insan evaluation
   schema'sı ve privacy-safe özetleyici eklendi; otomatik factuality iddiası üretmez.
 - Bu evaluation artifact'i Qdrant/embedding başlatmadan doğrulayıp özetleyen

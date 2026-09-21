@@ -1,5 +1,15 @@
 # Karar günlüğü
 
+## 2026-09-22 — Format bazlı corpus kalite özeti
+
+Inventory zaten toplam kaynak/chunk/hata bilgisi üretiyordu; ancak gerçek kişisel
+corpus final incelemesinde PDF/DOCX/HTML gibi formatların ayrı başarı ve boşluk
+durumlarını karşılaştırmak için format bazlı, privacy-safe bir artifact gerekiyordu.
+`corpus-quality` yalnızca inventory'den sayım, byte/karakter/chunk toplamı, parser
+sürümü ve hata sınıfı üretir. Kaynak yolu, content hash, chunk ID ve metin rapora
+girmez. Bu rapor extraction kalitesini gözden geçirmeyi kolaylaştırır; runtime,
+peak-RAM veya insan doğrulamasının yerine geçmez.
+
 ## 2026-09-22 — RAG evaluation özeti için offline CLI sınırı
 
 İnsan değerlendirme artifact'inin yalnızca Python API'siyle kullanılabilmesi

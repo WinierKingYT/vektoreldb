@@ -31,6 +31,7 @@ from .corpus import (
     summarize_unsupported_files,
     write_corpus_inventory,
     write_corpus_manifest,
+    write_corpus_quality_report,
 )
 from .embeddings import create_embedding_provider
 from .ingest import IngestService, validate_document_id
@@ -240,6 +241,15 @@ def build_parser() -> argparse.ArgumentParser:
     corpus_inventory.add_argument(
         "--manifest", type=Path, default=Path("data/manifests/corpus-manifest.json")
     )
+    corpus_quality = subparsers.add_parser(
+        "corpus-quality", help="summarize inventory extraction quality by format"
+    )
+    corpus_quality.add_argument(
+        "--inventory", type=Path, default=Path("data/derived/corpus-inventory.json")
+    )
+    corpus_quality.add_argument(
+        "--output", type=Path, default=Path("data/derived/corpus-quality-report.json")
+    )
     search = subparsers.add_parser("search", help="search indexed chunks")
     search.add_argument("query")
     search.add_argument("--limit", type=int, default=8)
@@ -291,6 +301,14 @@ def main(argv: list[str] | None = None) -> None:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(encoded + "\n", encoding="utf-8")
         print(encoded)
+        return
+    if args.command == "corpus-quality":
+        try:
+            report = write_corpus_quality_report(args.inventory, args.output)
+        except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
+            print(f"corpus quality report failed: {error}", file=sys.stderr)
+            raise SystemExit(2) from None
+        print(json.dumps(report, ensure_ascii=False, sort_keys=True))
         return
     if args.command == "fixture-validate":
         cases = _load_fixture_or_exit(args.fixture)

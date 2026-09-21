@@ -68,6 +68,9 @@ def test_cli_parser_supports_core_commands() -> None:
     inventory_args = build_parser().parse_args(["corpus-inventory"])
     assert inventory_args.output.as_posix() == "data/derived/corpus-inventory.json"
     assert inventory_args.manifest.as_posix() == "data/manifests/corpus-manifest.json"
+    quality_args = build_parser().parse_args(["corpus-quality"])
+    assert quality_args.inventory.as_posix() == "data/derived/corpus-inventory.json"
+    assert quality_args.output.as_posix() == "data/derived/corpus-quality-report.json"
 
 
 def test_cli_configures_utf8_output(monkeypatch) -> None:
