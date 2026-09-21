@@ -321,9 +321,17 @@ def main(argv: list[str] | None = None) -> None:
         root = args.root or settings.data_dir / "sources"
         excluded_count = count_excluded_files(root)
         unsupported_suffixes = summarize_unsupported_files(root)
-        records = write_corpus_inventory(
-            root, args.output, max_source_bytes=settings.source_max_bytes
-        )
+        try:
+            records = write_corpus_inventory(
+                root,
+                args.output,
+                max_source_bytes=settings.source_max_bytes,
+                max_files=settings.source_max_files,
+                max_total_bytes=settings.source_max_total_bytes,
+            )
+        except (OSError, ValueError, TypeError) as error:
+            print(f"corpus inventory failed: {error}", file=sys.stderr)
+            raise SystemExit(2) from None
         manifest = write_corpus_manifest(root, records, args.manifest)
         parsed_count = sum(record.get("status") == "parsed" for record in records)
         failed_count = sum(record.get("status") == "failed" for record in records)

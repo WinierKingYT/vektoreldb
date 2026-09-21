@@ -391,6 +391,36 @@ def test_corpus_inventory_cli_prints_privacy_safe_quality_summary(tmp_path, caps
     assert "failure_types=none" in message
 
 
+def test_corpus_inventory_cli_rejects_over_budget_before_writing(
+    tmp_path, monkeypatch, capsys
+) -> None:
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "one.md").write_text("one", encoding="utf-8")
+    (root / "two.md").write_text("two", encoding="utf-8")
+    output = tmp_path / "inventory.json"
+    manifest = tmp_path / "corpus.json"
+    monkeypatch.setenv("VDB_SOURCE_MAX_FILES", "1")
+
+    with pytest.raises(SystemExit) as error:
+        cli.main(
+            [
+                "corpus-inventory",
+                "--root",
+                str(root),
+                "--output",
+                str(output),
+                "--manifest",
+                str(manifest),
+            ]
+        )
+
+    assert error.value.code == 2
+    assert "corpus inventory failed" in capsys.readouterr().err
+    assert not output.exists()
+    assert not manifest.exists()
+
+
 def test_fixture_coverage_cli_writes_privacy_safe_report(tmp_path, capsys) -> None:
     fixture = tmp_path / "queries.json"
     fixture.write_text(

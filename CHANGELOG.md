@@ -4,9 +4,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
-- `ingest-dir` için varsayılan 5.000 desteklenen dosya ve 1 GB toplam kaynak
-  byte admission cap'i tanımlandı; limit aşılırsa batch ilk embedding/store
-  yazımından önce reddedilir. Değerler ayarlanabilir ve kapasite garantisi değildir.
+- `ingest-dir` ve corpus inventory için varsayılan 5.000 desteklenen dosya ve
+  1 GB toplam kaynak byte admission cap'i tanımlandı; limit aşılırsa batch ilk
+  embedding/store yazımından veya inventory parse/yazımından önce reddedilir.
+  Değerler ayarlanabilir ve kapasite garantisi değildir.
 - 300+ kişisel benchmark için relevance yargılama protokolü eklendi: binary
   chunk kanıtı, farklı retrieval yollarından aday pooling'i, gerçek corpus-negative
   kontrolü ve single-annotator kör tekrar incelemesi. Mevcut 66 label'ın hiçbiri

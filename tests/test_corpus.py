@@ -1,11 +1,14 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from personal_vector_db.corpus import (
     count_excluded_files,
     inventory_sources,
     read_corpus_manifest,
     summarize_unsupported_files,
+    write_corpus_inventory,
     write_corpus_manifest,
 )
 
@@ -49,6 +52,45 @@ def test_inventory_classifies_a_large_source_without_reading_source_text(
     records = inventory_sources(root)
 
     assert records[0]["size_bucket"] == "large"
+    assert records[0]["status"] == "parsed"
+
+
+def test_inventory_file_limit_rejects_before_parsing_or_writing(tmp_path: Path) -> None:
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "a.md").write_text("first", encoding="utf-8")
+    (root / "b.md").write_text("second", encoding="utf-8")
+    output = tmp_path / "inventory.json"
+
+    with pytest.raises(ValueError, match="source file limit"):
+        write_corpus_inventory(root, output, max_files=1)
+
+    assert not output.exists()
+
+
+def test_inventory_total_bytes_limit_rejects_before_parsing_or_writing(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "a.md").write_text("first", encoding="utf-8")
+    (root / "b.md").write_text("second", encoding="utf-8")
+    output = tmp_path / "inventory.json"
+
+    with pytest.raises(ValueError, match="total source bytes limit"):
+        write_corpus_inventory(root, output, max_total_bytes=10)
+
+    assert not output.exists()
+
+
+def test_inventory_includes_exact_total_bytes_boundary(tmp_path: Path) -> None:
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "note.md").write_text("12345", encoding="utf-8")
+
+    records = inventory_sources(root, max_total_bytes=5)
+
+    assert len(records) == 1
     assert records[0]["status"] == "parsed"
 
 

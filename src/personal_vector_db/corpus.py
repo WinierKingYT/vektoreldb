@@ -48,7 +48,13 @@ def summarize_unsupported_files(root: Path) -> dict[str, int]:
     return dict(sorted(suffixes.items()))
 
 
-def inventory_sources(root: Path, *, max_source_bytes: int = 10_000_000) -> list[dict[str, object]]:
+def inventory_sources(
+    root: Path,
+    *,
+    max_source_bytes: int = 10_000_000,
+    max_files: int = 5_000,
+    max_total_bytes: int = 1_000_000_000,
+) -> list[dict[str, object]]:
     """Summarize supported local sources without returning source text."""
 
     resolved_root = root.resolve()
@@ -56,14 +62,34 @@ def inventory_sources(root: Path, *, max_source_bytes: int = 10_000_000) -> list
         raise ValueError("corpus root is not a directory")
     if max_source_bytes < 1:
         raise ValueError("max_source_bytes must be positive")
-    records: list[dict[str, object]] = []
-    for path in sorted(resolved_root.rglob("*")):
+    if isinstance(max_files, bool) or not isinstance(max_files, int) or max_files < 1:
+        raise ValueError("max_files must be a positive integer")
+    if (
+        isinstance(max_total_bytes, bool)
+        or not isinstance(max_total_bytes, int)
+        or max_total_bytes < 1
+    ):
+        raise ValueError("max_total_bytes must be a positive integer")
+
+    paths: list[Path] = []
+    total_source_bytes = 0
+    for path in resolved_root.rglob("*"):
         if (
             not path.is_file()
             or is_excluded_directory(path, resolved_root)
             or path.suffix.lower() not in SUPPORTED_SUFFIXES
         ):
             continue
+        if len(paths) >= max_files:
+            raise ValueError("corpus exceeds the configured source file limit")
+        source_size = path.stat().st_size
+        if total_source_bytes + source_size > max_total_bytes:
+            raise ValueError("corpus exceeds the configured total source bytes limit")
+        total_source_bytes += source_size
+        paths.append(path)
+
+    records: list[dict[str, object]] = []
+    for path in sorted(paths):
         relative_path = path.relative_to(resolved_root).as_posix()
         record: dict[str, object] = {
             "relative_path": relative_path,
@@ -133,11 +159,21 @@ def inventory_sources(root: Path, *, max_source_bytes: int = 10_000_000) -> list
 
 
 def write_corpus_inventory(
-    root: Path, output: Path, *, max_source_bytes: int = 10_000_000
+    root: Path,
+    output: Path,
+    *,
+    max_source_bytes: int = 10_000_000,
+    max_files: int = 5_000,
+    max_total_bytes: int = 1_000_000_000,
 ) -> list[dict[str, object]]:
     """Write deterministic inventory JSON; never include parsed source text."""
 
-    records = inventory_sources(root, max_source_bytes=max_source_bytes)
+    records = inventory_sources(
+        root,
+        max_source_bytes=max_source_bytes,
+        max_files=max_files,
+        max_total_bytes=max_total_bytes,
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
     return records
