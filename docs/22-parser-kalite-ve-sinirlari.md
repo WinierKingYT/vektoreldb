@@ -2,7 +2,7 @@
 
 ## Başlangıç sınırları
 
-Kaynak dosyası sınırı dosya başına 10 MB'dir (`validate_source_path`). Parser için ayrı bir çalışma zamanı timeout'u ve OCR katmanı henüz uygulanmaz. Desteklenen suffix'ler `.md`, `.markdown`, `.txt`, `.org`, `.rst`, `.log`, `.tex`, `.ics`, `.pdf`, `.docx`, `.html`, `.htm`, `.eml`, `.json`, `.jsonl`, `.ndjson`, `.yaml`, `.yml`, `.rtf`, `.csv` ve `.xml`'dir; bilinmeyen suffix açık hata ile reddedilir. `.org`, `.rst`, `.log`, `.tex` ve `.ics` dosyaları ek semantik yorumlama yapmadan güvenli plain-text parser'a yönlendirilir; `.ics` için takvim alanı ayrıştırma/normalizasyon garantisi yoktur. PDF metadata title'ı ve DOCX core-properties title'ı varsa belge başlığına taşınır. DOCX Heading1–Heading6 stilleri `heading_path` metadata'sına taşınır; karmaşık tablo/sütun yerleşimi ve PDF OCR kalite garantisi verilmez.
+Kaynak dosyası sınırı dosya başına 10 MB'dir (`validate_source_path`). Parser için ayrı bir çalışma zamanı timeout'u ve OCR katmanı henüz uygulanmaz. Desteklenen suffix'ler `.md`, `.markdown`, `.txt`, `.org`, `.rst`, `.log`, `.tex`, `.ics`, `.pdf`, `.docx`, `.html`, `.htm`, `.eml`, `.json`, `.jsonl`, `.ndjson`, `.yaml`, `.yml`, `.toml`, `.rtf`, `.csv` ve `.xml`'dir; bilinmeyen suffix açık hata ile reddedilir. `.org`, `.rst`, `.log`, `.tex` ve `.ics` dosyaları ek semantik yorumlama yapmadan güvenli plain-text parser'a yönlendirilir; `.ics` için takvim alanı ayrıştırma/normalizasyon garantisi yoktur. PDF metadata title'ı ve DOCX core-properties title'ı varsa belge başlığına taşınır. DOCX Heading1–Heading6 stilleri `heading_path` metadata'sına taşınır; karmaşık tablo/sütun yerleşimi ve PDF OCR kalite garantisi verilmez.
 Corpus inventory de aynı 10 MB ve kaynak-kökü sınırını uygular; büyük, dışarı
 taşan veya okunamayan destekli dosyayı tüm taramayı durdurmadan `failed` kaydıyla
 raporlar. Bu kayıtlarda içerik hash'i üretilmez.
@@ -25,6 +25,10 @@ ve DOCX/PDF iç sınırlar yine ayrıca uygulanır.
 - YAML/YML: tek YAML belgesi; UTF-8 BOM desteklenir; `yaml.safe_load` ile
   veri olarak okunur ve deterministik, sıralı JSON metnine dönüştürülür.
   Çoklu YAML belgeleri ve Python nesnesi tag'leri desteklenmez.
+
+- TOML (`toml-v1`): tek TOML belgesi `tomllib` ile okunur ve deterministik,
+  sıralı JSON metnine dönüştürülür. Yorumlar ve biçimlendirme korunmaz; TOML
+  tablo/anahtar konumu `location.record=1` olan tek bölümde temsil edilir.
 
 - RTF: Temel kontrol kelimeleri, paragraf/satır sonları, sekme, Unicode ve cp1252
   hex kaçışları metne dönüştürülür. Gömülü resim/nesne, makro, font tablosu ve

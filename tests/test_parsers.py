@@ -91,6 +91,23 @@ def test_yaml_parser_rejects_python_object_construction(tmp_path: Path) -> None:
         parse_source(yaml_path)
 
 
+def test_toml_parser_is_safe_and_deterministic(tmp_path: Path) -> None:
+    toml_path = tmp_path / "settings.toml"
+    toml_path.write_text(
+        '[owner]\nname = "Ada"\n[project]\nversion = "1.0"\n',
+        encoding="utf-8",
+    )
+
+    document = parse_source(toml_path)
+
+    assert document.source_type == "toml"
+    assert document.parser_version == "toml-v1"
+    assert document.sections[0].text == (
+        '{"owner": {"name": "Ada"}, "project": {"version": "1.0"}}'
+    )
+    assert document.sections[0].location == {"record": 1}
+
+
 def test_rtf_parser_extracts_text_and_unicode_without_interpreting_controls(
     tmp_path: Path,
 ) -> None:

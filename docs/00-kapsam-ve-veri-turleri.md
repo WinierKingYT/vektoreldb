@@ -21,13 +21,13 @@
 | PDF | İlk parser dilimi | Sayfa bazlı metin | OCR ve karmaşık tablo/sütun düzeni yok |
 | DOCX | İlk parser dilimi | Paragraf metni | Tablolar ve tam stil/konum korunmaz |
 | HTML | İlk parser dilimi | Görünür metin | Script/style/navigasyon alanları atılır |
-| JSON/JSONL/NDJSON/YAML/CSV/XML | İlk parser dilimi | Kayıt, satır veya XML leaf-node metni | Alan adları embedding metnine dahil edilir; JSONL/NDJSON satır konumu, YAML deterministik kaydı ve XML node yolu korunur |
+| JSON/JSONL/NDJSON/YAML/TOML/CSV/XML | İlk parser dilimi | Kayıt, satır veya XML leaf-node metni | Alan adları embedding metnine dahil edilir; JSONL/NDJSON satır konumu, YAML/TOML deterministik kaydı ve XML node yolu korunur |
 | XLSX | 2 | Tablo/kayıt | Hücre bağlamı ve hesaplanmış değer politikası gerekir |
 | Kod | 2 | Fonksiyon/sınıf parçaları | Dil, dosya ve sembol metadata'sı gerekir |
 | Görsel/taranmış PDF | 3 | OCR veya multimodal metin | OCR kalite eşiği zorunlu |
 
 Mevcut geliştirme diliminde Markdown/TXT ve kişisel plain-text alias'larına (`.org`, `.rst`, `.log`, `.tex`, `.ics`) ek olarak PDF, DOCX, HTML, EML, JSON,
-JSONL/NDJSON, YAML/YML, RTF, CSV ve XML için suffix-tabanlı parser dispatch'i eklendi. XLSX, görsel, ses/video
+JSONL/NDJSON, YAML/YML, TOML, RTF, CSV ve XML için suffix-tabanlı parser dispatch'i eklendi. XLSX, görsel, ses/video
 ve özel kod araması daha sonraki adaylardır; desteklenmeyen dosya sessizce
 atlanmaz, açık bir “desteklenmiyor” durumu üretir.
 

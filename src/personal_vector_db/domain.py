@@ -21,7 +21,7 @@ class CanonicalDocument(BaseModel):
     source_uri: str = Field(min_length=1)
     source_type: Literal[
         "markdown", "text", "pdf", "docx", "html", "json", "jsonl", "yaml",
-        "rtf", "csv", "email", "xml"
+        "toml", "rtf", "csv", "email", "xml"
     ]
     title: str = ""
     owner_id: Literal["me"] = "me"

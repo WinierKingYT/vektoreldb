@@ -1,5 +1,15 @@
 # Karar günlüğü
 
+## 2026-09-22 — TOML yapılandırılmış kaynak desteği
+
+Kişisel corpus'larda ayar ve proje metadata'sı sık görüldüğü için ek bağımlılık
+getirmeyen Python `tomllib` ile TOML dispatch'i eklendi. Parser, kod çalıştırmadan
+tek belgeyi sıralı JSON metnine dönüştürüyor ve `toml-v1` provenance'ı taşıyor;
+yorumlar, biçimlendirme ve tablo satır konumu bilinçli olarak korunmuyor. `toml`
+source type'ı canonical document/chunk schema'larına eklendi. Rollback, TOML
+suffix dispatch'ini ve ilgili enum üyelerini birlikte geri almaktır; mevcut
+formatların parser sürümleri değişmez.
+
 ## 2026-09-22 — Concurrency warm-up sözleşmesi
 
 Cold ve warm kapasite koşullarını aynı primitive ile ayırabilmek için

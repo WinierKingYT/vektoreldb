@@ -83,6 +83,14 @@ PyMuPDF metin çıkarabilir; ancak düz metin çıktısı her zaman okuyucunun b
 - Alan adlarını metne bağlam ekleyecek biçimde kullan.
 - Çok yüksek cardinality veya sır niteliğinde alanları embedding'e sokma.
 
+## TOML
+
+- Tek TOML belgesi `tomllib` ile yalnızca veri olarak okunur; kod çalıştırılmaz.
+- Anahtarları korunmuş, sıralı JSON metni olarak tek kanonik bölüm üretilir ve
+  `location.record=1` ile provenance tutulur.
+- TOML yorumları, biçimlendirme ve tablo/satır özgü konumlar korunmaz; parser
+  sürümü `toml-v1` değişirse kaynak yeniden indekslenmelidir.
+
 ## EML
 
 - Konu başlığını belge başlığı olarak koru.

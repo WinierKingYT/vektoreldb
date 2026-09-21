@@ -6,6 +6,7 @@ import io
 import json
 import re
 import stat
+import tomllib
 import zipfile
 from datetime import UTC, datetime
 from email import policy
@@ -333,6 +334,19 @@ def _parse_yaml(path: Path) -> CanonicalDocument:
     return _document(path, "yaml", sections, parser_version="yaml-v1")
 
 
+def _parse_toml(path: Path) -> CanonicalDocument:
+    """Parse one TOML document into deterministic JSON text without execution."""
+
+    value = tomllib.loads(_read_utf8_text(path))
+    sections = [
+        Section(
+            text=json.dumps(value, ensure_ascii=False, sort_keys=True, default=str),
+            location={"record": 1},
+        )
+    ]
+    return _document(path, "toml", sections, parser_version="toml-v1")
+
+
 def _parse_rtf(path: Path) -> CanonicalDocument:
     """Extract readable text from basic RTF without interpreting embedded objects."""
 
@@ -544,6 +558,8 @@ def parse_source_file(
         return _parse_json(path)
     if suffix in {".yaml", ".yml"}:
         return _parse_yaml(path)
+    if suffix == ".toml":
+        return _parse_toml(path)
     if suffix == ".rtf":
         return _parse_rtf(path)
     if suffix in {".jsonl", ".ndjson"}:

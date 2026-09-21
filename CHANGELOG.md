@@ -4,6 +4,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- TOML kaynakları `tomllib` tabanlı `toml-v1` deterministic parser ve kanonik
+  `source_type=toml` sözleşmesiyle desteklendi; yorum/biçimlendirme provenance'a
+  alınmaz ve mevcut dense/RAG akışı değişmez.
 - Concurrency probe ve matrix için ölçüm dışı, bounded `warmup-repetitions` desteği
   eklendi; cold/warm koşulları ayrıştırılabilir ve warm-up sayısı artifact provenance'ında tutulur.
 - `fixture-validate` final kabulinde label dosyası ve güncel corpus manifesti

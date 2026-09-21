@@ -7,7 +7,7 @@ SUPPORTED_SUFFIXES = frozenset(
     {
         ".md", ".markdown", ".txt", ".org", ".rst", ".log", ".tex", ".ics",
         ".pdf", ".docx", ".html", ".htm",
-        ".json", ".jsonl", ".ndjson", ".yaml", ".yml", ".rtf", ".csv", ".eml", ".xml",
+        ".json", ".jsonl", ".ndjson", ".yaml", ".yml", ".toml", ".rtf", ".csv", ".eml", ".xml",
     }
 )
 

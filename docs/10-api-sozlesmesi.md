@@ -7,7 +7,7 @@ Bu sözleşme uygulama katmanı ile retrieval/indexing katmanlarını ayırır. 
 `POST /v1/documents:ingest`
 
 İstek: `file_ref` desteklenir. Kaynak dosya, izin verilen source root altında
-`.md`, `.markdown`, `.txt`, `.org`, `.rst`, `.log`, `.tex`, `.ics`, `.pdf`, `.docx`, `.html`, `.htm`, `.eml`, `.json`, `.jsonl`, `.ndjson` veya `.csv`
+`.md`, `.markdown`, `.txt`, `.org`, `.rst`, `.log`, `.tex`, `.ics`, `.pdf`, `.docx`, `.html`, `.htm`, `.eml`, `.json`, `.jsonl`, `.ndjson`, `.yaml`, `.yml`, `.toml`, `.rtf`, `.csv` veya `.xml`
 olmalıdır. Dosya boyutu ve parser kalite sınırları [parser kalite standardı](22-parser-kalite-ve-sinirlari.md)
 ile belirlenir.
 
