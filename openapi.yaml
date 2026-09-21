@@ -1,0 +1,175 @@
+openapi: 3.1.0
+info:
+  title: Personal Vector Database API
+  version: 0.1.0
+  description: Personal document ingestion and retrieval API; retrieval mode is server-configured.
+servers:
+  - url: http://localhost:8000
+paths:
+  /v1/health:
+    get:
+      operationId: health
+      responses:
+        '200':
+          description: Vector database health status
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string, enum: [ok, unavailable] }
+  /v1/documents:ingest:
+    post:
+      operationId: ingestDocument
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestRequest'
+      responses:
+        '202':
+          description: Document indexed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '413': { $ref: '#/components/responses/PayloadTooLarge' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /v1/search:
+    post:
+      operationId: search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /v1/documents/{document_id}:
+    parameters:
+      - $ref: '#/components/parameters/DocumentId'
+    delete:
+      operationId: deleteDocument
+      responses:
+        '202': { description: Deletion accepted }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /v1/documents/{document_id}:reindex:
+    post:
+      operationId: reindexDocument
+      parameters:
+        - $ref: '#/components/parameters/DocumentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestRequest'
+      responses:
+        '202':
+          description: Document reindexed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+components:
+  parameters:
+    DocumentId:
+      name: document_id
+      in: path
+      required: true
+      schema: { type: string }
+  schemas:
+    IngestRequest:
+      type: object
+      additionalProperties: false
+      required: [file_ref]
+      properties:
+        file_ref: { type: string, minLength: 1, maxLength: 4096 }
+    IngestResponse:
+      type: object
+      required: [document_id, status, chunk_count, embedding_manifest_id]
+      properties:
+        document_id: { type: string }
+        status: { enum: [indexed] }
+        chunk_count: { type: integer, minimum: 1 }
+        embedding_manifest_id: { type: string }
+    SearchRequest:
+      type: object
+      additionalProperties: false
+      required: [query]
+      properties:
+        query: { type: string, minLength: 1, maxLength: 4000 }
+        top_k: { type: integer, minimum: 1, maximum: 50, default: 8 }
+        min_score: { type: number, minimum: -1, maximum: 1, nullable: true }
+        document_ids: { type: array, maxItems: 100, items: { type: string } }
+        source_uris: { type: array, maxItems: 100, items: { type: string } }
+        source_types: { type: array, maxItems: 10, items: { type: string } }
+        titles: { type: array, maxItems: 100, items: { type: string } }
+        rerank: { type: boolean, default: false }
+    SearchResponse:
+      type: object
+      required: [query, results]
+      properties:
+        query: { type: string }
+        results: { type: array, items: { $ref: '#/components/schemas/SearchResult' } }
+        abstention_reason: { type: string, enum: [none, no_candidates, below_min_score] }
+        candidate_count: { type: integer, minimum: 0 }
+        threshold_rejected_count: { type: integer, minimum: 0 }
+    SearchResult:
+      type: object
+      required: [document_id, chunk_id, text, score, source_uri, title, location, heading_path, embedding_manifest_id, retrieval_stage, parser_version, document_status, security_flags]
+      properties:
+        document_id: { type: string }
+        chunk_id: { type: string }
+        text: { type: string }
+        score: { type: number }
+        source_uri: { type: string }
+        location: { type: object, additionalProperties: true }
+        heading_path: { type: array, items: { type: string } }
+        title: { type: string }
+        embedding_manifest_id: { type: string }
+        retrieval_stage: { type: string, enum: [dense, hybrid, late_interaction, dense+rerank, hybrid+rerank, late_interaction+rerank] }
+        parser_version: { type: string }
+        document_status: { type: string, enum: [active, archived, deleted, needs_review] }
+        security_flags: { type: array, items: { type: string } }
+    JobResponse:
+      type: object
+      required: [document_id, status]
+      properties:
+        document_id: { type: string }
+        status: { enum: [queued, processing, indexed, failed, needs_review] }
+        warnings: { type: array, items: { type: string } }
+    DocumentStatus:
+      type: object
+      required: [document_id, status]
+      properties:
+        document_id: { type: string }
+        status: { type: string }
+        chunk_count: { type: integer, minimum: 0 }
+    Error:
+      type: object
+      required: [code, message, retryable, request_id, details]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        retryable: { type: boolean }
+        request_id: { type: string }
+        details: { type: object, additionalProperties: true }
+  responses:
+    BadRequest: { description: Invalid request, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    ValidationError: { description: Request validation failed, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    NotFound: { description: Document not found, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    PayloadTooLarge: { description: Payload exceeds configured limit, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/personal-vector-chunk-payload.schema.json",
+  "title": "Personal Vector Chunk Payload",
+  "type": "object",
+  "required": ["document_id", "chunk_id", "chunk_index", "text", "owner_id", "document_status", "embedding_manifest_id", "chunking_version"],
+  "properties": {
+    "document_id": {"type": "string"},
+    "chunk_id": {"type": "string"},
+    "chunk_index": {"type": "integer", "minimum": 0},
+    "text": {"type": "string", "minLength": 1},
+    "heading_path": {"type": "array", "items": {"type": "string"}},
+    "location": {"type": "object", "additionalProperties": true},
+    "token_count": {"type": "integer", "minimum": 1},
+    "owner_id": {"const": "me"},
+    "document_status": {"enum": ["active", "archived", "deleted", "needs_review"]},
+    "embedding_manifest_id": {"type": "string"},
+    "chunking_version": {"type": "string"},
+    "source_uri": {"type": "string", "minLength": 1},
+    "source_type": {"enum": ["markdown", "text", "pdf", "docx", "html", "json", "jsonl", "yaml", "rtf", "csv", "email", "xml"]},
+    "title": {"type": "string"},
+    "content_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "parser_version": {"type": "string", "minLength": 1},
+    "security_flags": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

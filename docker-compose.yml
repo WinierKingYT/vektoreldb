@@ -1,0 +1,16 @@
+volumes:
+  qdrant_server_storage:
+  qdrant_server_snapshots:
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.0
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      # Keep server-mode data separate from the Docker-free local path.
+      - qdrant_server_storage:/qdrant/storage
+      # Persist snapshots and make them available for server-side file:// recovery.
+      - qdrant_server_snapshots:/qdrant/snapshots

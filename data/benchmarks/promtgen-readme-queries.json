@@ -1,0 +1,780 @@
+[
+  {
+    "query_id": "promt-q-001",
+    "text": "dağınık proje fikirlerini tasarım ve görevlere dönüştüren araç",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-002",
+    "text": "bireysel geliştiriciler için local-first proje tasarımı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-003",
+    "text": "PromtGen ana ürünü nedir",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-004",
+    "text": "Planner akışının aşamaları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-005",
+    "text": "Fikir Tasarımı aşaması ne işe yarar",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-006",
+    "text": "Çözüm Tasarımı adımı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-007",
+    "text": "Uygulama Planı aşamasının amacı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-008",
+    "text": "Agent Devri nasıl çalışır",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-009",
+    "text": "Labs hangi özellikleri sunar",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-010",
+    "text": "kod yürütme hangi bölümde isteğe bağlıdır",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-011",
+    "text": "mimari karşılaştırma nerede bulunur",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-012",
+    "text": "uzman perspektifleri hangi alandadır",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-013",
+    "text": "fikri netleştirip onaylama akışı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-014",
+    "text": "onaylanan fikirden teknik tasarıma geçiş",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-015",
+    "text": "planı kodlama aracına dışa aktarma",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-016",
+    "text": "ürün dokümanları nereden takip edilir",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-017",
+    "text": "çekirdek kapsam belgesi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-018",
+    "text": "desteklenen proje matrisi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-019",
+    "text": "özelliklerin olgunluk etiketi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-020",
+    "text": "Stable ilan edilmeyen yetenekler",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-021",
+    "text": "üretim entegrasyon testleri ve terfi kanıtları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-022",
+    "text": "Yetenek Kanıtları raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-023",
+    "text": "Planner Benchmark Raporu neyi izler",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-024",
+    "text": "Guided Discovery Benchmark Raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-025",
+    "text": "Comparative Results raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-026",
+    "text": "güvenlik ve çalışma zamanı sınırları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-027",
+    "text": "Envanter Güvenlik Raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-028",
+    "text": "Sağlayıcı Entegrasyon Raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-029",
+    "text": "İzole Yürütme Raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-030",
+    "text": "canonical yaşayan plan ve revizyon yönetimi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-031",
+    "text": "proje durumunun JSON formatında saklanması",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-032",
+    "text": "r1 rN revizyonları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-033",
+    "text": "kanıta dayalı ürün sözleşmesi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-034",
+    "text": "izlenebilir gereksinim görev test paketi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-035",
+    "text": "fikirden onaylı tasarıma geçiş",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-036",
+    "text": "teknik kararların gerekçelendirilmesi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-037",
+    "text": "local-first yaklaşımın anlamı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-038",
+    "text": "Planner ile proje fikri geliştirme",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-039",
+    "text": "PromtGen kullanım amacı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-040",
+    "text": "npm ile projeyi kurma komutu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-041",
+    "text": "geliştirme sunucusunu başlatma",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-042",
+    "text": "masaüstü geliştirme komutu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-043",
+    "text": "desktop dev npm scripti",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "exact_identifier"
+  },
+  {
+    "query_id": "promt-q-044",
+    "text": "Windows installer üretmek",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-045",
+    "text": "desktop build komutu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "exact_identifier"
+  },
+  {
+    "query_id": "promt-q-046",
+    "text": "npm run verify ne yapar",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-047",
+    "text": "tüm birim testlerini çalıştıran komut",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-048",
+    "text": "entegrasyon testleri hangi komutta",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-049",
+    "text": "güvenlik testleri doğrulaması",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-050",
+    "text": "TypeScript tip kontrolü",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-051",
+    "text": "lint kontrolü hangi doğrulamada",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-052",
+    "text": "PWA production build",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-053",
+    "text": "Tauri Rust testleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-054",
+    "text": "browser E2E test komutu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-055",
+    "text": "npm run test:e2e",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "exact_identifier"
+  },
+  {
+    "query_id": "promt-q-056",
+    "text": "tarayıcı uçtan uca testleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-057",
+    "text": "Tauri masaüstü uygulaması testleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-058",
+    "text": "production build doğrulaması",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-059",
+    "text": "verify komutunun sıralı adımları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-060",
+    "text": "hangi komut lint çalıştırır",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-061",
+    "text": "hangi komut Rust testlerini çalıştırır",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-062",
+    "text": "hangi komut PWA üretim derlemesi yapar",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-063",
+    "text": "installer oluşturma süreci",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-064",
+    "text": "npm install sonrası geliştirme",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-065",
+    "text": "yerel geliştirme akışı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-066",
+    "text": "masaüstü uygulaması geliştirme akışı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-067",
+    "text": "Windows kurulum paketi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-068",
+    "text": "browser E2E için ayrı komut",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-069",
+    "text": "birim entegrasyon güvenlik ve tip testleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-070",
+    "text": "verify komutunun yaptığı kontroller",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-071",
+    "text": "Rust testlerinin çalıştırılması",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-072",
+    "text": "PWA build aşaması",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-073",
+    "text": "lint ve TypeScript kontrolü",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-074",
+    "text": "desktop geliştirme ile browser geliştirme farkı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-075",
+    "text": "npm run dev",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "exact_identifier"
+  },
+  {
+    "query_id": "promt-q-076",
+    "text": "npm install",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "exact_identifier"
+  },
+  {
+    "query_id": "promt-q-077",
+    "text": "npm run desktop:build",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "exact_identifier"
+  },
+  {
+    "query_id": "promt-q-078",
+    "text": "kod tabanını doğrulama komutu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic"
+  },
+  {
+    "query_id": "promt-q-079",
+    "text": "test e2e scripti",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "exact_identifier"
+  },
+  {
+    "query_id": "promt-q-080",
+    "text": "PromtGen hangi aşamalardan oluşur",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-081",
+    "text": "fikri anlatıp tasarım ve uygulama planı çıkarma",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-082",
+    "text": "Labs ile Planner arasındaki fark",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-083",
+    "text": "ürün sözleşmesi ve kanıt raporları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-084",
+    "text": "geliştirme ve doğrulama komutlarının tamamı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-085",
+    "text": "hangi yetenekler Stable değildir",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "morphology"
+  },
+  {
+    "query_id": "promt-q-086",
+    "text": "projelerimin planlarını JSON saklamak",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "morphology"
+  },
+  {
+    "query_id": "promt-q-087",
+    "text": "kodlama aracına aktarılacak plan",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "morphology"
+  },
+  {
+    "query_id": "promt-q-088",
+    "text": "masaüstü kurulumunu hazırlamak",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "morphology"
+  },
+  {
+    "query_id": "promt-q-089",
+    "text": "testleri ve production build'i birlikte doğrulamak",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "long_context"
+  },
+  {
+    "query_id": "promt-q-090",
+    "text": "hava durumu tahmini",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-091",
+    "text": "araba motoru bakımı",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-092",
+    "text": "vergi beyannamesi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-093",
+    "text": "yemek tarifi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-094",
+    "text": "uçak bileti fiyatı",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-095",
+    "text": "kripto para fiyatı",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-096",
+    "text": "spor maç sonucu",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-097",
+    "text": "ev bitkisi sulama",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-098",
+    "text": "fotoğraf düzenleme",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-099",
+    "text": "müzik listesi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  },
+  {
+    "query_id": "promt-q-100",
+    "text": "döviz kuru geçmişi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative"
+  }
+]

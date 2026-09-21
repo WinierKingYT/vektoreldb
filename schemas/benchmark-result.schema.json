@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/benchmark-result.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["query_count", "recall_at_k", "elapsed_seconds", "latency_p50_ms", "latency_p95_ms", "latency_p99_ms", "error_rate", "mrr_at_k", "ndcg_at_k", "negative_success_rate", "query_type_metrics", "cpu_seconds", "rss_mb", "fixture_checksum", "corpus_checksum", "embedding_manifest_id"],
+  "properties": {
+    "query_count": {"type": "integer", "minimum": 1},
+    "recall_at_k": {"type": "number", "minimum": 0, "maximum": 1},
+    "elapsed_seconds": {"type": "number", "minimum": 0},
+    "latency_p50_ms": {"type": "number", "minimum": 0},
+    "latency_p95_ms": {"type": "number", "minimum": 0},
+    "latency_p99_ms": {"type": "number", "minimum": 0},
+    "error_rate": {"type": "number", "minimum": 0, "maximum": 1},
+    "mrr_at_k": {"type": "number", "minimum": 0, "maximum": 1},
+    "ndcg_at_k": {"type": "number", "minimum": 0, "maximum": 1},
+    "negative_success_rate": {"type": "number", "minimum": 0, "maximum": 1},
+    "query_type_metrics": {"type": "object", "additionalProperties": true},
+    "cpu_seconds": {"type": "number", "minimum": 0},
+    "rss_mb": {"type": ["number", "null"], "minimum": 0},
+    "fixture_checksum": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "corpus_checksum": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "embedding_manifest_id": {"type": ["string", "null"], "minLength": 1}
+  }
+}

@@ -1,0 +1,1263 @@
+[
+  {
+    "query_id": "filtered-001",
+    "text": "planner fikir tasarımı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-002",
+    "text": "Planner ürün akışı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-003",
+    "text": "local-first proje aracı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-004",
+    "text": "Agent Devri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-005",
+    "text": "Labs özellikleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-006",
+    "text": "kanıt sözleşmesi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-007",
+    "text": "Yetenek Kanıtları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-008",
+    "text": "proje durum JSON",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-009",
+    "text": "revizyon yönetimi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-010",
+    "text": "Fikir Tasarımı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-011",
+    "text": "Çözüm Tasarımı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-012",
+    "text": "Uygulama Planı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-013",
+    "text": "uzman perspektifleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-014",
+    "text": "mimari karşılaştırma",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-015",
+    "text": "onaylı proje tasarımı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-016",
+    "text": "gereksinim görev test",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-017",
+    "text": "Stable etiketi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-018",
+    "text": "ürün dokümanları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-019",
+    "text": "çekirdek kapsam",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-020",
+    "text": "proje matrisi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-021",
+    "text": "PromtGen amacı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-022",
+    "text": "teknik kararlar",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-023",
+    "text": "tasarım aracının hedefi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-024",
+    "text": "planner aşamaları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-025",
+    "text": "kodlama aracına aktarma",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-026",
+    "text": "kanıta dayalı plan",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-027",
+    "text": "deterministic sonuçlar",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-028",
+    "text": "güvenlik raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-029",
+    "text": "provider raporu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-030",
+    "text": "izole yürütme",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-031",
+    "text": "canonical plan",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-032",
+    "text": "fikir netleştirme",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-033",
+    "text": "teknik tasarım onayı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-034",
+    "text": "uygulama planı onayı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-035",
+    "text": "agent devri planı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-036",
+    "text": "Labs kod yürütme",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-037",
+    "text": "ürün sınırları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-038",
+    "text": "olgunluk kanıtı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-039",
+    "text": "proje fikirleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-040",
+    "text": "kişisel geliştirici",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_bc90785b9f4f89ff"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "source_types": [
+        "markdown"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-041",
+    "text": "npm install",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-042",
+    "text": "npm run dev",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-043",
+    "text": "desktop geliştirme",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-044",
+    "text": "Windows installer",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-045",
+    "text": "npm run verify",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-046",
+    "text": "birim testleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-047",
+    "text": "entegrasyon testleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-048",
+    "text": "güvenlik doğrulaması",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-049",
+    "text": "TypeScript tip kontrolü",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-050",
+    "text": "lint kontrolü",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-051",
+    "text": "PWA production build",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-052",
+    "text": "Tauri Rust testleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-053",
+    "text": "browser E2E",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-054",
+    "text": "npm run test:e2e",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-055",
+    "text": "desktop dev scripti",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-056",
+    "text": "desktop build scripti",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-057",
+    "text": "verify sırası",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-058",
+    "text": "geliştirme sunucusu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-059",
+    "text": "kurulum komutu",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-060",
+    "text": "masaüstü paket",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-061",
+    "text": "Windows build",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-062",
+    "text": "production doğrulama",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-063",
+    "text": "E2E testi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-064",
+    "text": "Rust doğrulama",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-065",
+    "text": "PWA derlemesi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-066",
+    "text": "npm komutları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-067",
+    "text": "test komutları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-068",
+    "text": "tip kontrolü",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-069",
+    "text": "lint aşaması",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-070",
+    "text": "installer üretimi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-071",
+    "text": "browser uçtan uca",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-072",
+    "text": "masaüstü geliştirme akışı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-073",
+    "text": "dev script",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-074",
+    "text": "build script",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-075",
+    "text": "verify kontrolleri",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-076",
+    "text": "test:e2e script",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-077",
+    "text": "npm çalışma akışı",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-078",
+    "text": "kurulum sonrası",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-079",
+    "text": "üretim derlemesi",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-080",
+    "text": "geliştirici komutları",
+    "relevant_chunk_ids": [
+      "doc_1563952351ed7ea2b0c7f156b126db33af02f163af03e9d6293b9c7ff6945dfe_chunk_aec2e9b86553cb48"
+    ],
+    "query_type": "semantic",
+    "filters": {
+      "titles": [
+        "promtgen-readme"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-081",
+    "text": "bilinmeyen arşiv",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-082",
+    "text": "stok raporu",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-083",
+    "text": "araba bakımı",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-084",
+    "text": "vergi takvimi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-085",
+    "text": "hava durumu",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-086",
+    "text": "film önerisi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-087",
+    "text": "yemek tarifi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-088",
+    "text": "spor sonucu",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-089",
+    "text": "uçuş bilgisi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-090",
+    "text": "müzik listesi",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "titles": [
+        "NotARealTitle"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-091",
+    "text": "unknown filtered query 1",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-092",
+    "text": "unknown filtered query 2",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-093",
+    "text": "unknown filtered query 3",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-094",
+    "text": "unknown filtered query 4",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-095",
+    "text": "unknown filtered query 5",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-096",
+    "text": "unknown filtered query 6",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-097",
+    "text": "unknown filtered query 7",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-098",
+    "text": "unknown filtered query 8",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-099",
+    "text": "unknown filtered query 9",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  },
+  {
+    "query_id": "filtered-100",
+    "text": "unknown filtered query 10",
+    "relevant_chunk_ids": [],
+    "query_type": "negative",
+    "filters": {
+      "source_types": [
+        "text"
+      ]
+    }
+  }
+]
+

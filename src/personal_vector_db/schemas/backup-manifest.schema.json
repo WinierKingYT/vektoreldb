@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Backup manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["collection_name", "snapshot_name", "embedding_manifest_id", "model", "dimension", "metric", "parser_version", "chunking_version", "snapshot_checksum", "created_at"],
+  "properties": {
+    "collection_name": { "type": "string", "minLength": 1 },
+    "snapshot_name": { "type": "string", "minLength": 1 },
+    "embedding_manifest_id": { "type": "string", "minLength": 1 },
+    "model": { "type": "string", "minLength": 1 },
+    "dimension": { "type": "integer", "minimum": 1 },
+    "metric": { "type": "string", "enum": ["cosine"] },
+    "parser_version": { "type": "string", "minLength": 1 },
+    "parser_versions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "corpus_checksum": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+    "chunking_version": { "type": "string", "minLength": 1 },
+    "snapshot_checksum": { "type": ["string", "null"] },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

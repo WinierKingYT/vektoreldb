@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/concurrency-result.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["concurrency", "total_requests", "successful_requests", "error_count", "elapsed_seconds", "throughput_per_second", "latency_p50_ms", "latency_p95_ms", "latency_p99_ms", "error_types", "fixture_checksum", "corpus_checksum", "embedding_manifest_id"],
+  "properties": {
+    "concurrency": {"type": "integer", "minimum": 1},
+    "total_requests": {"type": "integer", "minimum": 1},
+    "successful_requests": {"type": "integer", "minimum": 0},
+    "error_count": {"type": "integer", "minimum": 0},
+    "elapsed_seconds": {"type": "number", "minimum": 0},
+    "throughput_per_second": {"type": "number", "minimum": 0},
+    "latency_p50_ms": {"type": "number", "minimum": 0},
+    "latency_p95_ms": {"type": "number", "minimum": 0},
+    "latency_p99_ms": {"type": "number", "minimum": 0},
+    "error_types": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+    "fixture_checksum": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "corpus_checksum": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "embedding_manifest_id": {"type": ["string", "null"], "minLength": 1}
+  }
+}

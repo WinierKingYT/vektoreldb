@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/query-fixture-manifest.schema.json",
+  "title": "Query fixture manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "minimum_query_count",
+    "recommended_split",
+    "split_tolerance",
+    "required_query_types",
+    "minimum_queries_per_type",
+    "required_document_size_buckets",
+    "required_filter_selectivity_buckets",
+    "corpus_checksum",
+    "parser_version",
+    "chunking_version",
+    "embedding_manifest_id",
+    "privacy_classification",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {"const": "query-fixture-manifest-v1"},
+    "status": {"enum": ["contract-only", "ready"]},
+    "minimum_query_count": {"type": "integer", "minimum": 1},
+    "recommended_split": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "number", "exclusiveMinimum": 0}
+    },
+    "split_tolerance": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
+    "required_query_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "minimum_queries_per_type": {"type": "integer", "minimum": 1},
+    "required_document_size_buckets": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["small", "medium", "large"]}
+    },
+    "required_filter_selectivity_buckets": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["low", "medium", "high"]}
+    },
+    "corpus_checksum": {"type": ["string", "null"], "minLength": 1},
+    "parser_version": {"type": ["string", "null"], "minLength": 1},
+    "parser_versions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "chunking_version": {"type": ["string", "null"], "minLength": 1},
+    "embedding_manifest_id": {"type": ["string", "null"], "minLength": 1},
+    "privacy_classification": {"const": "private-local"},
+    "notes": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ready"}}},
+      "then": {
+        "properties": {
+          "corpus_checksum": {"type": "string", "minLength": 1},
+          "parser_version": {"type": "string", "minLength": 1},
+          "chunking_version": {"type": "string", "minLength": 1},
+          "embedding_manifest_id": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  ]
+}

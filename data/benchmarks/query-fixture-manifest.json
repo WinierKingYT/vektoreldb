@@ -1,0 +1,28 @@
+{
+  "schema_version": "query-fixture-manifest-v1",
+  "status": "contract-only",
+  "minimum_query_count": 300,
+  "recommended_split": {
+    "development": 0.6,
+    "validation": 0.2,
+    "test": 0.2
+  },
+  "split_tolerance": 0.05,
+  "required_query_types": [
+    "semantic",
+    "exact_identifier",
+    "typo",
+    "morphology",
+    "long_context",
+    "negative"
+  ],
+  "minimum_queries_per_type": 30,
+  "required_document_size_buckets": ["small", "medium", "large"],
+  "required_filter_selectivity_buckets": ["low", "medium", "high"],
+  "corpus_checksum": null,
+  "parser_version": null,
+  "chunking_version": null,
+  "embedding_manifest_id": null,
+  "privacy_classification": "private-local",
+  "notes": "Contract only; real personal corpus labels must be added before final benchmark."
+}

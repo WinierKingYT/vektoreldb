@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://personal-vector-db.local/schemas/fixture-coverage-report.schema.json",
+  "title": "Privacy-safe fixture coverage report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_status", "query_count", "minimum_query_count", "coverage_complete", "corpus_binding_status", "corpus_checksum_status", "corpus_checksum", "fixture_corpus_checksum", "fixture_checksum", "label_provenance_status", "label_provenance_mismatch_count", "labels_status", "label_count", "unlabeled_query_count", "orphan_label_count", "derived_label_count", "review_required_label_count", "unknown_labeled_chunk_count", "labels_with_unknown_chunks", "unknown_relevant_chunk_count", "queries_with_unknown_relevant_chunks", "duplicate_query_group_count", "duplicate_query_count", "cross_split_duplicate_count", "chunk_size_bucket_binding_status", "queries_with_size_bucket_mismatch", "unknown_size_bucket_chunk_count", "corpus_size_bucket_counts", "corpus_parser_versions", "fixture_parser_versions", "parser_versions_binding_status", "query_type_counts", "missing_query_types", "split_counts", "split_ratios", "recommended_split", "missing_splits", "split_ratio_issues", "size_bucket_counts", "missing_document_size_buckets", "filter_selectivity_counts", "missing_filter_selectivity_buckets"],
+  "properties": {
+    "manifest_status": {"type": "string"},
+    "query_count": {"type": "integer", "minimum": 0},
+    "minimum_query_count": {"type": "integer", "minimum": 1},
+    "coverage_complete": {"type": "boolean"},
+    "corpus_binding_status": {"type": "string"},
+    "corpus_checksum_status": {"type": "string"},
+    "corpus_checksum": {"type": ["string", "null"]},
+    "fixture_corpus_checksum": {"type": ["string", "null"]},
+    "fixture_checksum": {"type": ["string", "null"]},
+    "label_provenance_status": {"type": "string"},
+    "label_provenance_mismatch_count": {"type": "integer", "minimum": 0},
+    "labels_status": {"type": "string"}
+    ,"label_count": {"type": "integer", "minimum": 0}
+    ,"unlabeled_query_count": {"type": "integer", "minimum": 0}
+    ,"orphan_label_count": {"type": "integer", "minimum": 0}
+    ,"derived_label_count": {"type": "integer", "minimum": 0}
+    ,"review_required_label_count": {"type": "integer", "minimum": 0}
+    ,"unknown_labeled_chunk_count": {"type": "integer", "minimum": 0}
+    ,"labels_with_unknown_chunks": {"type": "integer", "minimum": 0}
+    ,"unknown_relevant_chunk_count": {"type": "integer", "minimum": 0}
+    ,"queries_with_unknown_relevant_chunks": {"type": "integer", "minimum": 0}
+    ,"duplicate_query_group_count": {"type": "integer", "minimum": 0}
+    ,"duplicate_query_count": {"type": "integer", "minimum": 0}
+    ,"cross_split_duplicate_count": {"type": "integer", "minimum": 0}
+    ,"chunk_size_bucket_binding_status": {"type": "string"}
+    ,"queries_with_size_bucket_mismatch": {"type": "integer", "minimum": 0}
+    ,"unknown_size_bucket_chunk_count": {"type": "integer", "minimum": 0}
+    ,"corpus_size_bucket_counts": {"type": ["object", "null"]}
+    ,"corpus_parser_versions": {"type": ["array", "null"], "items": {"type": "string"}}
+    ,"fixture_parser_versions": {"type": ["array", "null"], "items": {"type": "string"}}
+    ,"parser_versions_binding_status": {"type": "string"}
+    ,"query_type_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+    ,"missing_query_types": {"type": "array", "items": {"type": "string"}}
+    ,"split_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+    ,"split_ratios": {"type": "object", "additionalProperties": {"type": "number"}}
+    ,"recommended_split": {"type": "object", "additionalProperties": {"type": "number"}}
+    ,"missing_splits": {"type": "array", "items": {"type": "string"}}
+    ,"split_ratio_issues": {"type": "array", "items": {"type": "string"}}
+    ,"size_bucket_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+    ,"missing_document_size_buckets": {"type": "array", "items": {"type": "string"}}
+    ,"filter_selectivity_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}
+    ,"missing_filter_selectivity_buckets": {"type": "array", "items": {"type": "string"}}
+  }
+}

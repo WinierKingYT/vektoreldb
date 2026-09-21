@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/personal-vector-document.schema.json",
+  "title": "Personal Vector Document",
+  "type": "object",
+  "required": ["document_id", "source_uri", "source_type", "owner_id", "document_status", "content_hash", "parser_version", "created_at", "updated_at"],
+  "properties": {
+    "document_id": {"type": "string", "pattern": "^doc_[A-Za-z0-9_-]+$"},
+    "source_uri": {"type": "string", "minLength": 1},
+    "source_type": {"enum": ["markdown", "text", "pdf", "docx", "html", "json", "jsonl", "yaml", "rtf", "csv", "email", "xml"]},
+    "title": {"type": "string"},
+    "owner_id": {"const": "me"},
+    "visibility": {"enum": ["private"]},
+    "document_status": {"enum": ["discovered", "parsing", "parsed", "embedding", "indexed", "active", "stale", "archived", "failed", "needs_review", "deleted"]},
+    "content_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "parser_version": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}
