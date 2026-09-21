@@ -4,6 +4,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- 300+ kişisel benchmark için relevance yargılama protokolü eklendi: binary
+  chunk kanıtı, farklı retrieval yollarından aday pooling'i, gerçek corpus-negative
+  kontrolü ve single-annotator kör tekrar incelemesi. Mevcut 66 label'ın hiçbiri
+  bu belge değişikliğiyle otomatik reviewed yapılmadı.
 - `min_score` yalnızca dense cosine retrieval'da, varsa reranking öncesinde
   uygulanıyor. Kalibrasyonu olmayan hybrid/late eşik istekleri fail-closed
   reddedilir; eşiksiz arama açıktır. Reranker yalnızca dense eşiğini geçen

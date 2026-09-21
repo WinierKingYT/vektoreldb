@@ -15,6 +15,16 @@ Bir özellik için kodun bulunması tek başına final kabul anlamına gelmez;
 | Harici embedding | Opt-in OpenAI-compatible adapter, strict numeric config, bounded hash-keyed in-memory cache, privacy-safe `cache_stats`, HTTPS/loopback, redirects disabled, finite-norm/dimension validation ve sınırlı retry hazır | Aynı corpus üzerinde kalite, latency, retry maliyeti ve veri paylaşımı kararı |
 | Multimodal/Graph-RAG/çoklu kullanıcı | Bilinçli olarak ertelendi | Ölçülmüş darboğaz veya açık kullanım ihtiyacı |
 
+### Fixture etiketleme güvenilirliği — yeni protokol
+
+`docs/advanced/14-etiketli-query-fixture-sozlesmesi.md` binary chunk relevance'ın
+anlamını, aday pooling ile mevcut dense baseline'a önyargıyı azaltmayı, gerçek
+corpus-negative sorguyu top-k false negative'den ayırmayı ve tek annotator için
+kör tekrar kontrolünü tanımlar. Bu protokol mevcut 66 derived label'ı reviewed
+yapmaz; benchmark kanıtı üretmez ve kod/schema değişikliği gerektirmez. NIST'in
+judgment kapsamı uyarısıyla uyumlu olarak incelenmemiş chunk “non-relevant”
+varsayılmaz.
+
 ## Final koşusundan önceki gerçek durum
 
 Mevcut yerel corpus inventory'si on dört kaynak ve 47 chunk içeriyor;

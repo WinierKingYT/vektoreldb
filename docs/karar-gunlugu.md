@@ -1,5 +1,26 @@
 # Karar günlüğü
 
+## 2026-09-22 — Query relevance etiketleme protokolü
+
+- V1.7 query-label sözleşmesi ikili chunk relevance'ı olarak kalacak;
+  `relevant_chunk_ids`, sorguyu cevaplamakta doğrudan kullanılabilir kanıt
+  taşıyan chunk'ları gösterir. Dereceli qrels schema değişikliği bu goal'a
+  eklenmeyecek; ölçülmüş ihtiyaç çıkarsa ayrı migration/metric kararı açılacak.
+- Exact/lexical ve dense (varsa opt-in retrieval varyantı) adaylarının havuzu
+  incelenecek; havuz tamlık kanıtı sayılmayacak. İncelenmemiş chunk otomatik
+  “non-relevant” değildir. Negative etiketi, corpus ve parse kapsamı kontrol
+  edilmeden verilmeyecek.
+- Tek annotator için ikinci annotator zorunlu değil; test split'inden ayrı,
+  skor/rank bilgisi gizli küçük tekrar incelemesindeki değişiklikler kaydedilecek.
+  Bu sonuç annotator'lar arası anlaşma diye sunulmayacak.
+- Kaynaklar: [NIST TREC relevance judgments](https://trec.nist.gov/data/reljudge_eng.html),
+  [BEIR paper](https://arxiv.org/abs/2104.08663). BEIR'in task/domain çeşitliliği,
+  kişisel fixture'da tek tip sorgularla 300 sayısına ulaşmama kararını destekler;
+  bu bir tasarım çıkarımıdır, BEIR protokolünün zorunlu kuralı değildir.
+- Etki/rollback: kod, label schema, mevcut veri ve runtime davranışı değişmez.
+  Yönerge yetersiz kalırsa doküman güncellenebilir; qrels schema değişirse eski
+  binary kayıtlar sessizce dönüştürülmeden ayrı sürüm açılır.
+
 ## 2026-09-22 — Parser izolasyonu belgesinin uygulamayla hizalanması
 
 - Parser rehberinin izolasyon bölümünde timeout, bellek sınırı ve geçici alan

@@ -177,6 +177,61 @@ chunking sürümü değiştiğinde fixture etiketleri yeniden doğrulanmalıdır
 
 ## Split ve etiket kalitesi
 
+### Relevance yargılama protokolü
+
+Mevcut şema chunk relevance'ını ikili olarak temsil eder: chunk ya sorgu için
+kullanılabilir kanıt taşır ya da taşımaz. Bu, küçük/kişisel V1.7 kapsamı için
+bilinçli sadeliktir; `relevant_chunk_ids` dışındaki chunk'lara dair “incelendi ve
+ilgisiz bulundu” iddiası üretmez. Ancak mevcut evaluator ayrı bir “unjudged”
+durumu saklamaz; metriğe verilen relevance kümesinde olmayan chunk'lar ölçümde
+relevant sayılmaz. Bu yüzden aday havuzu yeterince incelenmemiş bir sorgu
+`manual`/`reviewed` yapılmamalı, `derived` ve `review-required` kalmalıdır.
+TREC'in relevance tanımı da belgenin raporda kullanılabilir bilgi taşımasına
+dayanır; qrels yalnızca kendi koleksiyonu ve
+judgment kapsamı için tamamlanmış kabul edilir
+([NIST TREC relevance judgments](https://trec.nist.gov/data/reljudge_eng.html)).
+
+Her sorguyu etiketlerken:
+
+1. Sorguyu, mevcut corpus sürümünü ve hedeflenen cevap bilgisini sabitle; sorguyu
+   yalnızca tek bir gold chunk'tan kopyalayarak yazma. Doğal dil, Türkçe ekler,
+   yazım hatası, tanımlayıcı ve negative türleri ayrı çeşitlilik boyutlarıdır.
+2. Sorguyu en az iki farklı aday bulma yoluyla (ör. lexical/exact ve dense; varsa
+   opt-in hybrid/rerank) çalıştırıp aday havuzlarının birleşimini incele. Bu
+   pooling yaklaşımı, yalnızca mevcut dense sisteminin bulduğu chunk'ları doğru
+   sayma yanlılığını azaltır; havuzun tamlığını kanıtlamaz. NIST TREC de
+   relevance judgment üretiminde pooling kullanır.
+3. Aday metinleri sorgu-kaynak eşleşmesini anlamaya yetecek bağlamla incele.
+   Rank ve skorları mümkünse gizle. Sırf aynı konu/anahtar kelimeyi paylaşan
+   chunk'ı relevant sayma; chunk sorguyu cevaplamak veya cevaba doğrudan kanıt
+   sağlamak için gerçekten kullanılabilmelidir.
+4. Cevap birden çok parçaya dayanıyorsa gerekli bütün chunk'ları etiketle.
+   Parçalardan biri tek başına eksik bağlam yaratıyorsa, parçaların birlikte
+   cevap için gerekli olup olmadığını kısa `decision_note` ile belirt. Aynı
+   cevabı tekrar eden kopyaları sırf kopya oldukları için ayrı kanıt sayma.
+5. `negative` sorguyu yalnızca corpus'un tamamını ve parse/inventory hatalarını
+   kontrol ettikten sonra negative yap: `relevant_chunk_ids` boş olmalı ve
+   sorgunun cevabı corpus'ta gerçekten bulunmamalıdır. Sadece sistemin top-k
+   sonuçlarında çıkmayan cevap negative değildir. Kaynak/parse kapsamı belirsizse
+   sorgu etiketlenmez; `review-required` kalır.
+6. Her kararın corpus checksum, parser/chunking sürümü, annotator ve tarihle
+   bağını koru. Derived öneriler gözden geçirilmeden `manual`/`reviewed`
+   sayılmaz. Uyuşmazlıkta karar notu bırak; hangi judgment kapsamının
+   incelendiği doğrulanamıyorsa onu sessizce “non-relevant”e çevirmeyip yeniden
+   incele.
+
+Tek kişilik projede ikinci annotator zorunlu değildir. Bunun yerine final
+`test` split'inden ayrı tutulan küçük bir kör tekrar örneklemi belirlenir ve
+kararlar zaman aralığı bırakılarak yeniden incelenir; değişen kararlar not edilir.
+Bu, annotator'lar arası anlaşma ölçüsü değildir ve öyle raporlanmamalıdır.
+Fixture'ın 300 sorguya ulaşması tek başına kalite kanıtı değildir: tekrar
+ifadelerle sayıyı doldurmak yerine farklı intent, source family, corpus boyutu
+ve negative durumları kapsamalıdır. Heterojen retrieval veri kümelerinin farklı
+task/domain dağılımlarıyla sınanması BEIR'in temel motivasyonlarındandır
+([BEIR paper](https://arxiv.org/abs/2104.08663)); bunun kişisel corpus için
+doğrudan aynı benchmark tasarımını zorunlu kıldığı değil, tek tip sorgu setinin
+genelleme iddiasını daralttığı sonucu çıkarılır.
+
 Coverage raporundaki `size_bucket_counts` fixture sorgularının belge boyutu
 dağılımını, `corpus_size_bucket_counts` ise corpus manifestindeki gerçek kaynak
 dağılımını gösterir. İkinci alan legacy corpus manifestlerinde `null` olabilir.
@@ -197,6 +252,12 @@ binding durumunu `mismatch` yapar; eski manifestlerde bu alt kontrol
 - Negative sorgularda `relevant_chunk_ids` boş olmalıdır.
 - En az iki gözden geçirme gerektiren anlaşmazlıklar karar günlüğüne yazılır.
 - Her etiket corpus checksum'ı ve chunking/parser sürümüyle eşleştirilir.
+
+Bu protokolün `relevant_chunk_ids` için ürettiği kararlar ikilidir; `nDCG` gibi
+metriklerde bu proje için yalnızca ikili qrels kullanılır. Dereceli relevance
+karar kalitesini artıracak ölçülmüş bir ihtiyaç hâline gelirse schema, label
+coverage ve metric davranışı birlikte sürümlenmelidir; V1.7 benchmark'ına sessizce
+eklenmez.
 
 ## Gizlilik ve provenance
 
