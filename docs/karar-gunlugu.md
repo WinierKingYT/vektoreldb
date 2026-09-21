@@ -1,5 +1,15 @@
 # Karar günlüğü
 
+## 2026-09-22 — Concurrency warm-up sözleşmesi
+
+Cold ve warm kapasite koşullarını aynı primitive ile ayırabilmek için
+`run_concurrency_probe` ve matrix çalıştırıcısına bounded `warmup_repetitions`
+eklendi. Warm-up sorguları aynı worker seviyesiyle yürütülür fakat latency,
+throughput ve hata metriklerine dahil edilmez; sonuçta yalnızca sayısal provenance
+alanı olarak saklanır. Varsayılan `0` ile geriye dönük cold-probe davranışı korunur.
+Toplam istek bütçesi warm-up dahil hesaplanır. Bu özellik warm cache kanıtı üretir;
+gerçek local/server uzun süreli kapasite ölçümünün yerine geçmez.
+
 ## 2026-09-22 — Concurrency artifact aritmetik tutarlılık kapısı
 
 - Kanıt: JSON Schema alan tiplerini ve sınırlarını doğruluyordu; ancak farklı

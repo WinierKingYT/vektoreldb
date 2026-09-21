@@ -8,6 +8,7 @@
     "concurrency": {"type": "integer", "minimum": 1},
     "k": {"type": "integer", "minimum": 1, "maximum": 100},
     "repetitions": {"type": "integer", "minimum": 1, "maximum": 100},
+    "warmup_repetitions": {"type": "integer", "minimum": 0, "maximum": 100},
     "total_requests": {"type": "integer", "minimum": 1},
     "successful_requests": {"type": "integer", "minimum": 0},
     "error_count": {"type": "integer", "minimum": 0},

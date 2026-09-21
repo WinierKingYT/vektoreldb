@@ -1746,6 +1746,30 @@ def test_concurrency_probe_reports_success_and_errors_without_text() -> None:
     assert result.latency_p99_ms >= result.latency_p50_ms
 
 
+def test_concurrency_probe_excludes_bounded_warmup_from_metrics() -> None:
+    calls: list[str] = []
+
+    class RecordingSearcher:
+        def search(self, query: str, *, limit: int = 8) -> list[Result]:
+            calls.append(query)
+            return [Result("chunk-a")]
+
+    cases = [QueryCase("q1", "one", frozenset()), QueryCase("q2", "two", frozenset())]
+    result = run_concurrency_probe(
+        cases,
+        RecordingSearcher(),
+        k=1,
+        concurrency=2,
+        repetitions=1,
+        warmup_repetitions=2,
+    )
+
+    assert result.total_requests == 2
+    assert result.warmup_repetitions == 2
+    assert len(calls) == 6
+    assert result.successful_requests == 2
+
+
 def test_concurrency_result_preserves_privacy_safe_provenance() -> None:
     cases = [QueryCase("q-provenance", "a", frozenset({"chunk-a"}))]
 
@@ -1812,7 +1836,11 @@ def test_concurrency_matrix_rejects_excessive_total_request_budget() -> None:
 
 @pytest.mark.parametrize(
     ("kwargs", "message"),
-    [({"k": 0}, "k"), ({"repetitions": 0}, "repetitions")],
+    [
+        ({"k": 0}, "k"),
+        ({"repetitions": 0}, "repetitions"),
+        ({"warmup_repetitions": -1}, "warmup_repetitions"),
+    ],
 )
 def test_concurrency_matrix_rejects_invalid_probe_settings(
     kwargs: dict[str, int], message: str

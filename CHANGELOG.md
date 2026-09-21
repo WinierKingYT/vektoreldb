@@ -4,6 +4,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- Concurrency probe ve matrix için ölçüm dışı, bounded `warmup-repetitions` desteği
+  eklendi; cold/warm koşulları ayrıştırılabilir ve warm-up sayısı artifact provenance'ında tutulur.
 - `fixture-validate` final kabulinde label dosyası ve güncel corpus manifesti
   zorunlu hale getirildi; `status=ready` bir sorgu manifesti artık insan incelemesi,
   label provenance'ı ve gerçek corpus chunk-ID binding'i olmadan etiketli benchmark

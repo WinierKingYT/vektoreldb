@@ -240,6 +240,7 @@ class ConcurrencyResult:
     latency_p50_ms: float
     latency_p95_ms: float
     latency_p99_ms: float
+    warmup_repetitions: int = 0
     error_types: dict[str, int] = field(default_factory=dict)
     fixture_checksum: str | None = None
     corpus_checksum: str | None = None
@@ -250,6 +251,7 @@ class ConcurrencyResult:
             "concurrency": self.concurrency,
             "k": self.k,
             "repetitions": self.repetitions,
+            "warmup_repetitions": self.warmup_repetitions,
             "total_requests": self.total_requests,
             "successful_requests": self.successful_requests,
             "error_count": self.error_count,
@@ -1351,6 +1353,7 @@ def run_concurrency_probe(
     k: int = 8,
     concurrency: int = 4,
     repetitions: int = 1,
+    warmup_repetitions: int = 0,
     fixture_checksum: str | None = None,
     corpus_checksum: str | None = None,
     embedding_manifest_id: str | None = None,
@@ -1370,14 +1373,14 @@ def run_concurrency_probe(
         raise ValueError("concurrency must be between 1 and 64")
     if not 1 <= repetitions <= 100:
         raise ValueError("repetitions must be between 1 and 100")
+    if not 0 <= warmup_repetitions <= 100:
+        raise ValueError("warmup_repetitions must be between 0 and 100")
 
-    total_requests = len(cases) * repetitions
+    total_requests = len(cases) * (repetitions + warmup_repetitions)
     if total_requests > MAX_CONCURRENCY_PROBE_REQUESTS:
         raise ValueError(
-            "concurrency probe request budget exceeded; reduce fixture size or repetitions"
+            "concurrency probe request budget exceeded; reduce fixture size, repetitions or warm-up"
         )
-    work = cases * repetitions
-
     def execute(case: QueryCase) -> tuple[bool, float, str | None]:
         started = perf_counter()
         try:
@@ -1387,6 +1390,11 @@ def run_concurrency_probe(
             # Keep the probe privacy-safe: classify only the exception type,
             # never serialize its message (which may contain query text).
             return False, (perf_counter() - started) * 1000, type(error).__name__
+
+    if warmup_repetitions:
+        with ThreadPoolExecutor(max_workers=concurrency) as executor:
+            list(executor.map(execute, cases * warmup_repetitions))
+    work = cases * repetitions
 
     started = perf_counter()
     with ThreadPoolExecutor(max_workers=concurrency) as executor:
@@ -1406,6 +1414,7 @@ def run_concurrency_probe(
         concurrency=concurrency,
         k=k,
         repetitions=repetitions,
+        warmup_repetitions=warmup_repetitions,
         total_requests=len(outcomes),
         successful_requests=successful,
         error_count=len(outcomes) - successful,
@@ -1428,6 +1437,7 @@ def run_concurrency_matrix(
     *,
     k: int = 8,
     repetitions: int = 1,
+    warmup_repetitions: int = 0,
     fixture_checksum: str | None = None,
     corpus_checksum: str | None = None,
     embedding_manifest_id: str | None = None,
@@ -1453,10 +1463,13 @@ def run_concurrency_matrix(
         raise ValueError("k must be between 1 and 100")
     if not 1 <= repetitions <= 100:
         raise ValueError("repetitions must be between 1 and 100")
-    total_requests = len(cases) * repetitions * len(levels)
+    if not 0 <= warmup_repetitions <= 100:
+        raise ValueError("warmup_repetitions must be between 0 and 100")
+    total_requests = len(cases) * (repetitions + warmup_repetitions) * len(levels)
     if total_requests > MAX_CONCURRENCY_PROBE_REQUESTS:
         raise ValueError(
-            "concurrency matrix request budget exceeded; reduce levels, fixture size or repetitions"
+            "concurrency matrix request budget exceeded; reduce levels, fixture size, "
+            "repetitions or warm-up"
         )
     return [
         run_concurrency_probe(
@@ -1465,6 +1478,7 @@ def run_concurrency_matrix(
             k=k,
             concurrency=level,
             repetitions=repetitions,
+            warmup_repetitions=warmup_repetitions,
             fixture_checksum=fixture_checksum,
             corpus_checksum=corpus_checksum,
             embedding_manifest_id=embedding_manifest_id,

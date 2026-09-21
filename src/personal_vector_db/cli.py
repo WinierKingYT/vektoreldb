@@ -183,6 +183,7 @@ def build_parser() -> argparse.ArgumentParser:
     concurrency_probe.add_argument("--concurrency", type=int, default=4)
     concurrency_probe.add_argument("--concurrency-levels", type=int, nargs="+")
     concurrency_probe.add_argument("--repetitions", type=int, default=1)
+    concurrency_probe.add_argument("--warmup-repetitions", type=int, default=0)
     concurrency_probe.add_argument("--limit", type=int, default=8)
     concurrency_probe.add_argument("--min-score", type=float)
     concurrency_probe.add_argument("--rerank", action="store_true")
@@ -535,6 +536,7 @@ def main(argv: list[str] | None = None) -> None:
                     args.concurrency_levels,
                     k=args.limit,
                     repetitions=args.repetitions,
+                    warmup_repetitions=args.warmup_repetitions,
                     fixture_checksum=fixture_checksum,
                     corpus_checksum=corpus_checksum,
                     embedding_manifest_id=getattr(
@@ -551,6 +553,7 @@ def main(argv: list[str] | None = None) -> None:
                     k=args.limit,
                     concurrency=args.concurrency,
                     repetitions=args.repetitions,
+                    warmup_repetitions=args.warmup_repetitions,
                     fixture_checksum=fixture_checksum,
                     corpus_checksum=corpus_checksum,
                     embedding_manifest_id=getattr(

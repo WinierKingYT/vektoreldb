@@ -86,10 +86,13 @@ Geliştirme sırasında kullanılacak bounded concurrency primitive'i
 toplam istek, hata, throughput, p50/p95/p99 latency ve hata sınıfı dağılımı
 üretir. Hata mesajı hiçbir zaman çıktıya alınmaz; böylece geçici servis/provider
 hataları ayrıştırılabilirken sorgu veya belge içeriğinin sızma riski azaltılır.
-Concurrency 1–64, repetitions 1–100 ve toplam probe istekleri 100.000 ile
-sınırlıdır; matrix çalıştırıcısı ayrıca tüm seviyelerin toplamını da aynı
-100.000 istek bütçesiyle sınırlar ve kontrolü iş listesi oluşturulmadan önce
-yapar. Bu yardımcı final load testinin yerine geçmez ve gerçek
+Concurrency 1–64, repetitions 1–100, warm-up repetitions 0–100 ve toplam probe
+istekleri 100.000 ile sınırlıdır; matrix çalıştırıcısı ayrıca tüm seviyelerin
+toplamını da aynı 100.000 istek bütçesiyle sınırlar ve kontrolü iş listesi
+oluşturulmadan önce yapar. Warm-up istekleri latency/throughput/error metriklerine
+katılmaz, fakat sonuçta `warmup_repetitions` provenance alanı olarak saklanır.
+Varsayılan `0` değeri eski cold-probe davranışını korur. Bu yardımcı final load
+testinin yerine geçmez ve gerçek
 corpus/server ölçümü yapılmadan kapasite iddiası oluşturmaz.
 CLI terminal çıktısı makinece parse edilebilir JSON'dur; `--output` verilirse
 aynı JSON dosyaya yazılır.
@@ -100,7 +103,7 @@ CLI eşdeğeri:
 
 ```powershell
 vdb concurrency-probe --fixture data/benchmarks/queries-v1.json `
-  --concurrency 4 --repetitions 2 `
+  --concurrency 4 --warmup-repetitions 1 --repetitions 2 `
   --output data/benchmarks/runs/concurrency-c4-r2.json
 ```
 
@@ -126,7 +129,7 @@ CLI ile matrix çalıştırma örneği:
 
 ```powershell
 vdb concurrency-probe --fixture data/benchmarks/queries-v1.json `
-  --concurrency-levels 1 2 4 8 16 --repetitions 2 `
+  --concurrency-levels 1 2 4 8 16 --warmup-repetitions 1 --repetitions 2 `
   --output data/benchmarks/runs/concurrency-matrix.json
 ```
 
