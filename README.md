@@ -15,8 +15,8 @@ uv run vdb search "aranan konu"
 uv run vdb search "aranan konu" --min-score 0.70
 uv run vdb benchmark --fixture data\benchmarks\queries.json --output data\benchmarks\results\latest.json
 uv run vdb benchmark --fixture data\benchmarks\queries.json --repeat 3 --output data\benchmarks\results\repeat3.json
-uv run vdb concurrency-probe --fixture data\benchmarks\queries.json --concurrency 4 --repetitions 2
-uv run vdb concurrency-probe --fixture data\benchmarks\queries.json --concurrency-levels 1 2 4 8 16 --repetitions 2 --output data\benchmarks\results\concurrency-matrix.json
+uv run vdb concurrency-probe --fixture data\benchmarks\queries.json --concurrency 4 --warmup-repetitions 1 --repetitions 2
+uv run vdb concurrency-probe --fixture data\benchmarks\queries.json --concurrency-levels 1 2 4 8 16 --warmup-repetitions 1 --repetitions 2 --output data\benchmarks\results\concurrency-matrix.json
 uv run vdb corpus-inventory `
   --root data\sources `
   --output data\derived\corpus-inventory.json `
@@ -54,7 +54,7 @@ HTTP `/v1/search` yanıtı `results` alanına ek olarak `abstention_reason`,
 `no_candidates` ile `below_min_score` ayrımını gösterir; ayrıntılı sözleşme
 [API/OpenAPI planında](docs/20-api-openapi-plani.md) bulunur.
 
-Varsayılan `path:qdrant_storage` local persistence kullanır ve Docker gerektirmez. Server Qdrant smoke testi için `.env` içinde `VDB_QDRANT_URL=http://localhost:6333` ayarla; ayrıntılı prosedür [runtime smoke testi](docs/runtime-smoke-testi.md) dosyasındadır. `data/sources/` altında Markdown/TXT, Org/RST/LOG/TEX/ICS, PDF, DOCX, HTML, EML, JSON, JSONL/NDJSON, YAML/YML, RTF, CSV ve XML kaynakları kullanılabilir. Plain-text parser UTF-8/UTF-16/UTF-32 BOM'lu export'ları; yapılandırılmış parser'lar UTF-8 BOM'lu export'ları destekler. JSONL/NDJSON'de her boş olmayan satır ayrı kayıt olarak işlenir ve satır provenance'ı korunur. EML parser yalnızca düz metin gövdesini ve konu başlığını alır; HTML gövdesi ve ek dosyalar işlenmez. PDF metin çıkarımı yapar; OCR ve karmaşık tablo/sütun düzeni bu ilk parser diliminin kapsamı dışındadır. DOCX paragraf, temel tablo satırı ve Heading1–Heading6 stillerini çıkarır. XML parser yalnızca leaf-node metnini ve node yolunu alır; DTD/entity declaration içeren girdileri reddeder. YAML parser yalnızca `safe_load` ile veri okur; Python nesnesi tag'lerini çalıştırmaz. RTF parser temel metin, paragraf/satır sonu, sekme, Unicode ve cp1252 hex kaçışlarını çıkarır; gömülü resim/nesne, makro ve karmaşık biçimlendirme anlamlandırılmaz.
+Varsayılan `path:qdrant_storage` local persistence kullanır ve Docker gerektirmez. Server Qdrant smoke testi için `.env` içinde `VDB_QDRANT_URL=http://localhost:6333` ayarla; ayrıntılı prosedür [runtime smoke testi](docs/runtime-smoke-testi.md) dosyasındadır. `data/sources/` altında Markdown/TXT, Org/RST/LOG/TEX/ICS, PDF, DOCX, HTML, EML, JSON, JSONL/NDJSON, YAML/YML, TOML, RTF, CSV ve XML kaynakları kullanılabilir. Plain-text parser UTF-8/UTF-16/UTF-32 BOM'lu export'ları; yapılandırılmış parser'lar UTF-8 BOM'lu export'ları destekler. JSONL/NDJSON'de her boş olmayan satır ayrı kayıt olarak işlenir ve satır provenance'ı korunur. EML parser yalnızca düz metin gövdesini ve konu başlığını alır; HTML gövdesi ve ek dosyalar işlenmez. PDF metin çıkarımı yapar; OCR ve karmaşık tablo/sütun düzeni bu ilk parser diliminin kapsamı dışındadır. DOCX paragraf, temel tablo satırı ve Heading1–Heading6 stillerini çıkarır. XML parser yalnızca leaf-node metnini ve node yolunu alır; DTD/entity declaration içeren girdileri reddeder. YAML parser yalnızca `safe_load` ile veri okur; Python nesnesi tag'lerini çalıştırmaz. TOML parser `tomllib` ile veri okur ve tek deterministik JSON bölümü üretir. RTF parser temel metin, paragraf/satır sonu, sekme, Unicode ve cp1252 hex kaçışlarını çıkarır; gömülü resim/nesne, makro ve karmaşık biçimlendirme anlamlandırılmaz.
 
 Recursive `ingest-dir` ve `corpus-inventory` akışları `.git`, virtualenv,
 `node_modules`, cache/temp, build/dist, secrets/credentials ve benzeri varsayılan
@@ -73,6 +73,11 @@ altındaki dosyalar yalnızca parser/inventory smoke kapsamını genişleten sen
 Compose server deployment'ı `qdrant_server_storage` ve `qdrant_server_snapshots` named volume'larını kullanır; böylece local `qdrant_storage` ile dosya kilidi çakışması önlenir. Elle volume bağlarken de local Qdrant süreci ile Docker Qdrant server aynı klasörü eşzamanlı kullanmamalıdır.
 
 ## Başlangıç yolu
+
+Harici embedding yalnızca açıkça `VDB_EMBEDDING_PROVIDER=openai` seçildiğinde
+devreye girer; başarılı provider seçimi ham veri veya API key içermeyen audit
+olayı üretir. Ayrıntılı ağ, retry ve gizlilik sınırları [embedding provider
+sözleşmesinde](docs/05-embedding-provider-sozlesmesi.md) açıklanır.
 
 Inventory çıktısındaki `unsupported_files` ve `unsupported_suffixes` alanları
 allowlist dışındaki dosyaları yol ve içerik göstermeden raporlar. Bu dosyalar
