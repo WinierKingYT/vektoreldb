@@ -1,5 +1,56 @@
 # Karar günlüğü
 
+## 2026-09-22 — Final fixture kabulinde label ve corpus manifesti zorunluluğu
+
+- Kanıt: `validate_fixture_requirements` label dosyasını isteğe bağlı yüklüyor,
+  ardından `label_count=0` ile başarılı dönmek mümkün olabiliyordu. Bu durum
+  `fixture-validate` komutunun “etiketli” final kabul amacıyla ve
+  `docs/advanced/14-etiketli-query-fixture-sozlesmesi.md` ile çelişiyordu.
+- Karar: Diğer şema, sorgu, corpus binding ve dağılım kontrolleri geçtikten sonra
+  labelsız veya güncel corpus manifestsiz `status=ready` paketi final kabul etme;
+  tam ve provenance-bağlı labels dosyası ile chunk ID'lerini doğrulayacak corpus
+  manifesti zorunlu olsun. `fixture-coverage` bunlar olmadan hazırlık raporu
+  vermeye devam eder.
+- Güvenlik/provenance: Yeni içerik veya kaynak metni üretilmez. Her fixture
+  sorgusu için birebir label ve mevcut corpus/parser/chunking provenance
+  doğrulaması uygulanır; derived label'lar ready statüsünde yine reddedilir.
+- Geriye uyumluluk/rollback: Coverage, benchmark smoke ve `contract-only`
+  hazırlık kullanımları değişmez; önceden “ready” olup labelsız geçen bir fixture
+  artık fail-closed olur. Zorunluluk kaldırılırsa eski yanlış kabul riski geri gelir.
+
+## 2026-09-22 — Final fixture kabulinde chunk boyut provenance'ı
+
+- Kanıt: Coverage, corpus manifestindeki `chunk_size_buckets` eşlemesini pozitif
+  sorguların `size_bucket` etiketleriyle karşılaştırıyordu; final validator ise
+  bu mapping eksik veya tutarsız olsa da yalnızca genel boyut kovasıyla geçebilirdi.
+- Karar: `status=ready` final kabulinde corpus manifesti her `chunk_id` için
+  `chunk_size_buckets` eşlemesi taşımalı ve pozitif sorgu etiketleriyle eşleşmeli.
+  Coverage hazırlık raporu eski/eksik manifestleri teşhis etmeye devam eder.
+- Provenance/güvenlik: Kaynak metni eklenmez; ölçümde kullanılan boyut kovasının
+  gerçek chunk kimliklerine bağlı olduğu doğrulanır.
+- Geriye uyumluluk/rollback: Eski contract-only ve coverage akışları korunur;
+  eski ready manifestler yeniden inventory üretilip mapping eklenmeden kabul edilmez.
+
+## 2026-09-22 — DOCX arşiv üye sayısı sınırı
+
+- Kanıt: DOCX parser ZIP yollarını, duplicate/symlink/encryption durumlarını ve
+  50 MB toplam açılmış boyutu doğruluyordu; ancak her ZIP üyesi için metadata
+  doğrulaması yaptığı halde üye adedine uygulama düzeyinde bir üst sınır yoktu.
+  Python `ZipFile.infolist()` her arşiv üyesi için `ZipInfo` listesi döndürür.
+- Karar: 4.096 üzeri üye içeren DOCX paketlerini içerik XML'lerini okumadan
+  reddet. Olağan belge paketleri için geniş bir tavan seçildi; özel arşivli
+  girdiler gerektiğinde dönüşüm/ayırma ile hazırlanabilir.
+- Güvenlik sınırı: `ZipFile` merkez dizini bu sayı denetlenmeden önce belleğe
+  alınır; 10 MB kaynak boyutu ve bu üye sınırı peak-RAM veya parser timeout
+  garantisi değildir. Süreç izolasyonu ve gerçek dosya profili final ölçümünde
+  ayrıca değerlendirilecek.
+- Veri/provenance: Kabul edilen DOCX extraction içeriği ve `docx-v4` çıktısı
+  değişmez; yalnızca 4.096 üzeri üye sayılı arşivler artık fail-closed olur.
+  Parser sürümü veya yeniden indeksleme politikası değişmez.
+- Geriye uyumluluk/rollback: Standart DOCX davranışı korunur. Meşru, çok üyeli
+  paketler reddedilebilir; gerçek korpus kanıtı bunu gösterirse limit artırılır
+  veya değişiklik geri alınır, process izolasyonu yerine konmuş sayılmaz.
+
 ## 2026-09-22 — Directory ingest için aggregate admission budget
 
 - Kanıt: `IngestService.ingest_directory` kaynak başına 10 MB doğruluyordu, fakat

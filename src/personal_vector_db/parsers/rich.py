@@ -22,6 +22,7 @@ from personal_vector_db.parsers.plain_text import parse_text_file
 _SUPPORTED_TEXT = {".md", ".markdown", ".txt", ".org", ".rst", ".log", ".tex", ".ics"}
 _DOCX_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 _MAX_DOCX_UNCOMPRESSED_BYTES = 50_000_000
+_MAX_DOCX_MEMBERS = 4_096
 _MAX_PDF_EXTRACTED_CHARS = 50_000_000
 _XML_FORBIDDEN_DECLARATIONS = ("<!doctype", "<!entity")
 _RTF_HEX_ESCAPE = re.compile(r"\\'([0-9a-fA-F]{2})")
@@ -218,7 +219,10 @@ def _parse_docx(path: Path) -> CanonicalDocument:
     with zipfile.ZipFile(path) as archive:
         total_uncompressed = 0
         member_names: set[str] = set()
-        for info in archive.infolist():
+        members = archive.infolist()
+        if len(members) > _MAX_DOCX_MEMBERS:
+            raise ValueError("DOCX archive exceeds the member count limit")
+        for info in members:
             normalized_name = info.filename.replace("\\", "/")
             member_path = PurePosixPath(normalized_name)
             is_windows_absolute = (

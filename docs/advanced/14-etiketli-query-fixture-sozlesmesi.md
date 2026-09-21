@@ -116,6 +116,12 @@ sorgunun tekrarını artırarak 300 eşiğini yapay biçimde geçmek mümkün de
 `--corpus-manifest` verildiğinde buna checksum ve parser sürüm binding'inin
 geçerli olması da dahildir; ancak gerçek relevance doğrulaması ve reviewed
 etiket kalitesi yine `fixture-validate --labels` ve insan incelemesiyle kanıtlanır.
+Final kabul komutu `--labels` dosyası olmadan başarılı olamaz; dosyada her fixture
+`query_id` için tam bir provenance-bağlı label bulunmalıdır. Bu zorunluluk
+`fixture-coverage` hazırlık raporunu etkilemez; coverage aşamasında label dosyası
+opsiyonel kalır. Final kabul ayrıca güncel corpus manifestini `--corpus-manifest`
+ile zorunlu ister; böylece fixture checksum/parser binding'i ve her label'ın
+relevant chunk ID'leri aynı corpus snapshot'ına karşı doğrulanır.
 Komuta `--corpus-manifest` verilirse her pozitif sorgunun referans chunk ID'leri
 güncel corpus manifestine karşı privacy-safe biçimde kontrol edilir. Fixture
 checksum'ı da varsa aynı manifestle eşleştirilir. Eski veya başka corpus'a ait
@@ -137,8 +143,8 @@ yeniden corpus üzerinden üretilmelidir.
 `fixture-coverage --labels --corpus-manifest` aynı kontrolü label dosyasındaki
 relevance ID'leri için de yapar; sonuçta `unknown_labeled_chunk_count` ve
 `labels_with_unknown_chunks` alanlarıyla yalnızca sayısal, privacy-safe uyarı verir.
-Corpus manifesti `chunk_size_buckets` alanını sağlıyorsa bu mapping'in bütün
-`chunk_ids` değerlerini kapsaması gerekir. Kısmi mapping, fixture yalnızca
+Final fixture kabulindeki corpus manifesti `chunk_size_buckets` alanını taşımalı;
+bu mapping'in bütün `chunk_ids` değerlerini kapsaması gerekir. Kısmi mapping, fixture yalnızca
 eşlenmiş chunk'lara değinse bile `chunk_size_bucket_binding_status=mismatch`
 olarak raporlanır; böylece boyut dağılımı eksik provenance ile final ölçüm
 başlatılamaz.
@@ -156,7 +162,7 @@ vdb fixture-label-template `
 Bu çıktı bilerek `source=derived` ve `REVIEW_REQUIRED` notuyla gelir; final
 etiket değildir. Annotator, tarih, karar notu, relevance ve provenance alanları
 insan tarafından doğrulanmalı; kaynak `manual` veya `reviewed` yapılmadan ve
-`fixture-validate --labels` geçmeden ölçüm başlatılmamalıdır. Template sorgu veya
+`fixture-validate --labels --corpus-manifest` geçmeden ölçüm başlatılmamalıdır. Template sorgu veya
 belge metni içermez. `fixture-coverage --labels` çıktısı da derived ve
 inceleme-gerektiren etiketleri ayrı sayar; tüm query ID'leri bulunsa bile bu
 durum `labels_status=review-required` olarak görünür, `complete` sayılmaz.
@@ -304,8 +310,8 @@ vdb fixture-validate `
   --labels data/benchmarks/labels-v1.json
 ```
 
-`--corpus-manifest` verildiğinde fixture checksum'ı ve parser sürümü gerçek
-corpus manifestiyle de eşleştirilir. Komut embedding modeli veya Qdrant
+`--corpus-manifest` fixture-validate için zorunludur; fixture checksum'ı ve parser
+sürümü gerçek corpus manifestiyle eşleştirilir. Komut embedding modeli veya Qdrant
 başlatmadan yalnızca fixture sözleşmesini kontrol eder.
 Manifestteki `chunk_ids` alanı da gerçek corpus'tan üretilir; etiketli bir
 sorgunun `relevant_chunk_ids` kümesi bu listede olmayan bir kimlik içerirse

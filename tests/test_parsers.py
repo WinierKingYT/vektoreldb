@@ -397,6 +397,35 @@ def test_docx_parser_rejects_duplicate_archive_member_names(tmp_path: Path) -> N
         parse_source(path)
 
 
+def test_docx_parser_rejects_archive_with_too_many_members(tmp_path: Path) -> None:
+    path = tmp_path / "many-members.docx"
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("word/document.xml", "<w:document/>")
+        for index in range(4_096):
+            archive.writestr(f"custom/{index}.xml", "")
+
+    with pytest.raises(ValueError, match="member count limit"):
+        parse_source(path)
+
+
+def test_docx_parser_accepts_archive_at_member_limit(tmp_path: Path) -> None:
+    path = tmp_path / "limit-members.docx"
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr(
+            "word/document.xml",
+            '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+            "<w:body><w:p><w:r><w:t>Limit korunuyor</w:t></w:r></w:p></w:body>"
+            "</w:document>",
+        )
+        for index in range(4_095):
+            archive.writestr(f"custom/{index}.xml", "")
+
+    document = parse_source(path)
+
+    assert len(document.sections) == 1
+    assert document.sections[0].text == "Limit korunuyor"
+
+
 def test_pdf_parser_extracts_nonempty_pages_with_locations(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

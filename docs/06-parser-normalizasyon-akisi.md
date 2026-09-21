@@ -58,6 +58,9 @@ PyMuPDF metin çıkarabilir; ancak düz metin çıktısı her zaman okuyucunun b
 - `word/document.xml` ve varsa `docProps/core.xml` DTD/entity declaration
   içeriyorsa parse etmeden fail-closed reddet; DOCX'in ZIP boyutu sınırı XML
   parser kaynak tüketimi riskinin yerine geçmez.
+- ZIP içindeki üye sayısını da sınırla; üye sayısı sınırı, ZIP merkez dizini
+  metadata'sının `ZipFile` tarafından okunması sırasındaki bellek tüketimini
+  sınırlamaz ve process izolasyonunun yerine geçmez.
 - Başlık stillerini bölüm yoluna çevir.
 - Tabloları satır başlıklarıyla birlikte metinleştir.
 - Yorum, dipnot ve gizli metin için açık politika belirle.

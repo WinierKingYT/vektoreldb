@@ -4,6 +4,16 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- `fixture-validate` final kabulinde label dosyası ve güncel corpus manifesti
+  zorunlu hale getirildi; `status=ready` bir sorgu manifesti artık insan incelemesi,
+  label provenance'ı ve gerçek corpus chunk-ID binding'i olmadan etiketli benchmark
+  paketi olarak geçemez. Hazırlık için `fixture-coverage` bunlar olmadan çalışır.
+- Final fixture kabulinde corpus manifestinin her chunk için `chunk_size_buckets`
+  provenance'ı taşıması ve pozitif sorguların boyut etiketleriyle eşleşmesi zorunlu
+  hale getirildi; eski/eksik mapping'ler coverage aşamasında raporlanır.
+- DOCX ZIP paketlerinde üye sayısı 4.096 ile sınırlandırıldı; bu, açılmış toplam
+  boyut ve güvenli üye kontrollerini tamamlar ancak ZIP merkez dizininin ilk
+  okunması sırasında bellek sınırı veya process izolasyonu sağlamaz.
 - `ingest-dir` ve corpus inventory için varsayılan 5.000 desteklenen dosya ve
   1 GB toplam kaynak byte admission cap'i tanımlandı; limit aşılırsa batch ilk
   embedding/store yazımından veya inventory parse/yazımından önce reddedilir.

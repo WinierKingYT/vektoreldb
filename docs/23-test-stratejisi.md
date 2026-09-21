@@ -15,3 +15,9 @@
 Türkçe karakter, başlık, tablo, liste, duplicate içerik, bozuk encoding, boş dosya, çok uzun dosya, taranmış PDF ve yetki sınırı testleri bulunur.
 
 Her değişiklikte hızlı unit/contract testleri; parser, model veya retrieval değişiminde tam benchmark çalışır.
+
+Etiketli retrieval fixture'ının final kabul testi `fixture-validate --labels`
+ve `--corpus-manifest` ile yapılır. `status=ready` manifesti, sorgu/dağılım
+kapıları geçse bile label dosyası veya güncel corpus manifesti olmadan kabul
+edilmemelidir; `fixture-coverage` ise hazırlık aşaması olduğundan ikisi olmadan
+çalışabilir.

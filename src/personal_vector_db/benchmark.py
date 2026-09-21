@@ -1084,6 +1084,23 @@ def validate_fixture_requirements(
     for bucket in manifest.get("required_filter_selectivity_buckets", []):
         if selectivity_counts.get(bucket, 0) == 0:
             raise ValueError(f"fixture is missing filter selectivity bucket: {bucket}")
+    if labels is None:
+        raise ValueError("fixture validation requires a label file")
+    if corpus_manifest_path is None:
+        raise ValueError("fixture validation requires a corpus manifest")
+    if corpus_manifest_path is not None:
+        corpus_manifest = json.loads(corpus_manifest_path.read_text(encoding="utf-8"))
+        chunk_size_buckets = corpus_manifest.get("chunk_size_buckets")
+        if not isinstance(chunk_size_buckets, dict):
+            raise ValueError("corpus manifest is missing chunk_size_buckets")
+        if set(chunk_size_buckets) != set(corpus_manifest["chunk_ids"]):
+            raise ValueError("corpus manifest chunk_size_buckets are incomplete")
+        for case in cases:
+            if not case.relevant_chunk_ids or case.size_bucket is None:
+                continue
+            buckets = {chunk_size_buckets[chunk_id] for chunk_id in case.relevant_chunk_ids}
+            if case.size_bucket not in buckets:
+                raise ValueError(f"fixture size_bucket does not match corpus for {case.query_id}")
     return {
         "query_count": len(cases),
         "query_type_counts": type_counts,

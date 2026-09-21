@@ -1307,6 +1307,27 @@ def test_fixture_validation_binds_labels_to_case_and_manifest(tmp_path: Path) ->
         ),
         encoding="utf-8",
     )
+    corpus_path = tmp_path / "corpus-manifest.json"
+    corpus_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "corpus-manifest-v1",
+                "root_name": "sources",
+                "corpus_checksum": checksum,
+                "source_count": 1,
+                "parsed_source_count": 1,
+                "failed_source_count": 0,
+                "total_bytes": 10,
+                "total_chunks": 1,
+                "chunk_ids": ["chunk-a"],
+                "chunk_size_buckets": {"chunk-a": "small"},
+                "chunking_version": "paragraph-pack-v1",
+                "parser_versions": ["plain-text-v1"],
+                "privacy_classification": "private-local",
+            }
+        ),
+        encoding="utf-8",
+    )
 
     summary = validate_fixture_requirements(
         [
@@ -1320,6 +1341,7 @@ def test_fixture_validation_binds_labels_to_case_and_manifest(tmp_path: Path) ->
             )
         ],
         manifest_path,
+        corpus_manifest_path=corpus_path,
         labels_path=labels_path,
     )
 
@@ -1382,6 +1404,65 @@ def test_ready_fixture_rejects_unreviewed_derived_labels(tmp_path: Path) -> None
             manifest_path,
             labels_path=labels_path,
         )
+
+
+def test_ready_fixture_requires_label_file_after_other_gates_pass(tmp_path: Path) -> None:
+    checksum = "sha256:" + "f" * 64
+    manifest = {
+        "schema_version": "query-fixture-manifest-v1",
+        "status": "ready",
+        "minimum_query_count": 1,
+        "recommended_split": {"development": 1.0},
+        "split_tolerance": 0.01,
+        "required_query_types": ["semantic"],
+        "minimum_queries_per_type": 1,
+        "required_document_size_buckets": ["small"],
+        "required_filter_selectivity_buckets": ["low"],
+        "corpus_checksum": checksum,
+        "parser_version": "plain-text-v1",
+        "chunking_version": "paragraph-pack-v1",
+        "embedding_manifest_id": "local:model@revision",
+        "privacy_classification": "private-local",
+        "notes": "test",
+    }
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    cases = [
+        QueryCase(
+            "q1",
+            "query",
+            frozenset({"chunk-a"}),
+            query_type="semantic",
+            split="development",
+            size_bucket="small",
+            filter_selectivity="low",
+        )
+    ]
+
+    with pytest.raises(ValueError, match="requires a label file"):
+        validate_fixture_requirements(cases, manifest_path)
+
+    labels_path = tmp_path / "labels.json"
+    labels_path.write_text(
+        json.dumps(
+            [
+                {
+                    "query_id": "q1",
+                    "relevant_chunk_ids": ["chunk-a"],
+                    "annotator": "local-user",
+                    "annotated_at": "2026-09-22T00:00:00Z",
+                    "source": "manual",
+                    "decision_note": "direct evidence",
+                    "corpus_checksum": checksum,
+                    "parser_version": "plain-text-v1",
+                    "chunking_version": "paragraph-pack-v1",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="requires a corpus manifest"):
+        validate_fixture_requirements(cases, manifest_path, labels_path=labels_path)
 
 
 def test_benchmark_result_can_be_written(tmp_path: Path) -> None:
