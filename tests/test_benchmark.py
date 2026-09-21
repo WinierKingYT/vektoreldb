@@ -1348,6 +1348,66 @@ def test_fixture_validation_binds_labels_to_case_and_manifest(tmp_path: Path) ->
     assert summary["label_count"] == 1
 
 
+def test_ready_fixture_rejects_missing_chunk_size_provenance(tmp_path: Path) -> None:
+    checksum = "sha256:" + "f" * 64
+    manifest_path = _write_synthetic_fixture_manifest(
+        tmp_path,
+        corpus_checksum=checksum,
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest.update(
+        {
+            "status": "ready",
+            "embedding_manifest_id": "local:model@revision",
+        }
+    )
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    labels_path = tmp_path / "labels.json"
+    labels_path.write_text(
+        json.dumps(
+            [
+                {
+                    "query_id": "q1",
+                    "relevant_chunk_ids": ["chunk-a"],
+                    "annotator": "local-user",
+                    "annotated_at": "2026-09-13T00:00:00Z",
+                    "source": "manual",
+                    "decision_note": "direct evidence",
+                    "corpus_checksum": checksum,
+                    "parser_version": "plain-text-v1",
+                    "parser_versions": ["plain-text-v1"],
+                    "chunking_version": "paragraph-pack-v2",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    corpus_path = _write_synthetic_corpus_manifest(
+        tmp_path,
+        checksum=checksum,
+    )
+    corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+    corpus.pop("chunk_size_buckets")
+    corpus_path.write_text(json.dumps(corpus), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="missing chunk_size_buckets"):
+        validate_fixture_requirements(
+            [
+                QueryCase(
+                    "q1",
+                    "query",
+                    frozenset({"chunk-a"}),
+                    split="development",
+                    size_bucket="small",
+                    filter_selectivity="low",
+                )
+            ],
+            manifest_path,
+            corpus_manifest_path=corpus_path,
+            labels_path=labels_path,
+        )
+
+
 def test_ready_fixture_rejects_unreviewed_derived_labels(tmp_path: Path) -> None:
     checksum = "sha256:" + "e" * 64
     manifest = {
