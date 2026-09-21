@@ -1,5 +1,13 @@
 # Karar günlüğü
 
+## 2026-09-22 — Satır tabanlı parser bellek iyileştirmesi
+
+JSONL/NDJSON ve CSV parser'ları önce tüm kaynak dosyasını string olarak belleğe
+almıyordu; geniş kişisel export'larda gereksiz ikinci ham string kopyası oluşuyordu.
+Parser'lar artık UTF-8 BOM destekli stream/DictReader akışı kullanıyor. Kanonik
+section listesi, chunking ve provenance aynı kaldı; bu değişiklik süreç düzeyinde
+RAM/timeout izolasyonu veya sınırsız dosya kabul garantisi değildir.
+
 ## 2026-09-22 — RAG insan değerlendirme artifact'i
 
 RAG context ve citation sınırı retrieval kanıtının bütünlüğünü ölçüyordu, ancak

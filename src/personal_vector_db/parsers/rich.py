@@ -2,7 +2,6 @@
 
 import csv
 import hashlib
-import io
 import json
 import re
 import stat
@@ -406,28 +405,32 @@ def _strip_rtf_ignored_groups(text: str) -> str:
 
 def _parse_jsonl(path: Path) -> CanonicalDocument:
     sections: list[Section] = []
-    for line_number, line in enumerate(_read_utf8_text(path).splitlines(), start=1):
-        if not line.strip():
-            continue
-        record = json.loads(line)
-        sections.append(
-            Section(
-                text=json.dumps(record, ensure_ascii=False, sort_keys=True),
-                location={"line": line_number},
+    with path.open("r", encoding="utf-8-sig", newline="") as stream:
+        for line_number, line in enumerate(stream, start=1):
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            sections.append(
+                Section(
+                    text=json.dumps(record, ensure_ascii=False, sort_keys=True),
+                    location={"line": line_number},
+                )
             )
-        )
     return _document(path, "jsonl", sections, parser_version="jsonl-v1")
 
 
 def _parse_csv(path: Path) -> CanonicalDocument:
-    rows = list(csv.DictReader(io.StringIO(_read_utf8_text(path), newline="")))
-    sections = [
-        Section(
-            text="\n".join(f"{key}: {value}" for key, value in row.items() if value is not None),
-            location={"row": index},
-        )
-        for index, row in enumerate(rows, start=1)
-    ]
+    sections: list[Section] = []
+    with path.open("r", encoding="utf-8-sig", newline="") as stream:
+        for index, row in enumerate(csv.DictReader(stream), start=1):
+            sections.append(
+                Section(
+                    text="\n".join(
+                        f"{key}: {value}" for key, value in row.items() if value is not None
+                    ),
+                    location={"row": index},
+                )
+            )
     return _document(path, "csv", sections)
 
 

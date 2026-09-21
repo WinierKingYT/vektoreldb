@@ -4,6 +4,8 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- JSONL/NDJSON ve CSV parser'ları ham dosyayı önce tam string'e kopyalamadan
+  satır/row akışıyla okuyacak şekilde iyileştirildi; kanonik çıktı/provenance değişmedi.
 - RAG için ham cevap/source metni taşımayan, provenance'a bağlı insan evaluation
   schema'sı ve privacy-safe özetleyici eklendi; otomatik factuality iddiası üretmez.
 - Harici embedding provider başarıyla seçildiğinde ham veri ve API key içermeyen
