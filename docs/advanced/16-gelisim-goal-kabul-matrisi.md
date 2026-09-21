@@ -69,7 +69,7 @@ Uzun süreli test ve benchmarklar bu belgeyi erken kapatmak için atlanamaz.
 
 ## İlk final doğrulama notu
 
-Tam test paketi son bilinen durumda `276 passed, 3 skipped, 3 warnings` ile tamamlandı. Önceki
+Tam test paketi son doğrulamada `345 passed, 3 skipped, 3 warnings` ile tamamlandı. Önceki
 `117 passed, 3 skipped` kaydı tarihsel ilk doğrulama sonucudur. Eski 100 sorguluk
 smoke benchmark denemesi pinned local modelin Hugging Face cache/indirme
 aşamasında ilerlemediği için sonuç dosyası üretmeden durduruldu; bu kalite
