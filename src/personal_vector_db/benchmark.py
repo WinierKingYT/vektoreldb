@@ -85,6 +85,42 @@ def load_abstention_score_artifact(path: Path) -> dict[str, object]:
     return raw
 
 
+def write_abstention_score_artifact(
+    path: Path,
+    cases: Sequence[QueryCase],
+    scores_by_query_id: dict[str, float],
+    *,
+    fixture_checksum: str,
+    embedding_manifest_id: str,
+    retrieval_mode: str = "dense",
+) -> None:
+    """Write per-query maximum scores without query or document text."""
+
+    if retrieval_mode != "dense":
+        raise ValueError("abstention scores are supported only for dense retrieval")
+    expected_ids = {case.query_id for case in cases}
+    if set(scores_by_query_id) != expected_ids:
+        raise ValueError("abstention score output is incomplete or has unknown query_id")
+    scores = []
+    for case in cases:
+        score = scores_by_query_id[case.query_id]
+        if isinstance(score, bool) or not isinstance(score, (int, float)):
+            raise ValueError("abstention scores must be numeric")
+        if not isfinite(score) or not -1.0 <= score <= 1.0:
+            raise ValueError("abstention scores must be finite and between -1 and 1")
+        scores.append({"query_id": case.query_id, "max_score": float(score)})
+    artifact = {
+        "schema_version": "abstention-scores-v1",
+        "fixture_checksum": fixture_checksum,
+        "embedding_manifest_id": embedding_manifest_id,
+        "retrieval_mode": retrieval_mode,
+        "scores": scores,
+    }
+    validate_schema(artifact, "abstention-scores.schema.json")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def calibrate_abstention_threshold(
     cases: Sequence[QueryCase],
     score_artifact: dict[str, object],
@@ -1267,6 +1303,7 @@ def run_benchmark(
     fixture_checksum: str | None = None,
     corpus_checksum: str | None = None,
     embedding_manifest_id: str | None = None,
+    score_sink: dict[str, float] | None = None,
 ) -> BenchmarkResult:
     if not cases or not 1 <= k <= 100:
         raise ValueError("cases cannot be empty and k must be between 1 and 100")
@@ -1305,6 +1342,10 @@ def run_benchmark(
         query_started = perf_counter()
         try:
             results = _search(searcher, case, limit=k)
+            if score_sink is not None:
+                score_sink[case.query_id] = max(
+                    (float(result.score) for result in results), default=-1.0
+                )
             returned_ids = {result.chunk_id for result in results}
             if case.query_type == "negative":
                 negative_count += 1
@@ -1383,6 +1424,7 @@ def run_repeated_benchmark(
     fixture_checksum: str | None = None,
     corpus_checksum: str | None = None,
     embedding_manifest_id: str | None = None,
+    score_sink: dict[str, float] | None = None,
 ) -> list[BenchmarkResult]:
     """Run the same benchmark repeatedly for variance-aware gate decisions."""
 
@@ -1396,6 +1438,7 @@ def run_repeated_benchmark(
             fixture_checksum=fixture_checksum,
             corpus_checksum=corpus_checksum,
             embedding_manifest_id=embedding_manifest_id,
+            score_sink=score_sink,
         )
         for _ in range(repeats)
     ]

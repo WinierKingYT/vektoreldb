@@ -126,6 +126,11 @@ uv run vdb abstention-calibrate `
   --output data/benchmarks/results/abstention-calibration.json
 ```
 
+Gerçek dense benchmark koşusunda bu artifact'i doğrudan üretmek için benchmark'a
+`--scores-output` eklenebilir. Bu seçenek bilinçli olarak `repeat=1`, eşiksiz ve
+rerank kapalı dense koşulla sınırlıdır; böylece calibration girdisi önceden
+uygulanmış bir eşik veya reranker skoru olmaz.
+
 ## Dokümanlar
 
 - [Geliştirme roadmap'i](docs/roadmap.md)

@@ -20,6 +20,7 @@ from .benchmark import (
     run_repeated_benchmark,
     summarize_benchmark_results,
     validate_fixture_requirements,
+    write_abstention_score_artifact,
     write_benchmark_result,
     write_benchmark_results,
     write_concurrency_matrix_results,
@@ -186,6 +187,11 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--fixture-manifest", type=Path)
     benchmark.add_argument("--corpus-manifest", type=Path)
     benchmark.add_argument("--labels", type=Path)
+    benchmark.add_argument(
+        "--scores-output",
+        type=Path,
+        help="write privacy-safe dense per-query maximum scores for abstention calibration",
+    )
     concurrency_probe = subparsers.add_parser(
         "concurrency-probe", help="run a bounded concurrent retrieval probe"
     )
@@ -502,6 +508,15 @@ def main(argv: list[str] | None = None) -> None:
             return
         if args.command == "benchmark":
             cases = _load_fixture_or_exit(args.fixture)
+            if args.scores_output is not None and (
+                settings.retrieval_mode != "dense"
+                or args.repeat != 1
+                or args.rerank
+                or args.min_score is not None
+            ):
+                raise ValueError(
+                    "--scores-output requires dense mode, repeat=1, no rerank, and no min-score"
+                )
             service = RetrievalService(
                 provider,
                 store,
@@ -529,6 +544,7 @@ def main(argv: list[str] | None = None) -> None:
                         filters=filters,
                     )
 
+            score_sink = {} if args.scores_output is not None else None
             results = run_repeated_benchmark(
                 cases,
                 BenchmarkSearcher(),
@@ -539,7 +555,19 @@ def main(argv: list[str] | None = None) -> None:
                 embedding_manifest_id=getattr(
                     getattr(provider, "manifest", None), "manifest_id", None
                 ),
+                score_sink=score_sink,
             )
+            if args.scores_output is not None:
+                if results[0].error_rate:
+                    raise ValueError("cannot write abstention scores when benchmark has errors")
+                write_abstention_score_artifact(
+                    args.scores_output,
+                    cases,
+                    score_sink or {},
+                    fixture_checksum=fixture_checksum,
+                    embedding_manifest_id=provider.manifest.manifest_id,
+                    retrieval_mode=settings.retrieval_mode,
+                )
             if args.output is not None:
                 if len(results) == 1:
                     write_benchmark_result(args.output, results[0])

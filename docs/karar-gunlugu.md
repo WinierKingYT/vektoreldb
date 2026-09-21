@@ -21,6 +21,12 @@ validation eşiğini üretir. Sadece dense kip kabul edilir; hybrid/late skorlar
 bilinçli olarak kapsam dışıdır. Bu artifact ölçüm altyapısıdır, gerçek corpus
 kalibrasyon kanıtı değildir.
 
+Skor dosyasının elle veya farklı bir ölçüm koşuluyla üretilmesi drift riski
+taşıdığı için benchmark'a `--scores-output` bağlandı. Bu seçenek yalnızca tek
+tekrarlı, eşiksiz ve rerank'siz dense koşulda çalışır; hata içeren benchmark'ta
+eksik skor artifact'i yazılmaz. Böylece threshold calibration girdisi doğrudan
+aynı retrieval sözleşmesinden üretilebilir.
+
 ## 2026-09-22 — RAG evaluation özeti için offline CLI sınırı
 
 İnsan değerlendirme artifact'inin yalnızca Python API'siyle kullanılabilmesi

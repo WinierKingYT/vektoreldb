@@ -25,6 +25,7 @@ from personal_vector_db.benchmark import (
     run_repeated_benchmark,
     summarize_benchmark_results,
     validate_fixture_requirements,
+    write_abstention_score_artifact,
     write_benchmark_result,
     write_benchmark_results,
     write_concurrency_matrix_results,
@@ -36,6 +37,7 @@ from personal_vector_db.benchmark import (
 @dataclass
 class Result:
     chunk_id: str
+    score: float = 0.5
 
 
 class FakeSearcher:
@@ -128,6 +130,31 @@ def test_benchmark_reports_recall_and_query_count() -> None:
     assert result.rss_mb is None or result.rss_mb > 0
     assert result.query_type_metrics["semantic"]["count"] == 2
     assert result.query_type_metrics["semantic"]["recall_at_k"] == 0.5
+
+
+def test_benchmark_can_emit_privacy_safe_abstention_scores(tmp_path: Path) -> None:
+    cases = [
+        QueryCase("q1", "a query", frozenset({"chunk-a"}), split="validation"),
+        QueryCase("q2", "no hit", frozenset(), query_type="negative", split="validation"),
+    ]
+    scores: dict[str, float] = {}
+    run_benchmark(cases, FakeSearcher(), k=1, score_sink=scores)
+    output = tmp_path / "scores.json"
+
+    write_abstention_score_artifact(
+        output,
+        cases,
+        scores,
+        fixture_checksum="sha256:" + "a" * 64,
+        embedding_manifest_id="local:model@r1",
+    )
+
+    artifact = load_abstention_score_artifact(output)
+    assert artifact["retrieval_mode"] == "dense"
+    assert artifact["scores"] == [
+        {"query_id": "q1", "max_score": 0.5},
+        {"query_id": "q2", "max_score": 0.5},
+    ]
 
 
 def test_benchmark_result_preserves_privacy_safe_provenance() -> None:
