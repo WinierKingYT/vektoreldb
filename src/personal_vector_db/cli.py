@@ -283,12 +283,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--inventory", type=Path, default=Path("data/derived/corpus-inventory.json")
     )
     readiness.add_argument(
-        "--fixture", type=Path, default=Path("data/benchmarks/queries-v1.json")
+        "--fixture", type=Path, default=Path("data/benchmarks/representative-personal-queries.json")
     )
     readiness.add_argument(
         "--fixture-manifest",
         type=Path,
-        default=Path("data/benchmarks/query-fixture-manifest.json"),
+        default=Path("data/benchmarks/representative-personal-query-fixture-manifest.json"),
     )
     readiness.add_argument("--labels", type=Path)
     readiness.add_argument(

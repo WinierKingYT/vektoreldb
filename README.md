@@ -23,8 +23,8 @@ uv run vdb corpus-inventory `
   --manifest data\manifests\corpus-manifest.json
 uv run vdb final-readiness `
   --inventory data\derived\corpus-inventory.json `
-  --fixture data\benchmarks\queries-v1.json `
-  --fixture-manifest data\benchmarks\query-fixture-manifest.json `
+  --fixture data\benchmarks\representative-personal-queries.json `
+  --fixture-manifest data\benchmarks\representative-personal-query-fixture-manifest.json `
   --corpus-manifest data\manifests\corpus-manifest.json `
   --output data\derived\final-readiness.json
 # Preparation report; it does not start Qdrant or embeddings:
