@@ -83,6 +83,26 @@ def test_document_schema_accepts_xml_source_type() -> None:
     )
 
 
+def test_document_schema_accepts_toml_source_type() -> None:
+    now = datetime.now(UTC).isoformat()
+    validate_schema(
+        {
+            "document_id": "doc_toml",
+            "source_uri": "file:///settings.toml",
+            "source_type": "toml",
+            "title": "TOML settings",
+            "owner_id": "me",
+            "visibility": "private",
+            "document_status": "parsed",
+            "content_hash": "sha256:" + "c" * 64,
+            "parser_version": "toml-v1",
+            "created_at": now,
+            "updated_at": now,
+        },
+        "document.schema.json",
+    )
+
+
 def test_chunk_schema_rejects_unknown_fields() -> None:
     try:
         validate_schema(
