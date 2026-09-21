@@ -56,5 +56,7 @@ goal'unun güncel kabul durumu aşağıdaki ayrı bölümde tutulur.
 - [ ] Uzun süreli benchmark, kapasite matrisi ve eşik kalibrasyonu.
 - [ ] Ölçülmüş ihtiyaç olmadan multimodal/Graph-RAG/çoklu kullanıcı kapsamı açılmayacak.
 
-İleri seviye goal'un güncel tam test kanıtı `276 passed, 3 skipped, 3 warnings`;
+İleri seviye goal'un son tam paket kanıtı `276 passed, 3 skipped, 3 warnings`;
 bu sonuç gerçek kişisel corpus ve uzun süreli ölçüm koşullarının yerine geçmez.
+Ardından eklenen HTML `html-v4` hardening için hedefli HTML testleri `3 passed`;
+güncel tam regresyon final toplu turunda alınacaktır.

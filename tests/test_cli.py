@@ -60,6 +60,9 @@ def test_cli_parser_supports_core_commands() -> None:
     assert coverage_args.command == "fixture-coverage"
     assert coverage_args.corpus_manifest.name == "corpus.json"
     assert coverage_args.output is None
+    inventory_args = build_parser().parse_args(["corpus-inventory"])
+    assert inventory_args.output.as_posix() == "data/derived/corpus-inventory.json"
+    assert inventory_args.manifest.as_posix() == "data/manifests/corpus-manifest.json"
 
 
 def test_cli_configures_utf8_output(monkeypatch) -> None:

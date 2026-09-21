@@ -17,7 +17,10 @@ uv run vdb benchmark --fixture data\benchmarks\queries.json --output data\benchm
 uv run vdb benchmark --fixture data\benchmarks\queries.json --repeat 3 --output data\benchmarks\results\repeat3.json
 uv run vdb concurrency-probe --fixture data\benchmarks\queries.json --concurrency 4 --repetitions 2
 uv run vdb concurrency-probe --fixture data\benchmarks\queries.json --concurrency-levels 1 2 4 8 16 --repetitions 2 --output data\benchmarks\results\concurrency-matrix.json
-uv run vdb corpus-inventory --output data\benchmarks\corpus-inventory.json
+uv run vdb corpus-inventory `
+  --root data\sources `
+  --output data\derived\corpus-inventory.json `
+  --manifest data\manifests\corpus-manifest.json
 # Preparation report; it does not start Qdrant or embeddings:
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --labels data\benchmarks\labels-v1.json
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --output data\benchmarks\results\fixture-coverage.json
@@ -27,11 +30,15 @@ uv run vdb corpus-inventory --output data\benchmarks\corpus-inventory.json
 # uv run vdb fixture-merge labels --input data\benchmarks\labels\a.json data\benchmarks\labels\b.json --output data\benchmarks\labels-v1.json
 # Final gate after the real personal fixture and labels are prepared:
 # uv run vdb fixture-validate --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --corpus-manifest data\benchmarks\corpus-manifest.json --labels data\benchmarks\labels-v1.json
-uv run vdb backup --corpus-manifest data\benchmarks\corpus-manifest.json
+uv run vdb backup --corpus-manifest data\manifests\corpus-manifest.json
 uv run vdb restore data\snapshots\latest.tar.gz --manifest data\snapshots\latest.json
 ```
 
-`corpus-inventory` çıktısı kaynak metni içermez. Aynı ham byte içeriğine sahip
+`corpus-inventory` çıktısı kaynak metni içermez; ancak göreli dosya yolları,
+content hash'leri ve chunk kimlikleri içerir. Kişisel corpus çıktıları için
+izlenmeyen `data/derived/` ve `data/manifests/` klasörlerini kullan; bu dosyaları
+yayımlamadan veya benchmark fixture'ına bağlamadan önce metadata'yı ayrıca gözden geçir.
+`corpus-inventory` çıktısında aynı ham byte içeriğine sahip
 kopyalarda `duplicate_of` alanı daha sığ kanonik adayı gösterir; bu alan yalnızca
 inceleme içindir, otomatik silme veya birleştirme yapmaz. Komut çıktısındaki
 `formats` ve `failure_types` alanları format dağılımını ve parser hata özetini

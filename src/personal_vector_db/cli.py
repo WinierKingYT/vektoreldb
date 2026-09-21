@@ -227,10 +227,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     corpus_inventory.add_argument("--root", type=Path)
     corpus_inventory.add_argument(
-        "--output", type=Path, default=Path("data/benchmarks/corpus-inventory.json")
+        "--output", type=Path, default=Path("data/derived/corpus-inventory.json")
     )
     corpus_inventory.add_argument(
-        "--manifest", type=Path, default=Path("data/benchmarks/corpus-manifest.json")
+        "--manifest", type=Path, default=Path("data/manifests/corpus-manifest.json")
     )
     search = subparsers.add_parser("search", help="search indexed chunks")
     search.add_argument("query")

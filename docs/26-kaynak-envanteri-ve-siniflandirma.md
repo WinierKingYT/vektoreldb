@@ -4,6 +4,21 @@
 
 İlk sürümde yalnızca kullanıcı tarafından açıkça tanımlanan klasörler taranır. `.git`, `.hg`, `.svn`, virtualenv, `node_modules`, `__pycache__`, secrets/credentials, cache, geçici ve build/dist klasörleri varsayılan exclude listesindedir. Bu liste hem `corpus-inventory` hem `ingest-dir` için aynıdır. Inventory, parser'a kaynak kökü doğrulamasından geçmiş canonical path'i verir; böylece symlink ve provenance kontrolü aynı path üzerinde uygulanır.
 
+## Yerel çıktı ve Git gizliliği
+
+Kişisel corpus için inventory çıktısını `data/derived/corpus-inventory.json`,
+manifest'i `data/manifests/corpus-manifest.json` altında tut. Bu klasörler
+`.gitignore` içindedir ve CLI varsayılanları da bu konumları kullanır. Inventory
+ham belge metnini içermez; yine de göreli dosya yolu, content hash, document/chunk
+kimlikleri ve boyut/format metadata'sı hassas olabilir. Bunlar açık inceleme
+olmadan public repo'ya, issue'ya veya paylaşılmış benchmark'a eklenmemelidir.
+
+`data/benchmarks/` altında izlenen corpus/fixture dosyaları yalnızca sentetik
+repository test paketidir. Kişisel corpus taramasında benchmark klasöründeki
+bu statik artifact'lerin üzerine yazma; gerçek kullanımın manifestlerini yerel
+manifest klasöründe tut. Bilinçli bir paylaşım kararı verilirse önce dosya
+yollarını, hash'leri, chunk ID'leri, sorgu metinlerini ve label'ları incele.
+
 ## Sınıflar
 
 - `public`: dışarı açılması kritik olmayan içerik

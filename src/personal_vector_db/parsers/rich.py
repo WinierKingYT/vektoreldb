@@ -27,6 +27,7 @@ _XML_FORBIDDEN_DECLARATIONS = ("<!doctype", "<!entity")
 _RTF_HEX_ESCAPE = re.compile(r"\\'([0-9a-fA-F]{2})")
 _RTF_UNICODE_ESCAPE = re.compile(r"\\u(-?\d+)\??")
 _RTF_CONTROL_WORD = re.compile(r"\\[a-zA-Z]+-?\d* ?")
+_XML_FORBIDDEN_BYTE_PATTERN = re.compile(rb"<!doctype|<!entity", re.IGNORECASE)
 _RTF_IGNORED_DESTINATIONS = frozenset(
     {
         "colortbl",
@@ -75,6 +76,52 @@ def _document(
     )
 
 
+def _docx_paragraph_text(paragraph: ElementTree.Element) -> str:
+    """Preserve Word run boundaries represented as tabs and explicit breaks."""
+
+    parts: list[str] = []
+    for node in paragraph.iter():
+        if node.tag == f"{_DOCX_NS}t":
+            parts.append(node.text or "")
+        elif node.tag == f"{_DOCX_NS}tab":
+            parts.append("\t")
+        elif node.tag in {f"{_DOCX_NS}br", f"{_DOCX_NS}cr"}:
+            parts.append("\n")
+    return "".join(parts).strip()
+
+
+def _docx_cell_text(cell: ElementTree.Element) -> str:
+    """Join a cell's paragraphs without absorbing nested-table content twice."""
+
+    paragraphs: list[str] = []
+
+    def collect(node: ElementTree.Element) -> None:
+        for child in node:
+            if child.tag == f"{_DOCX_NS}tbl":
+                continue
+            if child.tag == f"{_DOCX_NS}p":
+                text = _docx_paragraph_text(child)
+                if text:
+                    paragraphs.append(text)
+                continue
+            collect(child)
+
+    collect(cell)
+    return " ".join(paragraphs).strip()
+
+
+def _parse_docx_xml(payload: bytes) -> ElementTree.Element:
+    """Reject DTD/entity declarations before handing package XML to Expat."""
+
+    has_forbidden_declaration = _XML_FORBIDDEN_BYTE_PATTERN.search(payload) is not None
+    if not has_forbidden_declaration and b"\x00" in payload:
+        utf16_ascii = payload.replace(b"\x00", b"")
+        has_forbidden_declaration = _XML_FORBIDDEN_BYTE_PATTERN.search(utf16_ascii) is not None
+    if has_forbidden_declaration:
+        raise ValueError("DOCX XML DTD/entity declarations are not supported")
+    return ElementTree.fromstring(payload)
+
+
 class _VisibleHTML(HTMLParser):
     _ignored = {"script", "style", "nav", "footer", "header", "aside"}
     _blocks = {"p", "div", "li", "pre", "blockquote", "br"} | {
@@ -89,29 +136,40 @@ class _VisibleHTML(HTMLParser):
         self._heading_path: list[str] = []
         self._title_parts: list[str] = []
         self._in_title = False
-        self._depth = 0
+        self._ignored_stack: list[str] = []
+        self._ignored_counts: dict[str, int] = {}
 
     def handle_starttag(self, tag: str, _attrs: list[tuple[str, str | None]]) -> None:
         if tag in self._ignored:
-            self._depth += 1
+            self._ignored_stack.append(tag)
+            self._ignored_counts[tag] = self._ignored_counts.get(tag, 0) + 1
             return
-        if not self._depth and tag == "title":
+        if not self._ignored_stack and tag == "title":
             self._in_title = True
             return
-        if not self._depth and tag in self._blocks:
+        if not self._ignored_stack and tag in self._blocks:
             self._flush()
             self._current_tag = tag
 
     def handle_endtag(self, tag: str) -> None:
-        if tag in self._ignored and self._depth:
-            self._depth -= 1
+        if tag in self._ignored:
+            if self._ignored_counts.get(tag, 0):
+                matching_index = len(self._ignored_stack) - 1 - self._ignored_stack[::-1].index(tag)
+                removed_tags = self._ignored_stack[matching_index:]
+                del self._ignored_stack[matching_index:]
+                for removed_tag in removed_tags:
+                    remaining = self._ignored_counts[removed_tag] - 1
+                    if remaining:
+                        self._ignored_counts[removed_tag] = remaining
+                    else:
+                        del self._ignored_counts[removed_tag]
         elif tag == "title" and self._in_title:
             self._in_title = False
-        elif not self._depth and tag in self._blocks:
+        elif not self._ignored_stack and tag in self._blocks:
             self._flush()
 
     def handle_data(self, data: str) -> None:
-        if not self._depth and data.strip():
+        if not self._ignored_stack and data.strip():
             if self._in_title:
                 self._title_parts.append(data.strip())
             else:
@@ -151,7 +209,7 @@ def _parse_html(path: Path) -> CanonicalDocument:
         path,
         "html",
         sections,
-        parser_version="html-v3",
+        parser_version="html-v4",
         title=parser.title,
     )
 
@@ -186,10 +244,10 @@ def _parse_docx(path: Path) -> CanonicalDocument:
             total_uncompressed += info.file_size
             if total_uncompressed > _MAX_DOCX_UNCOMPRESSED_BYTES:
                 raise ValueError("DOCX archive exceeds the uncompressed size limit")
-        root = ElementTree.fromstring(archive.read("word/document.xml"))
+        root = _parse_docx_xml(archive.read("word/document.xml"))
         title = ""
         try:
-            core = ElementTree.fromstring(archive.read("docProps/core.xml"))
+            core = _parse_docx_xml(archive.read("docProps/core.xml"))
             title_node = core.find("{http://purl.org/dc/elements/1.1/}title")
             title = (title_node.text or "").strip() if title_node is not None else ""
         except KeyError:
@@ -204,7 +262,7 @@ def _parse_docx(path: Path) -> CanonicalDocument:
     for child in body:
         if child.tag == f"{_DOCX_NS}p":
             paragraph_number += 1
-            text = "".join(node.text or "" for node in child.iter(f"{_DOCX_NS}t")).strip()
+            text = _docx_paragraph_text(child)
             if text:
                 style = child.find(f"{_DOCX_NS}pPr/{_DOCX_NS}pStyle")
                 style_name = style.get(f"{_DOCX_NS}val", "") if style is not None else ""
@@ -228,12 +286,7 @@ def _parse_docx(path: Path) -> CanonicalDocument:
             for row_number, row in enumerate(child.iter(f"{_DOCX_NS}tr"), start=1):
                 cells = []
                 for cell in row.findall(f"{_DOCX_NS}tc"):
-                    cell_text = " ".join(
-                        part.strip()
-                        for part in (node.text or "" for node in cell.iter(f"{_DOCX_NS}t"))
-                        if part.strip()
-                    )
-                    cells.append(cell_text)
+                    cells.append(_docx_cell_text(cell))
                 text = " | ".join(cells).strip()
                 if text:
                     sections.append(
@@ -243,7 +296,7 @@ def _parse_docx(path: Path) -> CanonicalDocument:
                             heading_path=list(heading_path),
                         )
                     )
-    return _document(path, "docx", sections, parser_version="docx-v3", title=title)
+    return _document(path, "docx", sections, parser_version="docx-v4", title=title)
 
 
 def _parse_json(path: Path) -> CanonicalDocument:

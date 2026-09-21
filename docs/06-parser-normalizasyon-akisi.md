@@ -43,6 +43,13 @@ PyMuPDF metin çıkarabilir; ancak düz metin çıktısı her zaman okuyucunun b
 ## DOCX
 
 - Paragraf sırasını koru.
+- Paragraf ve tablo hücrelerindeki `w:tab`, `w:br` ve `w:cr` işaretlerini
+  sırasıyla sekme ve satır sonu olarak koru; nested tablo içeriğini üst hücre
+  metnine tekrar katma. Extraction sürümü `docx-v4` olduğundan bu değişiklik
+  mevcut DOCX kayıtlarının yeniden indekslenmesini gerektirir.
+- `word/document.xml` ve varsa `docProps/core.xml` DTD/entity declaration
+  içeriyorsa parse etmeden fail-closed reddet; DOCX'in ZIP boyutu sınırı XML
+  parser kaynak tüketimi riskinin yerine geçmez.
 - Başlık stillerini bölüm yoluna çevir.
 - Tabloları satır başlıklarıyla birlikte metinleştir.
 - Yorum, dipnot ve gizli metin için açık politika belirle.
@@ -51,6 +58,11 @@ PyMuPDF metin çıkarabilir; ancak düz metin çıktısı her zaman okuyucunun b
 
 - Ana içerik, başlık, tarih ve kaynak URL'sini koru.
 - Menü, reklam, cookie banner ve tekrar eden footer'ı çıkar.
+- Atlanan blokları tag-aware yığınla takip et: eşleşmeyen kapanış etiketi
+  gizlemeyi erken bitirmemeli; açık bir üst atlanan blok kapandığında iç içe
+  atlanan alt bloklar da kapanmış sayılmalı.
+- HTML çıkarımı yalnızca yerel dosyada görünür metin içindir; dış bağlantı,
+  script çalıştırma veya gizli içerik çıkarımı yapılmaz.
 - HTML kaynağını ve temiz metni ayrı sakla.
 
 ## JSON/CSV

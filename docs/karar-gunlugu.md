@@ -1,5 +1,41 @@
 # Karar günlüğü
 
+## 2026-09-21 — Kişisel corpus artifact'lerini Git dışına alma
+
+- `corpus-inventory` varsayılanı Git'te izlenen `data/benchmarks/` içine
+  yazıyordu. Inventory ham metin taşımasa da göreli kaynak yolu, içerik hash'i,
+  document/chunk kimlikleri ve boyut metadata'sı içerdiğinden gerçek kişisel
+  corpus için public paylaşım riski oluşturuyordu; ayrıca sentetik benchmark
+  artifact'lerinin üzerine yazabilirdi.
+- Kişisel kullanım için inventory/manifest varsayılanları zaten ignore edilen
+  `data/derived/` ve `data/manifests/` klasörlerine taşındı. `data/benchmarks/`
+  mevcut izli sentetik fixture paketi olarak kalır. Açık `--output`/`--manifest`
+  seçenekleri geriye uyumludur; dosya formatı ve fixture provenance sözleşmesi
+  değişmez. Geri alma yolu eski CLI varsayılanlarına dönüştür; kullanıcı bu
+  sırada kendi özel yollarını açıkça verebilir.
+- Defaultsız `vdb corpus-inventory` komutu 14 yerel kaynağı 47 chunk/19.961
+  karakter olarak işledi; JSON çıktıları yalnızca `data/derived/` ve
+  `data/manifests/` altına yazıldı ve ikisi `git check-ignore` ile doğrulandı.
+  Embedding/Qdrant başlatılmadı; komut izlenen benchmark dosyalarını değiştirmedi.
+
+## 2026-09-21 — HTML gizli blok yığın doğrulaması
+
+- Mevcut HTML filtresi atlanan etiketleri tek bir sayısal derinlikle izliyordu;
+  eşleşmeyen `</aside>` gibi kapanışlar açık `<nav>`/`<script>` filtresini erken
+  bitirebilir, bozuk iç içe etiketler de sonraki görünür metni gereksiz yere
+  bastırabilirdi.
+- Filtreleme sözleşmesi tag-aware stack olarak güncellendi. HTML kanonik
+  çıktısındaki olası farklar `html-v4` parser sürümüne bağlandı; HTML belgeleri,
+  corpus manifesti ve parser provenance taşıyan fixture/coverage artifact'leri
+  yeniden üretilip doğrulanmalıdır. Geri alma yolu önceki parser sürümüne dönüş
+  ve etkilenen HTML belgelerini önceki manifestle yeniden indekslemektir.
+- Uygulama sonrası `corpus-inventory`: 14 kaynak, 47 chunk, 19.961 karakter,
+  sıfır parse hatası; dosya bazlı corpus checksum'ı değişmedi. Fixture
+  `parser_versions_binding_status=valid` ve `corpus_binding_status=valid`;
+  final kapısı mevcut 36 review-required etiket ve eksik large bucket nedeniyle
+  beklenen biçimde açık. HTML hedefli regresyon `3 passed`; tam paket final
+  turuna bırakıldı.
+
 ## 2026-09-12 — İlk taslak
 
 - Sağlayıcıdan bağımsız veri modeli; varsayılan uygulama Qdrant.
@@ -1036,3 +1072,40 @@
   doğrulanıyor; boolean ve sayısal metin coercion'ı reddediliyor. Provider
   sözleşmesi güncellendi, hedefli paket `16 passed`, tam regresyon `276 passed,
   3 skipped, 3 warnings`; gerçek API çağrısı yapılmadı.
+- Kullanıcının verdiği `data/sources/temsilî-kisisel-kayitlar.md` sentetik
+  corpus girdisi olarak doğrulandı. DOCX incelemesinde run'lar arasındaki
+  `w:tab`, `w:br` ve `w:cr` işaretlerinin metin birleştirilirken kaybolduğu
+  görüldü; `docx-v4` ile paragraf/tablo hücresinde sekme-satır sonu korunuyor,
+  iç tablo içeriği üst hücrede yinelenmiyor. Sonraki güvenlik incelemesinde DOCX
+  içindeki `word/document.xml` ve `docProps/core.xml` için DTD/entity
+  declaration'ları parse öncesi reddedildi. DOCX yeniden indeksleme ihtiyacı
+  dokümante edildi. Ayrıca gerçek `pypdf` ile oluşturulmuş minimal PDF smoke
+  testi eklendi; mevcut kaynak klasöründe PDF olmadığı için bu test gerçek
+  kişisel corpus kalite kanıtı sayılmıyor. Parser hedefli regresyon paketi
+  `38 passed`, Ruff ve diff kontrolleri temiz; kapsamlı regresyon ve uzun
+  ölçümler final turuna bırakıldı.
+- Aday retrieval sorguları iki kaynak belgede yoğunlaştığı için sentetik
+  `temsilî-formatlar/` corpus'undan 20 sorgu eklenerek paket 56'ya çıkarıldı;
+  hedef belge kapsamı 2'den 12'ye genişledi. `fixture-label-template` ve
+  privacy-safe `fixture-coverage` başarıyla üretildi: corpus/parser/chunk ve
+  label provenance binding valid, bilinmeyen chunk/duplicate/cross-split
+  duplicate sıfır. Tür dağılımı `17/11/7/7/7/7`, split `32/13/11`; 56 label'ın
+  tamamı derived/review-required, large bucket yok ve 300+ kabul kapısı açık.
+  Uzun benchmark ve relevance doğrulaması yapılmadı.
+- Medium günlüğün 14 chunk'ından yalnızca 5'inin mevcut fixture'da hedeflendiği
+  görüldü; diğer dokuz chunk için içerikten türetilmiş 9 aday sorgu eklendi.
+  Fixture 65 sorguya çıktı ve medium günlük kapsamı `14/14` oldu. Label template
+  ve coverage tekrar üretildi: corpus/parser/chunk/label binding valid, unknown
+  chunk, duplicate query ve cross-split duplicate sıfır; split oran sorunu yok.
+  65 label'ın tamamı review-required, her sorgu türü 30'un altında, large bucket
+  eksik; bu nedenle `coverage_complete=false` ve manifest `contract-only` kalıyor.
+  Fixture checksum `sha256:2ad89b0de12832da3e9df2a7213e4db1fdea401866034ec9bcdedc2c07d4f05e`.
+- 2026-09-21 devamında temsilî kişisel kayıt kaynağının giriş chunk'ı da aday
+  sorguyla kapsandı; fixture 66 sorguya çıktı ve bu kaynak `11/11`, medium günlük
+  `14/14` chunk kapsamasına ulaştı. Yeniden üretilen coverage'ta corpus/label/parser
+  binding geçerli, unknown chunk, duplicate query ve cross-split duplicate sıfır;
+  split oranları tolerans içinde. Tür dağılımı semantic=23, exact_identifier=14,
+  typo=7, morphology=7, long_context=8, negative=7; split development=38,
+  validation=14, test=14. Tüm 66 etiket `review-required`; 300+ sorgu ve large
+  bucket kapıları açık, dolayısıyla `coverage_complete=false`.
+  Fixture checksum: `sha256:27432801ce5813f20247b9e156481c38c2b21b1ee0d093ef9621c6d6d1952771`.

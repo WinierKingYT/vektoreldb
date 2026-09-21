@@ -24,12 +24,16 @@ da inventory'de temsil ediliyor.
 Bu nedenle 300+ query kabul kapısı henüz çalıştırılabilir biçimde hazır olsa da
 `ready` değildir. Gerçek kişisel kaynaklar eklendiğinde şu sıra izlenir:
 
-Güncel coverage snapshot'ı yeni aday fixture'ın corpus'a bağlandığını gösteriyor:
-36 sorguluk paket `corpus_binding_status=valid` ve
+Güncel coverage snapshot'ı genişletilmiş aday fixture'ın corpus'a bağlandığını gösteriyor:
+66 sorguluk paket `corpus_binding_status=valid` ve
 `label_provenance_status=valid` durumunda; ancak manifest hâlâ `contract-only`,
 etiket şablonu `review-required` ve 300 sorgu kapısı henüz karşılanmış değil.
-Bu paket geliştirme/smoke girdisidir, final relevance etiketi ve benchmark kanıtı
-değildir. Eski PromtGen smoke fixture'ları tarihsel deney kanıtıdır ve güncel
+Tüm 66 etiket derived/review-required durumundadır; bu paket geliştirme/smoke
+girdisidir, final relevance etiketi ve benchmark kanıtı değildir. Aday sorgular
+önce yalnızca iki belgeyi hedeflerken artık 12 corpus belgesini kapsıyor; medium
+boyutlu günlükteki 14 ve temsilî kişisel kayıt dosyasındaki 11 chunk'ın
+tamamına en az bir aday sorgu bağlanıyor.
+Eski PromtGen smoke fixture'ları tarihsel deney kanıtıdır ve güncel
 kişisel corpus kabul kapısının yerine geçmez. Sentetik kişisel kayıtlar
 corpus'a eklendi; yeni corpus checksum'ı
 `sha256:80170ea3cd3b1adb2b4ecc71918a9460a87050a6cfbcf22fa639611e8dded919`.
@@ -38,8 +42,8 @@ Bu karma formatlı corpus için fixture provenance'ı `parser_version: mixed`
 Bu corpus'a bağlı ilk aday fixture ve label şablonu sırasıyla
 `data/benchmarks/representative-personal-queries.json` ve
 `data/benchmarks/representative-personal-query-labels-template.json` dosyalarındadır.
-Fixture coverage binding açısından geçerli; 36 sorgu olduğu için 300+ kabul kapısını
-henüz geçmez ve label şablonu manuel review gerektirir. Altı sorgu medium-size
+Fixture coverage binding açısından geçerli; 66 sorgu olduğu için 300+ kabul kapısını
+henüz geçmez ve label şablonu manuel review gerektirir. On beş sorgu medium-size
 günlüğe bağlandı; large kovası henüz temsil edilmiyor.
 
 1. `vdb corpus-inventory` ile corpus manifesti oluştur.

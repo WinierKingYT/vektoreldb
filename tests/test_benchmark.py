@@ -837,7 +837,7 @@ def test_fixture_coverage_reports_parser_version_sets() -> None:
     expected = [
         "csv-v1",
         "email-v1",
-        "html-v3",
+        "html-v4",
         "json-v1",
         "jsonl-v1",
         "plain-text-v1",

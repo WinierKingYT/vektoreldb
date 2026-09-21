@@ -164,11 +164,13 @@ durum `labels_status=review-required` olarak görünür, `complete` sayılmaz.
 Corpus manifesti aktif `chunking_version` değerini de taşır; fixture preflight
 bu değeri fixture ile birebir eşleştirir. Böylece aynı kaynak checksum'ına sahip
 olsa bile farklı chunking çıktılarıyla üretilmiş etiketler kabul edilmez.
-HTML kaynakları `html-v3` parser sürümüyle bloklara ayrılır; `<title>`, başlıklar ve
+HTML kaynakları `html-v4` parser sürümüyle bloklara ayrılır; `<title>`, başlıklar ve
 `heading_path` bilgisi kanonik bölümlerde korunur. Bu nedenle HTML parser
 çıktısı değiştiğinde mevcut HTML belgeleri yeniden indekslenmelidir.
-DOCX core title ve başlık stilleri de aynı yapısal metadata’ya taşınır ve `docx-v3` parser
-sürümüyle izlenir; DOCX parser çıktısı değiştiğinde yeniden indeksleme gerekir.
+DOCX core title ve başlık stilleri de aynı yapısal metadata’ya taşınır. `docx-v4`
+paragraf/hücre içi sekme ve açık satır sonlarını korur, iç içe tablo içeriğini
+üst hücre metninde çoğaltmaz. Parser sürümü provenance'ta
+izlenir; DOCX parser çıktısı değiştiğinde yeniden indeksleme gerekir.
 Chunking farklı `heading_path` değerlerini tek chunk’ta birleştirmez. Bu davranış
 `paragraph-pack-v2` sürümüyle provenance sözleşmesine dahildir; parser veya
 chunking sürümü değiştiğinde fixture etiketleri yeniden doğrulanmalıdır.

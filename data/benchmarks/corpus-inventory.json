@@ -214,7 +214,7 @@
     "content_hash": "sha256:688eec733fdc027131ac757eb4d6ff5f116e160d52594a939703e5bb42b8504f",
     "document_id": "doc_0af459e6477287d2ded60cee0cb1bfbcc0854178e9a388c6d9de9bc1b6e58e14",
     "source_type": "html",
-    "parser_version": "html-v3",
+    "parser_version": "html-v4",
     "section_count": 6,
     "extracted_char_count": 230,
     "nonempty_section_count": 6,

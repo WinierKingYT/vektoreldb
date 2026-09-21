@@ -1,14 +1,14 @@
 {
   "manifest_status": "contract-only",
-  "query_count": 36,
+  "query_count": 66,
   "minimum_query_count": 300,
   "query_type_counts": {
-    "semantic": 11,
-    "exact_identifier": 5,
-    "typo": 5,
-    "morphology": 5,
-    "long_context": 5,
-    "negative": 5
+    "semantic": 23,
+    "exact_identifier": 14,
+    "typo": 7,
+    "morphology": 7,
+    "long_context": 8,
+    "negative": 7
   },
   "missing_query_types": [
     "semantic",
@@ -19,14 +19,14 @@
     "negative"
   ],
   "split_counts": {
-    "development": 20,
-    "test": 7,
-    "validation": 9
+    "development": 38,
+    "test": 14,
+    "validation": 14
   },
   "split_ratios": {
-    "development": 0.555556,
-    "test": 0.194444,
-    "validation": 0.25
+    "development": 0.575758,
+    "test": 0.212121,
+    "validation": 0.212121
   },
   "recommended_split": {
     "development": 0.6,
@@ -36,8 +36,8 @@
   "missing_splits": [],
   "split_ratio_issues": [],
   "size_bucket_counts": {
-    "small": 30,
-    "medium": 6,
+    "small": 51,
+    "medium": 15,
     "large": 0
   },
   "corpus_size_bucket_counts": {
@@ -48,7 +48,7 @@
   "corpus_parser_versions": [
     "csv-v1",
     "email-v1",
-    "html-v3",
+    "html-v4",
     "json-v1",
     "jsonl-v1",
     "plain-text-v1",
@@ -59,7 +59,7 @@
   "fixture_parser_versions": [
     "csv-v1",
     "email-v1",
-    "html-v3",
+    "html-v4",
     "json-v1",
     "jsonl-v1",
     "plain-text-v1",
@@ -70,7 +70,7 @@
   "parser_versions_binding_status": "valid",
   "corpus_checksum": "sha256:80170ea3cd3b1adb2b4ecc71918a9460a87050a6cfbcf22fa639611e8dded919",
   "fixture_corpus_checksum": "sha256:80170ea3cd3b1adb2b4ecc71918a9460a87050a6cfbcf22fa639611e8dded919",
-  "fixture_checksum": "sha256:082d140bab147fbd69a562adb3fdeeaab8fdfc29ed6bee737bc9a2c52b9f5968",
+  "fixture_checksum": "sha256:27432801ce5813f20247b9e156481c38c2b21b1ee0d093ef9621c6d6d1952771",
   "chunk_size_bucket_binding_status": "valid",
   "queries_with_size_bucket_mismatch": 0,
   "unknown_size_bucket_chunk_count": 0,
@@ -78,9 +78,9 @@
     "large"
   ],
   "filter_selectivity_counts": {
-    "low": 15,
-    "medium": 13,
-    "high": 8
+    "low": 24,
+    "medium": 24,
+    "high": 18
   },
   "missing_filter_selectivity_buckets": [],
   "coverage_complete": false,
@@ -94,11 +94,11 @@
   "labels_status": "review-required",
   "label_provenance_status": "valid",
   "label_provenance_mismatch_count": 0,
-  "label_count": 36,
+  "label_count": 66,
   "unlabeled_query_count": 0,
   "orphan_label_count": 0,
-  "derived_label_count": 36,
-  "review_required_label_count": 36,
+  "derived_label_count": 66,
+  "review_required_label_count": 66,
   "unknown_labeled_chunk_count": 0,
   "labels_with_unknown_chunks": 0
 }

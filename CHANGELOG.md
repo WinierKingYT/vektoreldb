@@ -4,6 +4,11 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- Corpus'a bağlı temsilî retrieval fixture'ı 36'dan 66 aday sorguya ve iki yerine
+  12 hedef belgeye genişletildi; kişisel kayıt örneğinin 11, medium günlüğün 14
+  chunk'ı kapsanıyor. Yeniden üretilen label template'i 66 kaydı da
+  derived/review-required işaretliyor; coverage binding geçerli, final 300 sorgu
+  ve large-bucket kapıları açık kalıyor.
 - V1 local-first retrieval çekirdeği tamamlandı: Markdown/TXT ingest, deterministic document/chunk kimlikleri, local embedding, Qdrant persistence, filtreli arama ve provenance/citation alanları.
 - Ingest, search, delete, reindex, backup/restore ve benchmark CLI/API akışları eklendi.
 - JSON Schema, OpenAPI, güvenlik kontrolleri, exact baseline ve regression ölçümleri için test altyapısı eklendi.
@@ -328,3 +333,20 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   bakımından sıkı doğrulanıyor; boolean/sayısal metin coercion'ı reddediliyor.
   Adapter hedefli testler `16 passed`, tam regresyon `276 passed, 3 skipped,
   3 warnings`; gerçek API çağrısı yapılmadı.
+- HTML görünür metin filtresi, eşleşmeyen kapanış etiketlerinin filtreyi erken
+  kapatmasını ve bozuk iç içe atlanan etiketlerin sonraki metni yutmasını
+  engelleyecek tag-aware yığınla `html-v4` olarak sertleştirildi. Corpus ve
+  fixture parser provenance'ı yeniden bağlandı; parser hedefli HTML testleri
+  `3 passed`. Uzun/tam regresyon final turuna bırakıldı.
+- Kişisel corpus inventory/manifest varsayılanları izlenmeyen `data/derived/`
+  ve `data/manifests/` konumlarına alındı; böylece kullanıcıya ait yol/hash/chunk
+  metadata'sı benchmark fixture'larını veya Git'te izlenen örnekleri yanlışlıkla
+  ezmiyor.
+- DOCX `docx-v4`, paragraf/tablo hücresi içindeki Word sekme ve açık satır
+  sonlarını koruyor ve iç içe tablo içeriğini üst hücrede yinelemiyor;
+  ayrıca ana belge ve core-properties XML'inde DTD/entity declaration'larını
+  reddediyor. Eski DOCX kayıtları yeni parser provenance'ı için yeniden
+  indekslenmelidir.
+- PDF parser entegrasyonu, kişisel belge gerektirmeyen gerçek bir sentetik PDF
+  ile `pypdf` smoke testinde doğrulanıyor; bu, çeşitlendirilmiş corpus kalite
+  incelemesinin yerine geçmiyor.

@@ -22,12 +22,30 @@ def test_html_parser_keeps_visible_content_and_drops_chrome(tmp_path: Path) -> N
     document = parse_source(path)
 
     assert document.source_type == "html"
-    assert document.parser_version == "html-v3"
+    assert document.parser_version == "html-v4"
     assert document.title == "Sayfa başlığı"
     assert [section.text for section in document.sections] == ["Başlık", "İçerik"]
     assert document.sections[1].heading_path == ["Başlık"]
     assert all("Menu" not in section.text for section in document.sections)
     assert all("secret" not in section.text for section in document.sections)
+
+
+@pytest.mark.parametrize(
+    "html",
+    [
+        "<nav>chrome</aside><p>still hidden</p></nav><p>Visible</p>",
+        "<nav><aside>chrome</nav><p>Visible</p>",
+    ],
+)
+def test_html_parser_recovers_ignored_stack_without_leaking_or_losing_text(
+    tmp_path: Path, html: str
+) -> None:
+    path = tmp_path / "malformed.html"
+    path.write_text(html, encoding="utf-8")
+
+    document = parse_source(path)
+
+    assert [section.text for section in document.sections] == ["Visible"]
 
 
 def test_json_and_csv_parsers_are_deterministic(tmp_path: Path) -> None:
@@ -249,6 +267,78 @@ def test_docx_parser_preserves_paragraph_and_table_locations(tmp_path: Path) -> 
     assert document.sections[1].location == {"table": 1, "row": 1}
 
 
+def test_docx_parser_preserves_tabs_and_explicit_line_breaks(tmp_path: Path) -> None:
+    path = tmp_path / "spacing.docx"
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
+    <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+      <w:body><w:p><w:r><w:t>Deniz</w:t><w:tab/><w:t>Kaya</w:t>
+      <w:br/><w:t>İkinci satır</w:t><w:cr/><w:t>Üçüncü satır</w:t></w:r></w:p></w:body>
+    </w:document>"""
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+
+    document = parse_source(path)
+
+    assert document.sections[0].text == "Deniz\tKaya\nİkinci satır\nÜçüncü satır"
+    assert document.parser_version == "docx-v4"
+
+
+def test_docx_table_cells_preserve_breaks_without_duplicating_nested_tables(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "nested-table.docx"
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
+    <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+      <w:body><w:tbl><w:tr><w:tc>
+        <w:p><w:r><w:t>Dış</w:t><w:tab/><w:t>hücre</w:t><w:br/><w:t>devam</w:t></w:r></w:p>
+        <w:tbl><w:tr><w:tc><w:p><w:r><w:t>İç tablo</w:t></w:r></w:p></w:tc></w:tr></w:tbl>
+      </w:tc></w:tr></w:tbl></w:body>
+    </w:document>"""
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("word/document.xml", xml)
+
+    document = parse_source(path)
+
+    assert [section.text for section in document.sections] == [
+        "Dış\thücre\ndevam",
+        "İç tablo",
+    ]
+    assert document.sections[1].location == {"table": 1, "row": 2}
+
+
+@pytest.mark.parametrize("unsafe_member", ["word/document.xml", "docProps/core.xml"])
+@pytest.mark.parametrize("encoding", ["utf-8", "utf-16"])
+def test_docx_parser_rejects_dtd_and_entity_declarations(
+    tmp_path: Path, encoding: str, unsafe_member: str
+) -> None:
+    path = tmp_path / "unsafe-xml.docx"
+    valid_document = """<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+      <w:body><w:p><w:r><w:t>Güvenli metin</w:t></w:r></w:p></w:body></w:document>"""
+    document_xml = (
+        "<!DOCTYPE w:document [<!ENTITY local 'expanded'>]>"
+        "<w:document xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>"
+        "<w:body><w:p><w:r><w:t>&local;</w:t></w:r></w:p></w:body></w:document>"
+        if unsafe_member == "word/document.xml"
+        else valid_document
+    )
+    core_xml = (
+        "<!DOCTYPE cp:coreProperties [<!ENTITY local 'expanded'>]>"
+        "<cp:coreProperties "
+        "xmlns:cp='http://schemas.openxmlformats.org/package/2006/metadata/core-properties' "
+        "xmlns:dc='http://purl.org/dc/elements/1.1/'><dc:title>&local;</dc:title></cp:coreProperties>"
+        if unsafe_member == "docProps/core.xml"
+        else None
+    )
+    with zipfile.ZipFile(path, "w") as archive:
+        document_encoding = encoding if unsafe_member == "word/document.xml" else "utf-8"
+        archive.writestr("word/document.xml", document_xml.encode(document_encoding))
+        if core_xml is not None:
+            archive.writestr(unsafe_member, core_xml.encode(encoding))
+
+    with pytest.raises(ValueError, match="DOCX XML DTD/entity"):
+        parse_source(path)
+
+
 def test_docx_parser_preserves_heading_path(tmp_path: Path) -> None:
     path = tmp_path / "structured.docx"
     xml = """<?xml version="1.0" encoding="UTF-8"?>
@@ -271,7 +361,7 @@ def test_docx_parser_preserves_heading_path(tmp_path: Path) -> None:
 
     document = parse_source(path)
 
-    assert document.parser_version == "docx-v3"
+    assert document.parser_version == "docx-v4"
     assert document.title == "Yapılandırılmış notlar"
     assert document.sections[1].heading_path == ["Bölüm"]
 
@@ -334,6 +424,46 @@ def test_pdf_parser_extracts_nonempty_pages_with_locations(
     assert document.title == "PDF rapor başlığı"
     assert [section.text for section in document.sections] == ["Birinci sayfa", "Üçüncü"]
     assert [section.location for section in document.sections] == [{"page": 1}, {"page": 3}]
+
+
+def test_pdf_parser_extracts_text_from_a_real_minimal_pdf(tmp_path: Path) -> None:
+    text = "Personal PDF note"
+    stream = f"BT /F1 12 Tf 36 250 Td ({text}) Tj ET".encode("ascii")
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 300] "
+        b"/Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+        b"<< /Length " + str(len(stream)).encode("ascii") + b" >>\nstream\n"
+        + stream
+        + b"\nendstream",
+    ]
+    pdf = bytearray(b"%PDF-1.4\n")
+    offsets = [0]
+    for object_number, body in enumerate(objects, start=1):
+        offsets.append(len(pdf))
+        pdf.extend(f"{object_number} 0 obj\n".encode("ascii"))
+        pdf.extend(body)
+        pdf.extend(b"\nendobj\n")
+    xref_offset = len(pdf)
+    pdf.extend(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
+    pdf.extend(b"0000000000 65535 f \n")
+    for offset in offsets[1:]:
+        pdf.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
+    pdf.extend(
+        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\n"
+        f"startxref\n{xref_offset}\n%%EOF\n".encode("ascii")
+    )
+    path = tmp_path / "minimal-real.pdf"
+    path.write_bytes(pdf)
+
+    document = parse_source(path)
+
+    assert document.source_type == "pdf"
+    assert document.parser_version == "pdf-v2"
+    assert [section.text for section in document.sections] == [text]
+    assert document.sections[0].location == {"page": 1}
 
 
 def test_pdf_parser_rejects_encrypted_files(
