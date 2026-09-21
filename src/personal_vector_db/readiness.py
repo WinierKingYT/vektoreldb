@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 from .benchmark import fixture_coverage_report, load_query_cases
-from .corpus import summarize_corpus_inventory
+from .corpus import read_corpus_manifest, summarize_corpus_inventory
 from .validation import validate_schema
 
 
@@ -43,14 +43,22 @@ def build_final_readiness_report(
         try:
             inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
             quality = summarize_corpus_inventory(inventory)
+            manifest_status = "missing"
+            if corpus_manifest_path is not None and corpus_manifest_path.is_file():
+                try:
+                    read_corpus_manifest(corpus_manifest_path)
+                    manifest_status = "valid"
+                except (OSError, ValueError, TypeError, json.JSONDecodeError):
+                    manifest_status = "invalid"
             report["corpus"] = {
-                "status": "ready",
+                "status": "ready" if manifest_status == "valid" else "incomplete",
                 "source_count": quality["source_count"],
                 "parsed_source_count": quality["parsed_source_count"],
                 "failed_source_count": quality["failed_source_count"],
                 "duplicate_count": quality["duplicate_count"],
                 "total_chunks": quality["total_chunks"],
                 "quality_schema_version": quality["schema_version"],
+                "manifest_status": manifest_status,
             }
         except (OSError, ValueError, TypeError, json.JSONDecodeError) as error:
             report["corpus"] = _failed(error)

@@ -291,7 +291,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("data/benchmarks/query-fixture-manifest.json"),
     )
     readiness.add_argument("--labels", type=Path)
-    readiness.add_argument("--corpus-manifest", type=Path)
+    readiness.add_argument(
+        "--corpus-manifest", type=Path, default=Path("data/manifests/corpus-manifest.json")
+    )
     readiness.add_argument("--output", type=Path)
     readiness.add_argument(
         "--strict", action="store_true", help="return exit code 2 when readiness is incomplete"

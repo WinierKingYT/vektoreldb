@@ -25,6 +25,7 @@ uv run vdb final-readiness `
   --inventory data\derived\corpus-inventory.json `
   --fixture data\benchmarks\queries-v1.json `
   --fixture-manifest data\benchmarks\query-fixture-manifest.json `
+  --corpus-manifest data\manifests\corpus-manifest.json `
   --output data\derived\final-readiness.json
 # Preparation report; it does not start Qdrant or embeddings:
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --labels data\benchmarks\labels-v1.json
