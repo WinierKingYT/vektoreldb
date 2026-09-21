@@ -50,11 +50,22 @@ boyutu 1–256, in-memory cache kapasitesi 0–4096 ile sınırlıdır; varsayı
 sırasıyla 32 ve 256'dır ve bu ayarlar yalnızca harici provider'da uygulanır.
 Retry sayısı 0–5 ile sınırlıdır; local provider bu ayarlara bakmaz. API anahtarı
 yalnızca `OPENAI_API_KEY` ortam değişkeninden alınır ve loglanmaz.
+Boyut, retry, batch ve cache ayarları kesin tam sayı olmalı (boolean/kesirli
+değerler kabul edilmez); timeout sonlu ve pozitif, backoff sonlu ve negatif
+olmayan sayısal değer olmalıdır. Yanıt
+vektörlerinin koordinatları sonlu olmasının yanında toplam normu da pozitif ve
+sonlu olmalıdır; aşırı büyüklükte koordinatların norm taşması manifest uyumsuzluğu
+olarak fail-closed reddedilir. Daha önce geçerli biçimde kullanılan konfigürasyon
+değişmez; hatalı tipler artık kullanım sırasında değil kurulum anında reddedilir.
 Endpoint provider oluşturulurken HTTPS URL olarak doğrulanır; yalnızca
 `localhost`, `127.0.0.1` veya `::1` loopback endpoint'lerinde HTTP test amacıyla
 izin verilir. Hatalı ya da uzak HTTP endpoint ile ağ çağrısı başlatılmaz.
+Embedding HTTP istemcisi yönlendirmeleri izlemez: endpoint'in 3xx cevabı
+credential veya metnin başka bir URL'ye yönelmesini önlemek için istek hatası
+olarak kapatılır. Özel OpenAI-compatible endpoint `/embeddings` isteğini doğrudan
+yanıtlamalı; yönlendirme gerekiyorsa `base_url` nihai adrese göre ayarlanmalıdır.
 
-Harici servis seçeneğinde API anahtarı kodda tutulmaz; veri paylaşımı, saklama ve bölge politikası kontrol edilir. Timeout, rate limit, exponential backoff ve idempotent batch retry uygulanır. Ham hassas içerik gönderilecekse açık bir gizlilik kararı gerekir.
+Harici servis seçeneğinde API anahtarı kodda tutulmaz; veri paylaşımı, saklama ve bölge politikası kontrol edilir. Timeout, rate limit ve exponential backoff ile sınırlandırılmış yeniden deneme uygulanır. Ancak istemci cevap alamadan servis isteği işlemiş olabilir; adapter idempotency anahtarı garantisi vermez ve belirsiz ağ hatasında aynı batch tekrar gönderilebilir. Sağlayıcıya göre yinelenen işleme veya ücret oluşabileceği için retry sayısı sınırlıdır ve gerçek maliyet final ölçümünde kontrol edilir. Ham hassas içerik gönderilecekse açık bir gizlilik kararı gerekir.
 
 Adapter metinleri yapılandırılmış batch boyutlarında OpenAI Embeddings endpoint'ine
 gönderir, batch'ler arasında input sırasını korur, dönen `data.index` alanına göre

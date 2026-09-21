@@ -1,5 +1,72 @@
 # Karar günlüğü
 
+## 2026-09-22 — Parser izolasyonu belgesinin uygulamayla hizalanması
+
+- Parser rehberinin izolasyon bölümünde timeout, bellek sınırı ve geçici alan
+  mevcutmuş gibi yazılmıştı; gerçek kod senkron in-process parser ve dosya/içerik
+  boyut limitleri kullanıyor, fakat process deadline/peak-RAM sandbox'ı kurmuyor.
+- Yanlış güvence kaldırıldı. PDF sayfa metni limit kontrolünden önce çıkarıldığı
+  için boyut kontrollerinin peak-memory garantisi olmadığı da açıkça belirtildi.
+  Format başına gerçek runtime/RAM profili final ölçümüne eklendi; daha karmaşık
+  worker izolasyonu ancak bu ölçüm ihtiyacı kanıtlarsa açılacak.
+
+## 2026-09-22 — Harici embedding numeric sınır doğrulaması
+
+- Provider constructor'ı aralık içinde olsa da boolean/kesirli integer ayarlarını
+  kabul edebiliyor, NaN/sonsuz timeout ve backoff değerlerini geçirebiliyordu;
+  hatalar geç aşamada oluşabilir veya sınırsız bekleme yaratabilirdi. Ayarların
+  numeric türü ve sonluluğu kullanım başlamadan doğrulanır.
+- Dış vektörün her koordinatı sonlu olsa bile kareler toplamı taşarak sonsuz
+  olabilir. Normun pozitif ve sonlu olması manifest boyutuyla beraber zorunlu
+  tutulur. Bu, geçerli config ve olağan vektörleri değiştirmez; yalnızca yanlış
+  tür ve bozuk/taşan yanıtları erkenden fail-closed reddeder.
+
+## 2026-09-22 — Harici embedding yönlendirmelerini kapatma
+
+- Python 3.12.13'ün aktif `urllib.request.HTTPRedirectHandler` uygulaması
+  POST→GET yönlendirmesinde Authorization dahil request header'larını yeni
+  request'e kopyalıyordu. Kaynak başvuru olarak [CPython urllib.request
+  uygulaması](https://github.com/python/cpython/blob/main/Lib/urllib/request.py)
+  ve [Python urllib.request belgeleri](https://docs.python.org/3/library/urllib.request.html)
+  incelendi; çalışma ortamındaki sürümün gerçek metodu da doğrulandı.
+- Embedding endpoint'i redirect verirse, API credential'ı veya metnin farklı
+  hedefe gitme riskini önlemek için istek artık fail-closed durur. Tüketici
+  endpoint'in son adresini `base_url` olarak vermelidir. Şema/index değişmez;
+  rollback yalnızca transport opener değişikliğini geri almaktır.
+- Aynı incelemede provider dokümanındaki “idempotent batch retry” iddiası
+  düzeltildi: client tarafında idempotency key yoktur; response kaybı sonrası
+  yeniden gönderim sağlayıcıda tekrarlı işleme/ücrete yol açabilir. Bounded retry
+  korunur, gerçek maliyet final ölçümüne bırakılır.
+
+## 2026-09-21 — RAG context metadata attribute escaping
+
+- RAG context kaynak metnini XML text olarak escape ediyordu; ancak title,
+  document/chunk id ve heading path değerlerini double-quoted XML attribute'larına
+  yalnızca text escaping uygulayarak yazıyordu. Tırnak içeren metadata
+  attribute yapısını genişletebildiğinden `quoteattr` ile encode edildi.
+- XML parser regresyon testi saldırgan tırnak örneklerinin attribute ekleyemediğini
+  ve değerlerin kayıpsız kaldığını denetler. Bu, prompt injection'a karşı tek başına
+  güvenlik garantisi değildir; context hâlâ güvenilmeyen kanıttır.
+
+## 2026-09-21 — Abstention eşiği ve reranking skor sözleşmesi
+
+- `min_score` yalnızca dense cosine retrieval'a uygulanır ve varsa reranking
+  öncesinde aday kabulünü belirler. Reranker sadece bu adayları sıralar; [Sentence
+  Transformers kullanım rehberi](https://www.sbert.net/docs/cross_encoder/usage/usage.html)
+  bazı CrossEncoder modellerinin ham logit döndürdüğünü ve sigmoidin yalnızca
+  ölçeği dönüştürdüğünü belirtir.
+- Hybrid RRF ve late-interaction MaxSim skorları cosine değildir. Kalibrasyonsuz
+  eşik yanlış abstention üretebileceğinden bu iki modda eşik talebi servis/model
+  çalıştırılmadan reddedilir; eşiksiz arama korunur. [Qdrant RRF](https://qdrant.tech/documentation/search/hybrid-queries/)
+  sıraları, [MaxSim](https://qdrant.tech/documentation/manage-data/vectors/)
+  token düzeyi benzerlik maksimumlarını birleştirir. İleride açılmaları için ayrı
+  skor sözleşmesi ve validation kalibrasyonu gerekir. Reranker-confidence eşiği
+  bu sürümün kapsamı dışındadır. Reranking açıkken validation ve test aynı
+  retrieval/reranker bileşimini kullanmalıdır.
+- Eşik seçici helper, evaluator ile aynı biçimde boolean/sayısal olmayan score ve
+  kalite tabanı girdilerini reddeder. API/servis `min_score` da boolean veya
+  sayısal olmayan değeri kabul etmez.
+
 ## 2026-09-21 — Private-local corpus artifact'lerini izlenen benchmark'tan ayırma
 
 - Önceki karar inventory/manifest varsayılanlarını ignore edilen dizinlere aldı,

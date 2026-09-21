@@ -49,6 +49,17 @@ validation kalite tabanlarını sağlayan en yüksek eşiği seçer; uygun eşik
 sessizce varsayılan üretmez ve fail-closed hata verir. Bu primitive final ölçümün
 yerine geçmez, fakat eşik seçimini tekrarlanabilir kılar.
 
+Eşik skorları boolean veya sayısal olmayan girdileri kabul etmez. Uygulamadaki
+`min_score` şu an yalnızca dense cosine retrieval'da kullanılabilir ve varsa
+reranking öncesi değerlendirilir. Hybrid RRF ve late-interaction MaxSim için
+eşik uygulanması kalibre edilmediğinden fail-closed reddedilir; eşiksiz bu modlar
+çalışabilir. Bu skorlar farklı matematiksel niceliklerdir: Qdrant RRF sıraları
+füze eder; MaxSim token düzeyi benzerlik maksimumlarını toplar. Herhangi bir
+gelecek mod-eşik desteği ayrı validation kalibrasyonu ve test doğrulaması ister.
+Reranker puanı sadece dense aday sıralamasını değiştirir ve abstention eşiği
+olarak kullanılmaz. Reranking açık ölçümlerde validation ve test aynı
+retrieval/reranker bileşimini kullanmalıdır.
+
 ## Deney akışı
 
 1. Host, Python, Qdrant image/client, model revision ve ayar manifest'ini kaydet.

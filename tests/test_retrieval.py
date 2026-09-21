@@ -190,6 +190,63 @@ def test_opt_in_reranker_rescores_only_candidates_and_preserves_provenance() -> 
     assert results[0].source_uri == "file:///notes.md"
 
 
+def test_min_score_filters_retrieval_scores_before_reranking() -> None:
+    class MisalignedScaleReranker:
+        name = "misaligned-scale"
+
+        def __init__(self) -> None:
+            self.seen: list[str] = []
+
+        def score(self, query: str, texts: list[str]) -> list[float]:
+            self.seen.extend(texts)
+            return [0.1 if text == "base-score-passes" else 0.99 for text in texts]
+
+    store = ExactVectorStore()
+    store.upsert(
+        [
+            point("below", [0.8, 0.6, 0.0], "doc_below", "base-score-fails"),
+            point("above", [0.6, 0.8, 0.0], "doc_above", "base-score-passes"),
+        ]
+    )
+    reranker = MisalignedScaleReranker()
+
+    results = RetrievalService(FakeProvider(), store, reranker).search(
+        "target query", min_score=0.75, rerank=True
+    )
+
+    assert [result.document_id for result in results] == ["doc_above"]
+    assert reranker.seen == ["base-score-passes"]
+    assert results[0].score == 0.1
+    assert results.threshold_rejected_count == 1
+
+
+@pytest.mark.parametrize("min_score", [True, "0.5"])
+def test_search_rejects_non_numeric_or_boolean_min_score(min_score: object) -> None:
+    with pytest.raises(ValueError, match="min_score"):
+        RetrievalService(FakeProvider(), ExactVectorStore()).search(
+            "soru", min_score=min_score  # type: ignore[arg-type]
+        )
+
+
+@pytest.mark.parametrize("mode", ["hybrid", "late"])
+def test_min_score_fails_closed_for_uncalibrated_retrieval_modes(mode: str) -> None:
+    class AlternateScoreStore(ExactVectorStore):
+        def hybrid_search(self, *args, **kwargs):
+            raise AssertionError("unsupported threshold must fail before retrieval")
+
+        def late_search(self, *args, **kwargs):
+            raise AssertionError("unsupported threshold must fail before retrieval")
+
+    store = AlternateScoreStore()
+    if mode == "hybrid":
+        store.late_search = None  # type: ignore[method-assign]
+    else:
+        store.hybrid_search = None  # type: ignore[method-assign]
+
+    with pytest.raises(ValueError, match="dense cosine retrieval only"):
+        RetrievalService(FakeProvider(), store).search("query", min_score=0.5)
+
+
 def test_reranker_failure_falls_back_to_original_candidates() -> None:
     class BrokenReranker:
         name = "broken"

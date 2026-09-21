@@ -108,7 +108,10 @@ class RetrievalService:
             raise ValueError("limit must be between 1 and 100")
         effective_min_score = self.default_min_score if min_score is None else min_score
         if effective_min_score is not None and (
-            not isfinite(effective_min_score) or not -1.0 <= effective_min_score <= 1.0
+            isinstance(effective_min_score, bool)
+            or not isinstance(effective_min_score, (int, float))
+            or not isfinite(effective_min_score)
+            or not -1.0 <= effective_min_score <= 1.0
         ):
             raise ValueError("min_score must be between -1 and 1")
         # Apply the score threshold before truncating to top-k. Otherwise an
@@ -119,6 +122,15 @@ class RetrievalService:
             if self.reranker is None:
                 raise ValueError("reranking is not configured")
             candidate_limit = min(100, max(limit * 3, 10))
+        late_search = getattr(self.store, "late_search", None)
+        hybrid_search = getattr(self.store, "hybrid_search", None)
+        if effective_min_score is not None and (
+            callable(late_search) or callable(hybrid_search)
+        ):
+            raise ValueError(
+                "min_score currently supports dense cosine retrieval only; "
+                "hybrid and late-interaction thresholds require separate calibration"
+            )
         selectivity = None
         if self.planner is not None and filters and filters.as_mapping():
             estimate = getattr(self.store, "filter_selectivity", None)
@@ -138,8 +150,6 @@ class RetrievalService:
         embedding_started = perf_counter()
         dense_vector = self.provider.embed_query(query)
         embedding_latency_ms = round((perf_counter() - embedding_started) * 1000, 3)
-        late_search = getattr(self.store, "late_search", None)
-        hybrid_search = getattr(self.store, "hybrid_search", None)
         if callable(late_search):
             points = late_search(
                 dense_vector,
@@ -168,8 +178,17 @@ class RetrievalService:
             retrieval_stage = "dense"
         candidate_count = len(points)
         results = [self._result(point, retrieval_stage=retrieval_stage) for point in points]
+        threshold_rejected_count = 0
+        if effective_min_score is not None:
+            # The threshold belongs to this retrieval mode's score scale.
+            # Reranker scores may use another scale (e.g. cross-encoder logits),
+            # so they only reorder candidates and never decide admission.
+            threshold_rejected_count = sum(
+                result.score < effective_min_score for result in results
+            )
+            results = [result for result in results if result.score >= effective_min_score]
         rerank_fallback = False
-        if rerank:
+        if rerank and results:
             try:
                 scores = self.reranker.score(query, [result.text for result in results])
                 if len(scores) != len(results) or not all(isfinite(score) for score in scores):
@@ -187,12 +206,6 @@ class RetrievalService:
                 results.sort(key=lambda result: result.score, reverse=True)
             except Exception:
                 rerank_fallback = True
-        threshold_rejected_count = 0
-        if effective_min_score is not None:
-            threshold_rejected_count = sum(
-                result.score < effective_min_score for result in results
-            )
-            results = [result for result in results if result.score >= effective_min_score]
         results = results[:limit]
         if not results:
             abstention_reason = (

@@ -3,6 +3,7 @@
 import re
 from dataclasses import dataclass
 from html import escape
+from xml.sax.saxutils import quoteattr
 
 from personal_vector_db.retrieval import RetrievalResult
 
@@ -156,11 +157,11 @@ def build_rag_context(
             security_flags=result.security_flags,
         )
         block = (
-            f'<evidence id="{citation.citation_id}" '
-            f'document_id="{escape(result.document_id)}" '
-            f'chunk_id="{escape(result.chunk_id)}" '
-            f'title="{escape(result.title)}" '
-            f'heading_path="{escape(" > ".join(result.heading_path))}" '
+            f"<evidence id={quoteattr(citation.citation_id)} "
+            f"document_id={quoteattr(result.document_id)} "
+            f"chunk_id={quoteattr(result.chunk_id)} "
+            f"title={quoteattr(result.title)} "
+            f"heading_path={quoteattr(' > '.join(result.heading_path))} "
             f'score="{result.score:.6f}">\n'
             f"{escape(result.text)}\n"
             "</evidence>"

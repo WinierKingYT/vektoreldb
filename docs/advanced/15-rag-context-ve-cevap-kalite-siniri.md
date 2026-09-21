@@ -27,7 +27,9 @@ RAG adapter'ı her kanıt için en az şu alanları korur:
 Ham metin context'e girebilir; ancak audit/log/benchmark özetine kopyalanmaz.
 Context builder kanıtları XML/JSON sınırlarıyla veri olarak işaretlemeli ve
 kaynak metnindeki talimatların sistem talimatı olmadığını generation prompt'unda
-açıkça belirtmelidir.
+açıkça belirtmelidir. Kaynak metni XML text olarak escape edilir; metadata
+attribute değerleri ayrıca quote-aware encode edilir, böylece belge başlığı ve
+heading içindeki tırnaklar kanıt etiketinin attribute yapısını değiştiremez.
 
 Kod tarafındaki `build_rag_context` bu paketleme işini yapar: bütün kanıt
 bloklarını veya hiç blok eklememeyi tercih eder, `max_chars` bütçesini aşmaz ve
@@ -91,6 +93,17 @@ ayrı kalır.
 - Cevapta retrieval kanıtı yoksa modelin genel bilgisinden gelen bölüm ayrı
   işaretlenmeli veya kişisel bilgi sorularında cevap reddedilmelidir.
 - `min_score` validation split'te seçilir; test split'te bir kez doğrulanır.
+- `min_score` mevcut sürümde yalnızca dense cosine retrieval için geçerlidir ve
+  varsa reranking öncesinde dense aday skoruna uygulanır. Hybrid veya
+  late-interaction store ile eşik istenirse sistem eşik kalibrasyonu bulunmadığı
+  için aramayı başlatmadan reddeder; eşiksiz arama modları çalışmaya devam eder.
+  Bu sınır önemlidir: Qdrant RRF skoru rank füzyonundan, late-interaction MaxSim
+  skoru ise token vektör benzerliklerinin toplamından üretir; ikisi de cosine
+  eşiğiyle değiştirilebilir değildir ([Qdrant RRF](https://qdrant.tech/documentation/search/hybrid-queries/), [Qdrant multivector/MaxSim](https://qdrant.tech/documentation/manage-data/vectors/)).
+- Dense aday eşiğini geçen sonuçlar yeniden sıralanabilir; reranker skoru farklı
+  ölçekte olabileceği için eşik/olasılık olarak kullanılmaz. Örneğin Sentence
+  Transformers MS MARCO CrossEncoder sigmoid uygulanmadığında logit döndürebilir;
+  sigmoid sıralamayı değiştirmeden skoru 0–1 aralığına getirir ([kullanım rehberi](https://www.sbert.net/docs/cross_encoder/usage/usage.html), [CrossEncoder API](https://www.sbert.net/docs/package_reference/cross_encoder/model.html)). Reranker'a özgü confidence eşiği bu sürümde desteklenmez.
 - Threshold seçimi için validation skorları üzerinde pozitif kabul ve negative
   başarı tabanlarını birlikte değerlendiren bounded helper kullanılabilir; uygun
   eşik yoksa RAG katmanı sessiz bir değer uydurmaz.

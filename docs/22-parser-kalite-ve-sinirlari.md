@@ -56,7 +56,7 @@ seçime alınmaz.
 
 ## İzolasyon
 
-Parser işlemleri dosya türü allowlist'i, timeout, bellek/dosya boyutu limiti ve geçici çalışma alanı ile izole edilir. Dış bağlantı gerektiren HTML işlemleri varsayılan olarak kapalıdır; yerel HTML ile web tarama birbirinden ayrıdır.
+Parser'lar şu anda çağıran uygulama sürecinde senkron çalışır; ayrı worker process, çalışma zamanı timeout'u, peak-RAM limiti veya geçici çalışma alanı izolasyonu uygulanmamıştır. Koruyucu boyut sınırları vardır: kaynak dosyası 10 MB, DOCX açılmış ZIP üyeleri toplamı 50 MB ve PDF çıkarılmış metni toplamı 50 milyon karakter. Bunlar bellek ya da süre için sert garanti değildir: PDF sayfası metni limit kontrolünden önce belleğe çıkarılır; DOCX XML ağacı ve HTML/JSON metni de parser sürecinde işlenir. Bu nedenle gerçek/çeşitli kişisel corpus denemelerinde süreç başına runtime/RAM gözlenmeli; timeout veya worker izolasyonunun gerekli olup olmadığı ölçümle kararlaştırılmalıdır. Dış bağlantı gerektiren HTML işlemleri varsayılan olarak kapalıdır; yerel HTML ile web tarama birbirinden ayrıdır.
 
 ## Kalıcı regresyon güvencesi
 

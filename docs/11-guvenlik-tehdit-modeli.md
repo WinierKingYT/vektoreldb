@@ -10,7 +10,7 @@ Kaynak dosya, parser, embedding sağlayıcısı, Qdrant, API istemcisi ve LLM bi
 |---|---|
 | Yetkisiz belge sonucu | Sunucu tarafında zorunlu erişim filtresi |
 | Prompt injection | Kaynak metnini talimatlardan ayırma, içerik işaretleme |
-| Harici sağlayıcıya veri sızıntısı | Redaksiyon, açık provider seçimi, veri politikası kontrolü ve HTTP ingest için zorunlu source_root |
+| Harici sağlayıcıya veri sızıntısı | Redaksiyon, açık provider seçimi, veri politikası kontrolü, HTTPS/loopback sınırı ve embedding yönlendirmelerinin kapatılması; HTTP ingest için zorunlu source_root |
 | Anahtar sızıntısı | Secret store/env, log redaction |
 | Zararlı dosya | Boyut/tür sınırı, kaynak kökü dışına yönlenen symlink reddi, DOCX arşiv üye yolu/açılmış boyut sınırı, şifreli PDF reddi ve PDF extraction sınırı, sandbox parser, malware taraması |
 | Metadata ile yetki yükseltme | Kullanıcı metadata'sını yetki kaynağı kabul etmeme |

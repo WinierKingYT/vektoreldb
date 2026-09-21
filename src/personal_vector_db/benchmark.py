@@ -140,7 +140,12 @@ def choose_abstention_threshold(
         (min_positive_acceptance, "min_positive_acceptance"),
         (min_negative_success, "min_negative_success"),
     ):
-        if not isfinite(value) or not 0.0 <= value <= 1.0:
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not isfinite(value)
+            or not 0.0 <= value <= 1.0
+        ):
             raise ValueError(f"{name} must be between 0 and 1")
     if not cases:
         raise ValueError("cases cannot be empty")
@@ -149,7 +154,12 @@ def choose_abstention_threshold(
     candidates = {1.0}
     for scores in score_lists:
         for score in scores:
-            if not isfinite(score) or not -1.0 <= score <= 1.0:
+            if (
+                isinstance(score, bool)
+                or not isinstance(score, (int, float))
+                or not isfinite(score)
+                or not -1.0 <= score <= 1.0
+            ):
                 raise ValueError("scores must be finite and between -1 and 1")
             candidates.add(float(score))
     evaluations = [

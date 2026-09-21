@@ -15,11 +15,33 @@ from threading import RLock
 from time import sleep
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from personal_vector_db.contracts import EmbeddingManifest
 
 _MAX_RESPONSE_BYTES = 64_000_000
+
+
+class _RejectEmbeddingRedirects(HTTPRedirectHandler):
+    """Prevent configured embedding credentials/data from following redirects."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise HTTPError(
+            req.full_url,
+            code,
+            "embedding endpoint redirects are disabled",
+            headers,
+            fp,
+        )
+
+
+_EMBEDDING_OPENER = build_opener(_RejectEmbeddingRedirects())
+
+
+def urlopen(request: Request, *, timeout: float):
+    """Open an embedding request without urllib's default redirect behavior."""
+
+    return _EMBEDDING_OPENER.open(request, timeout=timeout)
 
 
 class OpenAIEmbeddingProvider:
@@ -38,10 +60,16 @@ class OpenAIEmbeddingProvider:
         batch_size: int = 32,
         cache_size: int = 256,
     ) -> None:
-        if not model_name.strip():
+        if not isinstance(model_name, str) or not model_name.strip():
             raise ValueError("embedding model cannot be empty")
-        if dimension < 1:
+        if (
+            isinstance(dimension, bool)
+            or not isinstance(dimension, int)
+            or dimension < 1
+        ):
             raise ValueError("embedding dimension must be positive")
+        if not isinstance(base_url, str):
+            raise ValueError("embedding base_url must be a string")
         parsed_base_url = urlparse(base_url)
         hostname = (parsed_base_url.hostname or "").lower()
         local_http = parsed_base_url.scheme == "http" and hostname in {
@@ -60,15 +88,37 @@ class OpenAIEmbeddingProvider:
             raise ValueError(
                 "embedding base_url must use HTTPS; HTTP is allowed only for loopback"
             )
-        if timeout_seconds <= 0:
-            raise ValueError("embedding timeout must be positive")
-        if not 0 <= max_retries <= 5:
+        if (
+            isinstance(timeout_seconds, bool)
+            or not isinstance(timeout_seconds, (int, float))
+            or not isfinite(timeout_seconds)
+            or timeout_seconds <= 0
+        ):
+            raise ValueError("embedding timeout must be finite and positive")
+        if (
+            isinstance(max_retries, bool)
+            or not isinstance(max_retries, int)
+            or not 0 <= max_retries <= 5
+        ):
             raise ValueError("embedding max_retries must be between 0 and 5")
-        if retry_backoff_seconds < 0:
+        if (
+            isinstance(retry_backoff_seconds, bool)
+            or not isinstance(retry_backoff_seconds, (int, float))
+            or not isfinite(retry_backoff_seconds)
+            or retry_backoff_seconds < 0
+        ):
             raise ValueError("embedding retry backoff cannot be negative")
-        if not 1 <= batch_size <= 256:
+        if (
+            isinstance(batch_size, bool)
+            or not isinstance(batch_size, int)
+            or not 1 <= batch_size <= 256
+        ):
             raise ValueError("embedding batch_size must be between 1 and 256")
-        if not 0 <= cache_size <= 4096:
+        if (
+            isinstance(cache_size, bool)
+            or not isinstance(cache_size, int)
+            or not 0 <= cache_size <= 4096
+        ):
             raise ValueError("embedding cache_size must be between 0 and 4096")
         key = api_key or os.getenv("OPENAI_API_KEY")
         if not key:
@@ -190,13 +240,17 @@ class OpenAIEmbeddingProvider:
             [float(value) for value in item["embedding"]]
             for item in ordered
         ]
-        if any(
-            len(vector) != self.manifest.dimension
-            or not all(isfinite(value) for value in vector)
-            or sum(value * value for value in vector) == 0
-            for vector in vectors
-        ):
-            raise ValueError("external embedding vector does not match manifest")
+        for vector in vectors:
+            norm_squared = sum(value * value for value in vector)
+            if (
+                len(vector) != self.manifest.dimension
+                or not all(isfinite(value) for value in vector)
+                or not isfinite(norm_squared)
+                or norm_squared <= 0
+            ):
+                raise ValueError(
+                    "external embedding vector does not match manifest or has invalid norm"
+                )
         return vectors
 
     def embed_documents(self, texts: Sequence[str]) -> list[list[float]]:

@@ -1554,6 +1554,30 @@ def test_abstention_threshold_rejects_non_numeric_and_boolean_scores() -> None:
         evaluate_abstention_threshold(cases, [[0.9]], threshold=True)
 
 
+@pytest.mark.parametrize("score", [True, "0.9"])
+def test_abstention_threshold_selector_rejects_invalid_score_types(score: object) -> None:
+    cases = [QueryCase("positive", "query", frozenset({"chunk-a"}))]
+
+    with pytest.raises(ValueError, match="scores must be finite"):
+        choose_abstention_threshold(
+            cases, [[score]], min_positive_acceptance=1.0  # type: ignore[list-item]
+        )
+
+
+@pytest.mark.parametrize("floor", [True, "0.9"])
+def test_abstention_threshold_selector_rejects_invalid_quality_floor_types(
+    floor: object,
+) -> None:
+    cases = [QueryCase("positive", "query", frozenset({"chunk-a"}))]
+
+    with pytest.raises(ValueError, match="min_positive_acceptance"):
+        choose_abstention_threshold(
+            cases,
+            [[0.9]],
+            min_positive_acceptance=floor,  # type: ignore[arg-type]
+        )
+
+
 def test_concurrency_probe_reports_success_and_errors_without_text() -> None:
     class SometimesFailingSearcher:
         def search(self, query: str, *, limit: int = 8) -> list[Result]:

@@ -4,6 +4,19 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- `min_score` yalnızca dense cosine retrieval'da, varsa reranking öncesinde
+  uygulanıyor. Kalibrasyonu olmayan hybrid/late eşik istekleri fail-closed
+  reddedilir; eşiksiz arama açıktır. Reranker yalnızca dense eşiğini geçen
+  adayları yeniden sıralar. Eşik helper'ları invalid score/floor türlerini reddeder.
+- RAG evidence metadata'sı XML attribute bağlamında quote-aware encode ediliyor;
+  source-controlled başlık/heading tırnakları yeni attribute oluşturamıyor.
+- Harici embedding HTTP istemcisi 3xx yönlendirmelerini reddediyor; API anahtarı ve
+  kişisel metin yalnızca yapılandırılmış embedding endpoint'ine gönderiliyor.
+- Harici embedding numeric config tipleri/sonluluğu kurulum anında doğrulanıyor;
+  response vektör normunun taşması fail-closed reddediliyor.
+- Parser kalite rehberi mevcut durumu netleştiriyor: dosya/açılmış içerik sınırları
+  var, ancak process timeout veya peak-RAM izolasyonu uygulanmıyor; gerçek corpus
+  ölçümünde runtime/RAM gözlenip gereksinim kararı verilecek.
 - PDF extraction hiç metin bulamadığında artık taranmış/görsel içerik olasılığını ve
   OCR gerekebileceğini belirten açık hata verir; pypdf metin sırası ve sıkıştırılmış
   içerik akışının bellek sınırları parser kalite dokümantasyonunda netleştirildi.

@@ -1,8 +1,13 @@
 import json
 from concurrent.futures import ThreadPoolExecutor
+from email.message import Message
+from io import BytesIO
+from urllib.error import HTTPError
+from urllib.request import HTTPRedirectHandler, Request
 
 import pytest
 
+from personal_vector_db.embeddings import openai as openai_module
 from personal_vector_db.embeddings.openai import OpenAIEmbeddingProvider
 
 
@@ -53,6 +58,36 @@ def test_openai_provider_orders_vectors_and_preserves_manifest(
     assert request.full_url == "http://localhost:9000/v1/embeddings"
     assert timeout == 4
     assert b"bir" in request.data and b"iki" in request.data
+
+
+def test_openai_provider_transport_rejects_redirects() -> None:
+    assert not any(
+        type(handler) is HTTPRedirectHandler
+        for handler in openai_module._EMBEDDING_OPENER.handlers
+    )
+    handler = next(
+        handler
+        for handler in openai_module._EMBEDDING_OPENER.handlers
+        if isinstance(handler, openai_module._RejectEmbeddingRedirects)
+    )
+    request = Request(
+        "https://configured.example/v1/embeddings",
+        data=b'{"input":["private text"]}',
+        headers={"Authorization": "Bearer secret"},
+        method="POST",
+    )
+
+    with pytest.raises(HTTPError, match="redirects are disabled") as error:
+        handler.redirect_request(
+            request,
+            BytesIO(),
+            302,
+            "Found",
+            Message(),
+            "https://attacker.example/collect",
+        )
+
+    assert error.value.code == 302
 
 
 def test_openai_provider_retries_transient_failure(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -154,6 +189,35 @@ def test_openai_provider_rejects_unsafe_batch_size() -> None:
         OpenAIEmbeddingProvider("test-model", dimension=2, api_key="secret", batch_size=257)
 
 
+@pytest.mark.parametrize(
+    ("setting", "value", "message"),
+    [
+        ("dimension", True, "dimension"),
+        ("dimension", 2.0, "dimension"),
+        ("timeout_seconds", True, "timeout"),
+        ("timeout_seconds", float("nan"), "timeout"),
+        ("timeout_seconds", float("inf"), "timeout"),
+        ("max_retries", True, "max_retries"),
+        ("max_retries", 1.5, "max_retries"),
+        ("retry_backoff_seconds", True, "backoff"),
+        ("retry_backoff_seconds", float("nan"), "backoff"),
+        ("retry_backoff_seconds", float("inf"), "backoff"),
+        ("batch_size", True, "batch_size"),
+        ("batch_size", 1.5, "batch_size"),
+        ("cache_size", True, "cache_size"),
+        ("cache_size", 1.5, "cache_size"),
+    ],
+)
+def test_openai_provider_rejects_invalid_numeric_configuration(
+    setting: str, value: object, message: str
+) -> None:
+    configuration: dict[str, object] = {"dimension": 2, "api_key": "secret"}
+    configuration[setting] = value
+
+    with pytest.raises(ValueError, match=message):
+        OpenAIEmbeddingProvider("test-model", **configuration)  # type: ignore[arg-type]
+
+
 def test_openai_provider_caches_vectors_without_storing_input_text(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -212,6 +276,21 @@ def test_openai_provider_rejects_wrong_dimension(monkeypatch: pytest.MonkeyPatch
     provider = OpenAIEmbeddingProvider("test-model", dimension=2, api_key="secret")
 
     with pytest.raises(ValueError, match="manifest"):
+        provider.embed_query("soru")
+
+
+def test_openai_provider_rejects_finite_coordinates_with_overflowing_norm(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "personal_vector_db.embeddings.openai.urlopen",
+        lambda _request, *, timeout: _Response(
+            {"data": [{"index": 0, "embedding": [1e308, 0.0]}]}
+        ),
+    )
+    provider = OpenAIEmbeddingProvider("test-model", dimension=2, api_key="secret")
+
+    with pytest.raises(ValueError, match="invalid norm"):
         provider.embed_query("soru")
 
 
