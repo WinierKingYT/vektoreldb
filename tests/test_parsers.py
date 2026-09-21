@@ -483,6 +483,26 @@ def test_pdf_parser_rejects_encrypted_files(
         parse_source(path)
 
 
+def test_pdf_parser_explains_ocr_requirement_when_no_page_has_text(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class ImageOnlyPage:
+        def extract_text(self) -> None:
+            return None
+
+    class ImageOnlyPdfReader:
+        def __init__(self, _path: str) -> None:
+            self.is_encrypted = False
+            self.pages = [ImageOnlyPage(), ImageOnlyPage()]
+
+    monkeypatch.setitem(sys.modules, "pypdf", SimpleNamespace(PdfReader=ImageOnlyPdfReader))
+    path = tmp_path / "image-only.pdf"
+    path.write_bytes(b"mock pdf")
+
+    with pytest.raises(ValueError, match="no extractable text.*may require OCR"):
+        parse_source(path)
+
+
 def test_parser_rejects_unknown_suffix(tmp_path: Path) -> None:
     path = tmp_path / "data.exe"
     path.write_bytes(b"not a document")

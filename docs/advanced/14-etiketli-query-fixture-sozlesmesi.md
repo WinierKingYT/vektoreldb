@@ -149,7 +149,7 @@ rapor `coverage_complete=false` üretir.
 ```powershell
 vdb fixture-label-template `
   --fixture data/benchmarks/queries-v1.json `
-  --corpus-manifest data/benchmarks/corpus-manifest.json `
+  --corpus-manifest data/manifests/corpus-manifest.json `
   --output data/benchmarks/labels-v1-template.json
 ```
 
@@ -239,7 +239,7 @@ CLI kullanımı:
 vdb fixture-validate `
   --fixture data/benchmarks/queries-v1.json `
   --manifest data/benchmarks/query-fixture-manifest.json `
-  --corpus-manifest data/benchmarks/corpus-manifest.json `
+  --corpus-manifest data/manifests/corpus-manifest.json `
   --labels data/benchmarks/labels-v1.json
 ```
 

@@ -41,6 +41,70 @@ class FakeSearcher:
         return [Result("chunk-a")] if "a" in query else [Result("chunk-missing")]
 
 
+def _write_synthetic_corpus_manifest(
+    tmp_path: Path,
+    *,
+    parser_versions: tuple[str, ...] = ("plain-text-v1",),
+    chunk_ids: tuple[str, ...] = ("chunk-a",),
+    chunk_size_buckets: dict[str, str] | None = None,
+    checksum: str = "sha256:" + "a" * 64,
+) -> Path:
+    manifest = {
+        "schema_version": "corpus-manifest-v1",
+        "root_name": "synthetic-test-sources",
+        "corpus_checksum": checksum,
+        "source_count": 1 if chunk_ids else 0,
+        "parsed_source_count": 1 if chunk_ids else 0,
+        "failed_source_count": 0,
+        "total_bytes": 10 if chunk_ids else 0,
+        "total_chunks": len(chunk_ids),
+        "chunk_ids": list(chunk_ids),
+        "chunk_size_buckets": chunk_size_buckets
+        if chunk_size_buckets is not None
+        else {chunk_id: "small" for chunk_id in chunk_ids},
+        "chunking_version": "paragraph-pack-v2",
+        "parser_versions": list(parser_versions),
+        "privacy_classification": "private-local",
+    }
+    path = tmp_path / "corpus-manifest.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    return path
+
+
+def _write_synthetic_fixture_manifest(
+    tmp_path: Path,
+    *,
+    corpus_checksum: str = "sha256:" + "a" * 64,
+    parser_versions: tuple[str, ...] | None = ("plain-text-v1",),
+    declare_provenance: bool = True,
+) -> Path:
+    versions = list(parser_versions or ())
+    manifest = {
+        "schema_version": "query-fixture-manifest-v1",
+        "status": "contract-only",
+        "minimum_query_count": 1,
+        "recommended_split": {"development": 1.0},
+        "split_tolerance": 0.05,
+        "required_query_types": ["semantic"],
+        "minimum_queries_per_type": 1,
+        "required_document_size_buckets": ["small"],
+        "required_filter_selectivity_buckets": ["low"],
+        "corpus_checksum": corpus_checksum if declare_provenance else None,
+        "parser_version": (versions[0] if len(versions) == 1 else "mixed")
+        if declare_provenance and versions
+        else None,
+        "chunking_version": "paragraph-pack-v2" if declare_provenance else None,
+        "embedding_manifest_id": None,
+        "privacy_classification": "private-local",
+        "notes": "Synthetic test manifest; contains no real corpus data.",
+    }
+    if declare_provenance and versions:
+        manifest["parser_versions"] = versions
+    path = tmp_path / "fixture-manifest.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    return path
+
+
 def test_benchmark_reports_recall_and_query_count() -> None:
     cases = [
         QueryCase("q1", "a query", frozenset({"chunk-a"})),
@@ -205,20 +269,14 @@ def test_fixture_coverage_reports_corpus_size_buckets_separately(tmp_path: Path)
 
 
 def test_fixture_coverage_rejects_size_bucket_binding_mismatch(tmp_path: Path) -> None:
-    fixture_manifest = json.loads(
-        Path("data/benchmarks/representative-personal-query-fixture-manifest.json")
-        .read_text(encoding="utf-8")
+    checksum = "sha256:" + "a" * 64
+    corpus_path = _write_synthetic_corpus_manifest(
+        tmp_path,
+        chunk_size_buckets={"chunk-a": "medium"},
+        checksum=checksum,
     )
-    corpus_manifest = json.loads(
-        Path("data/benchmarks/corpus-manifest.json").read_text(encoding="utf-8")
-    )
-    corpus_manifest["chunk_ids"] = ["chunk-a"]
-    corpus_manifest["total_chunks"] = 1
-    corpus_manifest["chunk_size_buckets"] = {"chunk-a": "medium"}
-    corpus_path = tmp_path / "corpus.json"
     fixture_path = tmp_path / "fixture.json"
-    manifest_path = tmp_path / "fixture-manifest.json"
-    corpus_path.write_text(json.dumps(corpus_manifest), encoding="utf-8")
+    manifest_path = _write_synthetic_fixture_manifest(tmp_path, corpus_checksum=checksum)
     fixture_path.write_text(
         json.dumps(
             [
@@ -234,15 +292,6 @@ def test_fixture_coverage_rejects_size_bucket_binding_mismatch(tmp_path: Path) -
         ),
         encoding="utf-8",
     )
-    fixture_manifest["minimum_query_count"] = 1
-    fixture_manifest["required_query_types"] = ["semantic"]
-    fixture_manifest["minimum_queries_per_type"] = 1
-    fixture_manifest["required_document_size_buckets"] = ["small"]
-    fixture_manifest["required_filter_selectivity_buckets"] = ["low"]
-    fixture_manifest["corpus_checksum"] = corpus_manifest["corpus_checksum"]
-    fixture_manifest["recommended_split"] = {"development": 1.0}
-    fixture_manifest["notes"] = "test manifest"
-    manifest_path.write_text(json.dumps(fixture_manifest), encoding="utf-8")
 
     report = fixture_coverage_report(
         load_query_cases(fixture_path),
@@ -256,20 +305,15 @@ def test_fixture_coverage_rejects_size_bucket_binding_mismatch(tmp_path: Path) -
 
 
 def test_fixture_coverage_rejects_partial_chunk_size_bucket_mapping(tmp_path: Path) -> None:
-    fixture_manifest = json.loads(
-        Path("data/benchmarks/representative-personal-query-fixture-manifest.json")
-        .read_text(encoding="utf-8")
+    checksum = "sha256:" + "a" * 64
+    corpus_path = _write_synthetic_corpus_manifest(
+        tmp_path,
+        chunk_ids=("chunk-a", "chunk-b"),
+        chunk_size_buckets={"chunk-a": "small"},
+        checksum=checksum,
     )
-    corpus_manifest = json.loads(
-        Path("data/benchmarks/corpus-manifest.json").read_text(encoding="utf-8")
-    )
-    corpus_manifest["chunk_ids"] = ["chunk-a", "chunk-b"]
-    corpus_manifest["total_chunks"] = 2
-    corpus_manifest["chunk_size_buckets"] = {"chunk-a": "small"}
-    corpus_path = tmp_path / "corpus.json"
     fixture_path = tmp_path / "fixture.json"
-    manifest_path = tmp_path / "fixture-manifest.json"
-    corpus_path.write_text(json.dumps(corpus_manifest), encoding="utf-8")
+    manifest_path = _write_synthetic_fixture_manifest(tmp_path, corpus_checksum=checksum)
     fixture_path.write_text(
         json.dumps(
             [
@@ -285,15 +329,6 @@ def test_fixture_coverage_rejects_partial_chunk_size_bucket_mapping(tmp_path: Pa
         ),
         encoding="utf-8",
     )
-    fixture_manifest["minimum_query_count"] = 1
-    fixture_manifest["required_query_types"] = ["semantic"]
-    fixture_manifest["minimum_queries_per_type"] = 1
-    fixture_manifest["required_document_size_buckets"] = ["small"]
-    fixture_manifest["required_filter_selectivity_buckets"] = ["low"]
-    fixture_manifest["corpus_checksum"] = corpus_manifest["corpus_checksum"]
-    fixture_manifest["recommended_split"] = {"development": 1.0}
-    fixture_manifest["notes"] = "test manifest"
-    manifest_path.write_text(json.dumps(fixture_manifest), encoding="utf-8")
 
     report = fixture_coverage_report(
         load_query_cases(fixture_path),
@@ -799,21 +834,25 @@ def test_query_label_template_preserves_mixed_parser_provenance(tmp_path: Path) 
 
 
 def test_fixture_coverage_reports_label_provenance_mismatch(tmp_path: Path) -> None:
-    fixture_manifest = Path(
-        "data/benchmarks/representative-personal-query-fixture-manifest.json"
+    versions = ("html-v4", "plain-text-v1")
+    corpus_manifest = _write_synthetic_corpus_manifest(tmp_path, parser_versions=versions)
+    fixture_manifest = _write_synthetic_fixture_manifest(
+        tmp_path, parser_versions=versions
     )
-    corpus_manifest = Path("data/benchmarks/corpus-manifest.json")
-    labels = json.loads(
-        Path(
-            "data/benchmarks/representative-personal-query-labels-template.json"
-        ).read_text(encoding="utf-8")
-    )
-    labels[0]["parser_versions"] = ["stale-parser-v1"]
+    cases = [
+        QueryCase(
+            "q1", "synthetic query", frozenset({"chunk-a"}),
+            split="development", size_bucket="small", filter_selectivity="low"
+        )
+    ]
     labels_path = tmp_path / "labels.json"
+    write_query_label_template(labels_path, cases, corpus_manifest_path=corpus_manifest)
+    labels = json.loads(labels_path.read_text(encoding="utf-8"))
+    labels[0]["parser_versions"] = ["stale-parser-v1"]
     labels_path.write_text(json.dumps(labels), encoding="utf-8")
 
     report = fixture_coverage_report(
-        load_query_cases(Path("data/benchmarks/representative-personal-queries.json")),
+        cases,
         fixture_manifest,
         labels_path=labels_path,
         corpus_manifest_path=corpus_manifest,
@@ -824,16 +863,7 @@ def test_fixture_coverage_reports_label_provenance_mismatch(tmp_path: Path) -> N
     assert report["corpus_binding_status"] == "mismatch"
 
 
-def test_fixture_coverage_reports_parser_version_sets() -> None:
-    report = fixture_coverage_report(
-        load_query_cases(Path("data/benchmarks/representative-personal-queries.json")),
-        Path("data/benchmarks/representative-personal-query-fixture-manifest.json"),
-        labels_path=Path(
-            "data/benchmarks/representative-personal-query-labels-template.json"
-        ),
-        corpus_manifest_path=Path("data/benchmarks/corpus-manifest.json"),
-    )
-
+def test_fixture_coverage_reports_parser_version_sets(tmp_path: Path) -> None:
     expected = [
         "csv-v1",
         "email-v1",
@@ -845,26 +875,49 @@ def test_fixture_coverage_reports_parser_version_sets() -> None:
         "xml-v1",
         "yaml-v1",
     ]
+    versions = tuple(expected)
+    corpus_manifest = _write_synthetic_corpus_manifest(tmp_path, parser_versions=versions)
+    fixture_manifest = _write_synthetic_fixture_manifest(
+        tmp_path, parser_versions=versions
+    )
+    cases = [
+        QueryCase(
+            "q1", "synthetic query", frozenset({"chunk-a"}),
+            split="development", size_bucket="small", filter_selectivity="low"
+        )
+    ]
+    labels_path = tmp_path / "labels.json"
+    write_query_label_template(labels_path, cases, corpus_manifest_path=corpus_manifest)
+
+    report = fixture_coverage_report(
+        cases,
+        fixture_manifest,
+        labels_path=labels_path,
+        corpus_manifest_path=corpus_manifest,
+    )
+
     assert report["corpus_parser_versions"] == expected
     assert report["fixture_parser_versions"] == expected
     assert report["parser_versions_binding_status"] == "valid"
 
 
 def test_fixture_coverage_rejects_parser_version_set_mismatch(tmp_path: Path) -> None:
-    manifest = json.loads(
-        Path("data/benchmarks/representative-personal-query-fixture-manifest.json")
-        .read_text(encoding="utf-8")
+    versions = ("plain-text-v1", "xml-v1")
+    corpus_manifest = _write_synthetic_corpus_manifest(tmp_path, parser_versions=versions)
+    manifest_path = _write_synthetic_fixture_manifest(
+        tmp_path, parser_versions=("plain-text-v1",)
     )
-    manifest["parser_versions"] = [
-        version for version in manifest["parser_versions"] if version != "xml-v1"
+    cases = [
+        QueryCase(
+            "q1", "synthetic query", frozenset({"chunk-a"}),
+            split="development", size_bucket="small", filter_selectivity="low"
+        )
     ]
-    manifest_path = tmp_path / "fixture-manifest.json"
-    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
     report = fixture_coverage_report(
-        load_query_cases(Path("data/benchmarks/representative-personal-queries.json")),
+        cases,
         manifest_path,
-        corpus_manifest_path=Path("data/benchmarks/corpus-manifest.json"),
+        corpus_manifest_path=corpus_manifest,
     )
 
     assert report["parser_versions_binding_status"] == "mismatch"
@@ -897,7 +950,7 @@ def test_fixture_coverage_is_not_complete_without_declared_corpus_provenance(
     report = fixture_coverage_report(
         [QueryCase("q1", "query", frozenset(), query_type="semantic", split="development")],
         manifest_path,
-        corpus_manifest_path=Path("data/benchmarks/corpus-manifest.json"),
+        corpus_manifest_path=_write_synthetic_corpus_manifest(tmp_path),
     )
 
     assert report["corpus_binding_status"] == "valid"
@@ -906,14 +959,19 @@ def test_fixture_coverage_is_not_complete_without_declared_corpus_provenance(
     assert report["coverage_complete"] is False
 
 
-def test_fixture_coverage_reports_corpus_binding_checksums() -> None:
+def test_fixture_coverage_reports_corpus_binding_checksums(tmp_path: Path) -> None:
+    checksum = "sha256:" + "a" * 64
+    corpus_manifest = _write_synthetic_corpus_manifest(tmp_path, checksum=checksum)
+    fixture_manifest = _write_synthetic_fixture_manifest(
+        tmp_path, corpus_checksum=checksum
+    )
+    cases = [QueryCase("q1", "synthetic query", frozenset({"chunk-a"}))]
     report = fixture_coverage_report(
-        load_query_cases(Path("data/benchmarks/representative-personal-queries.json")),
-        Path("data/benchmarks/representative-personal-query-fixture-manifest.json"),
-        corpus_manifest_path=Path("data/benchmarks/corpus-manifest.json"),
+        cases,
+        fixture_manifest,
+        corpus_manifest_path=corpus_manifest,
     )
 
-    checksum = "sha256:80170ea3cd3b1adb2b4ecc71918a9460a87050a6cfbcf22fa639611e8dded919"
     assert report["corpus_checksum"] == checksum
     assert report["fixture_corpus_checksum"] == checksum
 
@@ -970,10 +1028,11 @@ def test_fixture_coverage_marks_derived_labels_as_review_required(tmp_path: Path
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     labels_path = tmp_path / "labels.json"
+    corpus_path = _write_synthetic_corpus_manifest(tmp_path, chunk_ids=())
     write_query_label_template(
         labels_path,
         [QueryCase("q1", "query", frozenset())],
-        corpus_manifest_path=Path("data/benchmarks/corpus-manifest.json"),
+        corpus_manifest_path=corpus_path,
     )
 
     report = fixture_coverage_report(

@@ -1,5 +1,26 @@
 # Karar günlüğü
 
+## 2026-09-21 — Private-local corpus artifact'lerini izlenen benchmark'tan ayırma
+
+- Önceki karar inventory/manifest varsayılanlarını ignore edilen dizinlere aldı,
+  ancak eski `data/benchmarks/corpus-inventory.json`, `corpus-manifest.json` ve
+  bunlara bağlanan `representative-personal-*.json` fixture/label/coverage
+  kayıtlarının Git'te izlenmeye devam etmesini gözden kaçırdı. Bu dosyalar
+  `private-local` sınıfı taşıyor; ham metin içermemeleri paylaşım için yeterli
+  güvence değil, çünkü yollar/hash'ler/ID'ler ve içerikten türetilmiş sorular
+  açığa çıkabilir.
+- Bu artifact aileleri `.gitignore` kapsamına alınıyor; yerel dosyalar korunur ve
+  testler kişisel corpus snapshot'ı yerine geçici, açıkça sentetik manifestler
+  kullanacak. `data/benchmarks/queries.json` gibi genel contract fixture'ları
+  ayrı ve paylaşılabilir sözleşme girdileri olmaya devam eder.
+- Compatibility: CLI şeması, corpus checksum/provenance ve kullanıcı tarafından
+  verilen output yolları değişmez; temiz clone artık kişisel corpus snapshot'ı
+  varsaymaz. Geri alma yalnızca ignore kuralı/test yardımcıları/docs değişikliğini
+  geri almak ve bilinçli şekilde sentetik public fixture koymaktır; kişisel
+  artifact'leri yeniden Git'e eklemek varsayılan rollback değildir.
+- GitHub'da önceden yayımlanmış commit geçmişi bu yerel düzeltmeyle silinmez;
+  public geçmişi gizleme/yeniden yazma ayrı kullanıcı onayı gerektirir.
+
 ## 2026-09-21 — Kişisel corpus artifact'lerini Git dışına alma
 
 - `corpus-inventory` varsayılanı Git'te izlenen `data/benchmarks/` içine
@@ -35,6 +56,22 @@
   final kapısı mevcut 36 review-required etiket ve eksik large bucket nedeniyle
   beklenen biçimde açık. HTML hedefli regresyon `3 passed`; tam paket final
   turuna bırakıldı.
+
+## 2026-09-21 — Metinsiz PDF için OCR teşhisi
+
+- pypdf resmi metin çıkarım rehberi, kütüphanenin OCR yapmadığını; görsel/tarama
+  içeriğinden metin çıkaramayacağını, sıralamanın PDF içerik akışına bağlı olarak
+  beklenenden farklı olabileceğini ve sıkıştırılmış page content stream'lerinin
+  yüksek bellek kullanabileceğini belirtiyor.
+- Tamamen metinsiz PDF'ler artık genel `empty parsed document` hatası yerine
+  taranmış/görsel içerik olasılığını ve olası OCR ihtiyacını belirten dosya-seviyesi
+  hata veriyor; bu durum tek başına dosyanın tarama olduğunu kanıtlamaz.
+  Kısmen metinsiz sayfalara fallback/OCR eklenmedi; pypdf `layout` modu varsayılan
+  olmadı. Başarılı sayfalardaki metin, parser sürümü ve provenance değişmiyor.
+- Geri alma yolu yeni özel hata dalını kaldırmaktır. Bu davranış source text ya
+  da Qdrant payload sözleşmesini değiştirmez. Hızlı parser testi pypdf çağrısını
+  taklit ederek metinsiz PDF teşhisini doğrular; gerçek çeşitlendirilmiş PDF
+  kalite raporu ve süreç/bellek izolasyonu final ölçüm kapısında kalır.
 
 ## 2026-09-12 — İlk taslak
 

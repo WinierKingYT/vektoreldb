@@ -18,6 +18,9 @@ data/sources/
 data/derived/
 data/manifests/
 data/benchmarks/results/
+data/benchmarks/corpus-inventory.json
+data/benchmarks/corpus-manifest.json
+data/benchmarks/representative-personal-*.json
 data/snapshots/
 qdrant_storage/
 qdrant_server_storage/

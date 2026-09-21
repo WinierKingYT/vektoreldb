@@ -509,6 +509,10 @@ def _parse_pdf(path: Path) -> CanonicalDocument:
             if extracted_chars > _MAX_PDF_EXTRACTED_CHARS:
                 raise ValueError("PDF extracted text exceeds the size limit")
             sections.append(Section(text=text, location={"page": page_number}))
+    if not sections:
+        raise ValueError(
+            "PDF contains no extractable text; scanned or image-only PDFs may require OCR"
+        )
     metadata = getattr(reader, "metadata", None)
     title = str(getattr(metadata, "title", "") or "").strip() if metadata else ""
     return _document(path, "pdf", sections, parser_version="pdf-v2", title=title)

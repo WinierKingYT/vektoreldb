@@ -4,6 +4,14 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- PDF extraction hiç metin bulamadığında artık taranmış/görsel içerik olasılığını ve
+  OCR gerekebileceğini belirten açık hata verir; pypdf metin sırası ve sıkıştırılmış
+  içerik akışının bellek sınırları parser kalite dokümantasyonunda netleştirildi.
+  Gerçek PDF corpus kalite incelemesi ve süreç izolasyonu hâlâ final kapısında.
+- Kişisel corpus inventory/manifest/query/label/coverage artifact'leri `private-local`
+  olarak Git ignore kapsamına alındı; corpus'a bağlı testler sentetik metadata ile
+  çalışacak. Daha önce public GitHub geçmişine gönderilmiş kayıtlar için geçmiş
+  temizliği bu çalışma ağacından otomatik yapılmıyor.
 - Corpus'a bağlı temsilî retrieval fixture'ı 36'dan 66 aday sorguya ve iki yerine
   12 hedef belgeye genişletildi; kişisel kayıt örneğinin 11, medium günlüğün 14
   chunk'ı kapsanıyor. Yeniden üretilen label template'i 66 kaydı da

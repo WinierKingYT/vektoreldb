@@ -38,6 +38,14 @@ başarısız sayılır ve bozuk kayıt sessizce atlanmaz.
 - Tablo, dipnot ve başlıkları ayrı kalite sınıflarıyla değerlendir.
 - Metin çıkmayan sayfalarda OCR gerektiğini işaretle.
 
+Mevcut parser OCR yapmaz. Bütün sayfalarda çıkarılabilir metin yoksa kaynak,
+tarama/görsel içerik ve OCR ihtiyacını açıkça belirten hata ile reddedilir;
+kısmen metinsiz sayfalar atlanabileceğinden sayfa boşlukları ayrıca incelenmelidir.
+`pypdf` metin sırasını her dosya için garanti etmez ve sıkıştırılmış içerik
+akışını açmak yüksek bellek kullanabilir. Kaynak-byte limiti ve çıktı karakter
+limiti tek başına çalışma zamanı/bellek izolasyonu değildir; layout çıkarımı,
+OCR ve süreç izolasyonu ayrı kabul/deney konularıdır.
+
 PyMuPDF metin çıkarabilir; ancak düz metin çıktısı her zaman okuyucunun beklediği doğal sırayı vermeyebilir. Bu nedenle PDF parser sonucu otomatik olarak doğru kabul edilmez. [PyMuPDF metin çıkarma rehberi](https://pymupdf.readthedocs.io/en/latest/recipes-text.html)
 
 ## DOCX

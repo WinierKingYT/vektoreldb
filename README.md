@@ -61,10 +61,12 @@ Recursive `ingest-dir` ve `corpus-inventory` akışları `.git`, virtualenv,
 dışlama dizinlerini işlemez. Tekil `ingest` çağrısı yalnızca açıkça verilen ve
 source root doğrulamasından geçen dosyayı işler. `corpus-inventory` özeti,
 exclude edilen dosya sayısını da içerir; dosya yolları ve içerikleri raporlanmaz.
-Temsilî corpus için aday sorgu ve review-gerekli label şablonu
-`data/benchmarks/representative-personal-queries.json` ile
-`data/benchmarks/representative-personal-query-labels-template.json` altında
-tutulur; bunlar 300+ final benchmark yerine geçmez. `data/sources/temsilî-formatlar/`
+Gerçek corpus'tan üretilen inventory, manifest, aday sorgu ve review-gerekli
+label/coverage artifact'leri `private-local` kabul edilir; kaynak metni içermeseler
+bile yol, hash, kimlik ve içerikten türetilmiş sorgu metadata'sı açığa çıkarabilirler.
+Bu yüzden bu tür dosyalar `.gitignore` kapsamındadır ve kişisel corpus'la birlikte
+yerelde üretilmelidir; public fixture veya test verisi olarak kullanılmamalıdır.
+Bunlar 300+ final benchmark yerine geçmez. `data/sources/temsilî-formatlar/`
 altındaki dosyalar yalnızca parser/inventory smoke kapsamını genişleten sentetik
 örneklerdir; gerçek kişisel kayıt olarak değerlendirilmemelidir.
 

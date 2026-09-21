@@ -8,7 +8,7 @@ Bir özellik için kodun bulunması tek başına final kabul anlamına gelmez;
 |---|---|---|
 | Geniş corpus | Parser registry, yapılandırılabilir güvenlik sınırlı inventory/manifest, root bağımsız boyut korumalı `ingest-dir`, PDF/DOCX/HTML/RTF/EML/JSON/JSONL/NDJSON/YAML/YML/CSV/XML format desteği, format/hata ve unsupported suffix özeti, extraction hacmi metrikleri ve ham-byte duplicate inceleme sinyali hazır | Temsilî corpus envanteri ve format kalite raporu; duplicate kararları gözden geçirilmiş olmalı |
 | 300+ sorgu | Loader metadata desteği, query-label schema, review-required `fixture-label-template`, derived-label review kapısı, canonical manifest schema, split toleransı, privacy-safe `fixture-coverage`, label kapsama özeti, shard'ları çakışma kontrollü birleştiren `fixture-merge`, fixture preflight, corpus chunk-ID binding ve `fixture-validate` hazır | `status=ready`, en az 300 sorgu, etiket/provenance, gerçek chunk kimliği ve dağılım kapıları |
-| PDF/DOCX/HTML | Suffix dispatch; PDF text, DOCX paragraf+temel tablo ve güvenli ZIP paketi doğrulaması, HTML görünür metin; hızlı parser/ingest regresyon testleri | Gerçek örnek corpus üzerinde extraction kalite raporu |
+| PDF/DOCX/HTML | Suffix dispatch; PDF text ve metinsiz PDF için açık, OCR olasılığını belirten hata, DOCX paragraf+temel tablo ve güvenli ZIP paketi doğrulaması, HTML görünür metin; hızlı parser/ingest regresyon testleri | Gerçek örnek corpus üzerinde extraction kalite raporu; PDF metin sırası, boş sayfa ve bellek sınırları değerlendirilmeli |
 | Concurrency/kapasite | Bounded probe, CLI, privacy-safe exception sınıfı dağılımı ve hızlı primitive testleri hazır | Local/server, worker, tekrar ve uzun süreli percentile ölçümleri |
 | Negative/abstention | Opt-in `VDB_RETRIEVAL_MIN_SCORE` ve istek override’ı; privacy-safe `abstention_reason` telemetrisi hazır | Validation threshold, test negative success ve yanlış boş sonuç oranı |
 | RAG kalite sınırı | Context builder, citation integrity, citation coverage, provenance/security metadata ve boş/review/truncated durumlarında fail-closed generation handoff policy hazır | Retrieval/context/answer katmanlarının ayrı değerlendirme raporu |
@@ -39,9 +39,9 @@ corpus'a eklendi; yeni corpus checksum'ı
 `sha256:80170ea3cd3b1adb2b4ecc71918a9460a87050a6cfbcf22fa639611e8dded919`.
 Bu karma formatlı corpus için fixture provenance'ı `parser_version: mixed`
 özetini ve dokuz parser sürümünü içeren `parser_versions` listesini korur.
-Bu corpus'a bağlı ilk aday fixture ve label şablonu sırasıyla
-`data/benchmarks/representative-personal-queries.json` ve
-`data/benchmarks/representative-personal-query-labels-template.json` dosyalarındadır.
+Yerel aday sorgu/label/coverage dosyaları `data/benchmarks/representative-personal-*.json`
+adlarıyla üretilebilir; bu `private-local` artifact'ler `.gitignore` kapsamındadır
+ve fresh clone'da bulunmaları beklenmez.
 Fixture coverage binding açısından geçerli; 66 sorgu olduğu için 300+ kabul kapısını
 henüz geçmez ve label şablonu manuel review gerektirir. On beş sorgu medium-size
 günlüğe bağlandı; large kovası henüz temsil edilmiyor.
