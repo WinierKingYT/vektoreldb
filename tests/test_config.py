@@ -19,6 +19,8 @@ def test_default_settings_match_v1_contract() -> None:
     assert settings.embedding_batch_size == 32
     assert settings.embedding_cache_size == 256
     assert settings.source_max_bytes == 10_000_000
+    assert settings.source_max_files == 5_000
+    assert settings.source_max_total_bytes == 1_000_000_000
 
 
 def test_external_embedding_settings_are_configurable() -> None:
@@ -43,6 +45,17 @@ def test_source_size_limit_is_configurable() -> None:
     settings = Settings(source_max_bytes=25_000_000, _env_file=None)
 
     assert settings.source_max_bytes == 25_000_000
+
+
+def test_directory_ingest_limits_are_configurable() -> None:
+    settings = Settings(
+        source_max_files=250,
+        source_max_total_bytes=250_000_000,
+        _env_file=None,
+    )
+
+    assert settings.source_max_files == 250
+    assert settings.source_max_total_bytes == 250_000_000
 
 
 def test_runtime_settings_reject_non_v1_distance() -> None:

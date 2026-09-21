@@ -190,6 +190,50 @@ def test_ingest_directory_excludes_default_sensitive_and_build_directories(
     assert [point.payload["title"] for point in store.points] == ["keep"]
 
 
+def test_ingest_directory_file_limit_rejects_batch_before_writes(tmp_path: Path) -> None:
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "a.md").write_text("first", encoding="utf-8")
+    (root / "b.md").write_text("second", encoding="utf-8")
+    store = FakeStore()
+    service = IngestService(FakeProvider(), store, max_directory_files=1)
+
+    with pytest.raises(ValueError, match="source file limit"):
+        service.ingest_directory(root)
+
+    assert store.points == []
+
+
+def test_ingest_directory_total_bytes_limit_rejects_batch_before_writes(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "sources"
+    root.mkdir()
+    (root / "a.md").write_text("first", encoding="utf-8")
+    (root / "b.md").write_text("second", encoding="utf-8")
+    store = FakeStore()
+    service = IngestService(FakeProvider(), store, max_directory_bytes=10)
+
+    with pytest.raises(ValueError, match="total source bytes limit"):
+        service.ingest_directory(root)
+
+    assert store.points == []
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"max_directory_files": 0},
+        {"max_directory_files": True},
+        {"max_directory_bytes": 0},
+        {"max_directory_bytes": 10.5},
+    ],
+)
+def test_ingest_directory_limits_require_positive_integers(kwargs: dict[str, object]) -> None:
+    with pytest.raises(ValueError, match="positive integer"):
+        IngestService(FakeProvider(), FakeStore(), **kwargs)
+
+
 def test_ingest_uses_configured_source_size_limit(tmp_path: Path) -> None:
     path = tmp_path / "note.md"
     path.write_text("content", encoding="utf-8")

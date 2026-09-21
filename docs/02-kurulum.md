@@ -51,6 +51,11 @@ atlanır; tek dosya parse/embedding hatası diğer dosyaları durdurmaz ve hata
 özeti yalnızca dosya yolu ile hata türünü içerir; parser/provider exception'ları
 dosya seviyesinde izole edilir. Her dosya kendi replacement
 işlemiyle işlendiği için başarısız dosya mevcut indeks sürümünü değiştirmez.
+Toplu ingest varsayılan olarak en çok 5.000 desteklenen dosya ve 1.000.000.000
+toplam kaynak byte'ı kabul eder. Bu bütçe aşılırsa işlem herhangi bir dosyayı
+indekse yazmadan reddedilir. Değerler `.env` içindeki `VDB_SOURCE_MAX_FILES` ve
+`VDB_SOURCE_MAX_TOTAL_BYTES` ile ayarlanabilir; bunlar RAM/çalışma süresi SLO'su
+değildir.
 
 ## Sağlık kontrolü
 

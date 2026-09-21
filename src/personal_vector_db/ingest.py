@@ -64,13 +64,29 @@ class IngestService:
         *,
         source_root: Path | None = None,
         max_source_bytes: int = 10_000_000,
+        max_directory_files: int = 5_000,
+        max_directory_bytes: int = 1_000_000_000,
     ) -> None:
         if max_source_bytes < 1:
             raise ValueError("max_source_bytes must be positive")
+        if (
+            isinstance(max_directory_files, bool)
+            or not isinstance(max_directory_files, int)
+            or max_directory_files < 1
+        ):
+            raise ValueError("max_directory_files must be a positive integer")
+        if (
+            isinstance(max_directory_bytes, bool)
+            or not isinstance(max_directory_bytes, int)
+            or max_directory_bytes < 1
+        ):
+            raise ValueError("max_directory_bytes must be a positive integer")
         self.provider = provider
         self.store = store
         self.source_root = source_root
         self.max_source_bytes = max_source_bytes
+        self.max_directory_files = max_directory_files
+        self.max_directory_bytes = max_directory_bytes
 
     def ingest_file(self, path: Path) -> IngestResult:
         if self.source_root is not None:
@@ -98,21 +114,39 @@ class IngestService:
                 ) from error
         if not resolved_root.is_dir():
             raise ValueError("source directory is not a directory")
-        indexed: list[IngestResult] = []
+        candidates: list[tuple[str, Path]] = []
         failures: list[IngestFailure] = []
-        for source_path in sorted(
-            (
-                candidate
-                for candidate in resolved_root.rglob("*")
-                if (
-                    candidate.is_file()
-                    and not is_excluded_directory(candidate, resolved_root)
-                    and candidate.suffix.lower() in SUPPORTED_SUFFIXES
+        total_source_bytes = 0
+        candidate_count = 0
+        validation_root = self.source_root or resolved_root
+        for candidate in resolved_root.rglob("*"):
+            if (
+                not candidate.is_file()
+                or is_excluded_directory(candidate, resolved_root)
+                or candidate.suffix.lower() not in SUPPORTED_SUFFIXES
+            ):
+                continue
+            candidate_count += 1
+            if candidate_count > self.max_directory_files:
+                raise ValueError("directory exceeds the configured source file limit")
+            relative_path = candidate.relative_to(resolved_root).as_posix()
+            try:
+                validated_path = validate_source_path(
+                    candidate, validation_root, max_bytes=self.max_source_bytes
                 )
-            ),
-            key=lambda candidate: candidate.relative_to(resolved_root).as_posix(),
-        ):
-            relative_path = source_path.relative_to(resolved_root).as_posix()
+                source_size = validated_path.stat().st_size
+            except Exception as error:
+                failures.append(
+                    IngestFailure(relative_path=relative_path, error_type=type(error).__name__)
+                )
+                continue
+            if total_source_bytes + source_size > self.max_directory_bytes:
+                raise ValueError("directory exceeds the configured total source bytes limit")
+            total_source_bytes += source_size
+            candidates.append((relative_path, validated_path))
+
+        indexed: list[IngestResult] = []
+        for relative_path, source_path in sorted(candidates, key=lambda item: item[0]):
             try:
                 indexed.append(self.ingest_file(source_path))
             except Exception as error:

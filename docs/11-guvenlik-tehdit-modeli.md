@@ -12,7 +12,7 @@ Kaynak dosya, parser, embedding sağlayıcısı, Qdrant, API istemcisi ve LLM bi
 | Prompt injection | Kaynak metnini talimatlardan ayırma, içerik işaretleme |
 | Harici sağlayıcıya veri sızıntısı | Redaksiyon, açık provider seçimi, veri politikası kontrolü, HTTPS/loopback sınırı ve embedding yönlendirmelerinin kapatılması; HTTP ingest için zorunlu source_root |
 | Anahtar sızıntısı | Secret store/env, log redaction |
-| Zararlı dosya | Boyut/tür sınırı, kaynak kökü dışına yönlenen symlink reddi, DOCX arşiv üye yolu/açılmış boyut sınırı, şifreli PDF reddi ve PDF extraction sınırı, sandbox parser, malware taraması |
+| Zararlı dosya veya aşırı toplu ingest | Kaynak başına 10 MB sınır; `ingest-dir` için varsayılan 5.000 destekli dosya/1 GB toplam byte kabul kapısı ve limit aşımında indeks yazımı başlamadan reddetme; kaynak kökü dışına yönlenen symlink reddi, DOCX arşiv üye yolu/açılmış boyut sınırı, şifreli PDF reddi ve PDF extraction sınırı. Bunlar parser process timeout/peak-RAM sandbox'ı veya malware taraması sağlamaz. |
 | Metadata ile yetki yükseltme | Kullanıcı metadata'sını yetki kaynağı kabul etmeme |
 | Snapshot sızıntısı | Şifreli depolama, kısıtlı erişim ve local restore'da canonical traversal/duplicate/symlink/special-file üye reddi; staging/rollback ve başarılı restore sonrası client yeniden açılması |
 | Silinen verinin kalması | Vector DB, kaynak, cache ve yedek yaşam döngüsü |

@@ -17,6 +17,8 @@
 | `VDB_EMBEDDING_BATCH_SIZE` | `32` | Harici provider batch boyutu; 1–256 arası |
 | `VDB_EMBEDDING_CACHE_SIZE` | `256` | Harici provider in-memory cache kapasitesi; 0–4096 arası, 0 kapalı |
 | `VDB_SOURCE_MAX_BYTES` | `10000000` | Kaynak dosyası başına güvenli üst sınır; ingest ve inventory birlikte kullanır |
+| `VDB_SOURCE_MAX_FILES` | `5000` | `ingest-dir` başına desteklenen kaynak dosyası sayısı üst sınırı; limit aşımında yazım başlamaz |
+| `VDB_SOURCE_MAX_TOTAL_BYTES` | `1000000000` | `ingest-dir` girdilerinin toplam kaynak byte bütçesi; RAM/çalışma süresi garantisi değildir |
 | `VDB_VECTOR_DIMENSION` | `768` | Provider vector boyutu |
 | `VDB_DISTANCE_METRIC` | `cosine` | Koleksiyon mesafe metriği |
 | `VDB_HNSW_EF` | boş veya `64` | Sorgu başına opsiyonel HNSW arama bütçesi |

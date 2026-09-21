@@ -52,6 +52,10 @@ class Settings(BaseSettings):
         default=None, alias="VDB_RETRIEVAL_MIN_SCORE", ge=-1, le=1
     )
     source_max_bytes: int = Field(default=10_000_000, alias="VDB_SOURCE_MAX_BYTES", gt=0)
+    source_max_files: int = Field(default=5_000, alias="VDB_SOURCE_MAX_FILES", gt=0)
+    source_max_total_bytes: int = Field(
+        default=1_000_000_000, alias="VDB_SOURCE_MAX_TOTAL_BYTES", gt=0
+    )
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", populate_by_name=True)
 

@@ -12,6 +12,12 @@ server ingest ve inventory akışlarında kullanılmalıdır.
 Kütüphane çağrılarında `source_root` verilmemiş olsa bile aynı boyut sınırı
 uygulanır; root doğrulaması ise yalnızca yapılandırılmış kaynak kökü olan
 akışlarda ayrıca devrededir.
+Klasör ingest'i ayrıca varsayılan 5.000 desteklenen dosya ve 1.000.000.000 byte
+toplam kaynak bütçesine sahiptir (`VDB_SOURCE_MAX_FILES`,
+`VDB_SOURCE_MAX_TOTAL_BYTES`). Bu bütçeler tarama kabul kapısıdır; çıktıdaki
+extract edilen metin, parser çalışma süresi veya tepe RAM için garanti değildir.
+Limit aşımında toplu ingest embed/store aşamasına girmeden reddedilir. Kaynak
+başına parser limitleri ve DOCX/PDF iç sınırlar yine ayrıca uygulanır.
 
 ## Mevcut parser davranışı
 

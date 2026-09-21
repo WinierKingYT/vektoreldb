@@ -14,6 +14,17 @@ Başlangıç kuralı: başlıkları koruyan 400–800 token parçalar, %10–15 
 
 Her kayıt için: `source_uri`, `content_hash`, `document_id`, `chunk_id`, `embedding_manifest_id`, `parser_version`, `chunking_version` ve `updated_at` zorunludur. Parser hataları sessizce atlanmaz; hata kuyruğuna yazılır.
 
+Toplu `ingest-dir` önce desteklenen ve hariç tutulmamış kaynakları deterministik
+sırada toplar. Tek dosya sınırına ek olarak varsayılan kabul sınırları 5.000
+desteklenen kaynak ve toplam 1.000.000.000 byte'tır (`VDB_SOURCE_MAX_FILES`,
+`VDB_SOURCE_MAX_TOTAL_BYTES`). Kaynak sayısı veya toplam byte bütçesi aşılırsa
+embedding/upsert başlamadan tüm toplu işlem reddedilir; kullanıcı limiti
+`VDB_SOURCE_MAX_BYTES` ile kaynak başına 10.000.000 byte olarak ayrıca uygular.
+Bu değerler performans/RAM garantisi değil, yanlışlıkla aşırı geniş klasör
+yüklemeyi durduran ayarlanabilir emniyet kapılarıdır. Bütçe içindeki parser,
+embedding veya store hataları mevcut dosya-bazlı hata izolasyonunu korur; bu
+durumlarda diğer uygun dosyalar işlenebilir.
+
 ## Hedef sorgu sözleşmesi (roadmap)
 
 Aşağıdaki örnek, filtre ve reranking desteklendiğinde hedeflenen genişletilmiş sözleşmedir; mevcut V1 HTTP API'si yalnızca `query`, `top_k` ve `min_score` kabul eder.

@@ -138,11 +138,22 @@ def test_ingest_does_not_open_a_second_qdrant_client(monkeypatch, capsys) -> Non
         manifest = type("Manifest", (), {"manifest_id": "test-manifest"})()
 
     class FakeIngest:
-        def __init__(self, provider, store, *, source_root, max_source_bytes):
+        def __init__(
+            self,
+            provider,
+            store,
+            *,
+            source_root,
+            max_source_bytes,
+            max_directory_files,
+            max_directory_bytes,
+        ):
             assert provider is fake_provider
             assert store is fake_store
             assert source_root.name == "sources"
             assert max_source_bytes == 10_000_000
+            assert max_directory_files == 5_000
+            assert max_directory_bytes == 1_000_000_000
 
         def ingest_file(self, path):
             assert path.name == "notes.md"

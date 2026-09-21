@@ -39,6 +39,8 @@ def create_production_app():
         store,
         source_root=settings.data_dir / "sources",
         max_source_bytes=settings.source_max_bytes,
+        max_directory_files=settings.source_max_files,
+        max_directory_bytes=settings.source_max_total_bytes,
     )
     planner = SelectivityQueryPlanner() if settings.query_planner_mode == "selectivity" else None
     reranker = LexicalOverlapReranker() if settings.reranker_mode == "lexical" else None

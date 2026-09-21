@@ -1,5 +1,28 @@
 # Karar günlüğü
 
+## 2026-09-22 — Directory ingest için aggregate admission budget
+
+- Kanıt: `IngestService.ingest_directory` kaynak başına 10 MB doğruluyordu, fakat
+  sıralamak için desteklenen dosya yollarını sınırsız listeliyor ve klasör
+  toplamındaki giriş byte'larını ölçmeden sırayla yazıyordu.
+- Karar: `VDB_SOURCE_MAX_FILES=5000` ve
+  `VDB_SOURCE_MAX_TOTAL_BYTES=1000000000` ekle. Limitlerden biri aşılırsa tek bir
+  dosya embed/upsert edilmeden tüm batch fail-closed reddedilsin. Bütçe altında
+  kalan dosya-bazlı parser/provider/store hata izolasyonu korunacak.
+- Gerekçe: Tek dosya sınırı çok sayıda geçerli dosyanın toplam kaynak yükünü
+  sınırlamıyor. 5.000/1 GB değerleri ölçülmüş kapasite hedefi değil, ayarlanabilir
+  başlangıç emniyet tavanlarıdır; gerçek corpus'ta süre/RAM/DB büyümesi ayrıca
+  final kapasite turunda ölçülmelidir.
+- Veri/provenance: Yeni limitler parser, chunk, ID, checksum veya payload
+  sözleşmesini değiştirmez; kaynak URI/manifest/provenance aynı kalır.
+- Güvenlik: Symlink/root ve kaynak-başı boyut doğrulamaları devam eder; limit
+  preflight'ta `source_root` içinde çözülen destekli adaylar sayılır. Bu, parser
+  process izolasyonu veya TOCTOU karşısında aggregate snapshot garantisi değildir.
+- Geriye uyumluluk/rollback: Tek dosyalı `ingest`/`reindex`, HTTP file-ingest ve
+  eski config'ler etkilenmez; yeni config değişkenleri varsayılanlıdır. Fazla
+  büyük klasör ingest'leri yeni varsayılanla reddedilebilir; ayar artırılabilir.
+  İstenirse config geçişi ve preflight birlikte geri alınabilir.
+
 ## 2026-09-22 — Query relevance etiketleme protokolü
 
 - V1.7 query-label sözleşmesi ikili chunk relevance'ı olarak kalacak;

@@ -563,6 +563,8 @@ def main(argv: list[str] | None = None) -> None:
                 store,
                 source_root=settings.data_dir / "sources",
                 max_source_bytes=settings.source_max_bytes,
+                max_directory_files=settings.source_max_files,
+                max_directory_bytes=settings.source_max_total_bytes,
             ).ingest_file(args.path)
             print(f"indexed document={result.document_id} chunks={result.chunk_count}")
             return
@@ -572,6 +574,8 @@ def main(argv: list[str] | None = None) -> None:
                 store,
                 source_root=settings.data_dir / "sources",
                 max_source_bytes=settings.source_max_bytes,
+                max_directory_files=settings.source_max_files,
+                max_directory_bytes=settings.source_max_total_bytes,
             ).ingest_directory(args.path)
             print(
                 f"indexed_documents={len(result.indexed)} "
@@ -584,6 +588,8 @@ def main(argv: list[str] | None = None) -> None:
                 store,
                 source_root=settings.data_dir / "sources",
                 max_source_bytes=settings.source_max_bytes,
+                max_directory_files=settings.source_max_files,
+                max_directory_bytes=settings.source_max_total_bytes,
             ).reindex_file(args.path, args.document_id)
             print(f"reindexed document={result.document_id} chunks={result.chunk_count}")
             return
