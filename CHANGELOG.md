@@ -39,6 +39,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   test ile doğrulandı. Gerçek dış provider kalite karşılaştırması ve generation
   cevap değerlendirmesi veri/erişim olmadığı için açık kapı olarak tutuldu;
   sonuç uydurulmadı.
+- Docker Desktop kurulumunun mevcut olduğu görüldü ve arka plan başlatma isteği
+  verildi; backend süreçleri oluşsa da Linux engine pipe'ı hazır olmadığı için
+  server smoke testi tekrar çalıştırılmadı.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60

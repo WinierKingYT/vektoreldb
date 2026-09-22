@@ -98,6 +98,12 @@ RAG cevap kalitesi için retrieval/context sınırı ve privacy-safe değerlendi
 oluşturulmadı. Bu nedenle citation/faithfulness/factuality sonucu uydurulmadı;
 bu kapı goal'un açık kalan ölçüm maddesidir.
 
+Docker Desktop'ın kurulu olduğu doğrulandı ve arka plan başlatma isteği verildi;
+`com.docker.backend` süreçleri oluşmasına rağmen Linux engine named pipe'ı kısa
+bekleme kontrollerinde hazır olmadı. Docker server smoke testi bu nedenle yeniden
+çalıştırılmadı. Docker Desktop'ın kendi runtime/WSL başlatma durumu düzelmeden
+aynı testi tekrarlamak veri veya sonuç üretmeyecektir.
+
 ## 2026-09-22 — Docker/Qdrant server runtime kapısı
 
 `docker compose config --quiet` başarılı; Compose tanımı statik olarak geçerli.
