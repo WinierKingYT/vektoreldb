@@ -23,6 +23,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   seviye başına 300 istek ve warm-up ile tüm koşullarda hata `0`; throughput
   `29.107/32.675/35.134/29.682 req/s`. Worker 4 sonrası p99 `257.513/444.915 ms`
   seviyesine çıktığı için bu sonuç kapasite SLO'su sayılmadı ve varsayılan artırılmadı.
+- `docker compose config --quiet` başarılı; Docker Desktop engine pipe'ı mevcut
+  olmadığından Docker/Qdrant server smoke testi çalıştırılamadı. Local Qdrant
+  storage ile server storage ayrımı korunarak runtime kapısı açık bırakıldı.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60

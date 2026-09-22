@@ -61,6 +61,15 @@ Bu bounded smoke, local process'in hata vermeden paralel sorgu kabul ettiğini
 gösterir; kapasite SLO'su veya uzun süreli dayanıklılık kanıtı değildir. Worker 4
 sonrasında tail latency belirgin büyüdüğü için varsayılan concurrency artırılmadı.
 
+## 2026-09-22 — Docker/Qdrant server runtime kapısı
+
+`docker compose config --quiet` başarılı; Compose tanımı statik olarak geçerli.
+Ancak `docker version` Docker Desktop Linux engine named pipe'ına bağlanamadı
+(`daemon is not running / pipe not found`). Bu nedenle Docker server smoke testi
+çalıştırılmadı ve başarısız retrieval sonucu olarak yorumlanmadı. Local Qdrant
+ölçümleri ayrı `qdrant_storage` üzerinde devam eder; server testi daemon erişilebilir
+olduğunda ayrı `qdrant_server_storage` ile yapılmalıdır.
+
 ## 2026-09-22 — V5 strict readiness ve local runtime ön kontrolü
 
 V5 corpus/fixture paketi `final-readiness --strict` ile başarıyla geçti:
