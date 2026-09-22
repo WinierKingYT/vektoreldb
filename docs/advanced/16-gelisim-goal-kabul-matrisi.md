@@ -27,10 +27,11 @@ varsayılmaz.
 
 ## Final koşusundan önceki gerçek durum
 
-Mevcut yerel corpus inventory'si on dört kaynak ve 47 chunk içeriyor;
+Mevcut yerel corpus inventory'si 23 kaynak ve 633 chunk içeriyor;
 Markdown yanında HTML, JSON, JSONL, YAML, RTF, XML, CSV, EML, ICS ve ORG örnekleri de gerçek dispatch
-akışından geçirildi. Sentetik uzun proje günlüğüyle medium-size kaynak davranışı
-da inventory'de temsil ediliyor.
+akışından geçirildi; Kargo Gemisi arşivindeki 9 DOCX dosyası da `docx-v4` ile
+başarıyla parse edildi. Sentetik uzun proje günlüğüyle medium-size ve arşiv
+belgeleriyle large kaynak davranışı inventory'de temsil ediliyor.
 Bu nedenle 300+ query kabul kapısı henüz çalıştırılabilir biçimde hazır olsa da
 `ready` değildir. Gerçek kişisel kaynaklar eklendiğinde şu sıra izlenir:
 
@@ -46,15 +47,16 @@ tamamına en az bir aday sorgu bağlanıyor.
 Eski PromtGen smoke fixture'ları tarihsel deney kanıtıdır ve güncel
 kişisel corpus kabul kapısının yerine geçmez. Sentetik kişisel kayıtlar
 corpus'a eklendi; yeni corpus checksum'ı
-`sha256:80170ea3cd3b1adb2b4ecc71918a9460a87050a6cfbcf22fa639611e8dded919`.
+`sha256:3df6f87547c96a4d1af40f829c0bfc9196dfec52a7227e35ab3fd299ce59098d`.
 Bu karma formatlı corpus için fixture provenance'ı `parser_version: mixed`
-özetini ve dokuz parser sürümünü içeren `parser_versions` listesini korur.
+özetini ve on parser sürümünü içeren `parser_versions` listesini korur.
 Yerel aday sorgu/label/coverage dosyaları `data/benchmarks/representative-personal-*.json`
 adlarıyla üretilebilir; bu `private-local` artifact'ler `.gitignore` kapsamındadır
 ve fresh clone'da bulunmaları beklenmez.
 Fixture coverage binding açısından geçerli; 66 sorgu olduğu için 300+ kabul kapısını
 henüz geçmez ve label şablonu manuel review gerektirir. On beş sorgu medium-size
-günlüğe bağlandı; large kovası henüz temsil edilmiyor.
+günlüğe bağlandı; large corpus kovası mevcut olsa da 66 sorguluk fixture henüz
+large belgeyi hedeflemiyor.
 
 1. `vdb corpus-inventory` ile corpus manifesti oluştur.
 2. Inventory içindeki `duplicate_of` alanlarını gözden geçir; otomatik merge/silme

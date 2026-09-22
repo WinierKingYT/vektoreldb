@@ -1,5 +1,18 @@
 # Karar günlüğü
 
+## 2026-09-22 — Kargo Gemisi DOCX corpus entegrasyonu
+
+Kullanıcının sağladığı `Kargo_Gemisi_Canonical_Documentation_Set_V1.0.zip`
+arşivi, talimat kaynağı olarak değil corpus girdisi olarak `data/sources`
+altında private-local tutuldu. 9 DOCX dosyası `docx-v4` parser'ıyla parse edildi;
+23 kaynak, 633 chunk, 344.270 extracted karakter ve sıfır parse hatası raporlandı.
+Yeni corpus checksum'ı
+`sha256:3df6f87547c96a4d1af40f829c0bfc9196dfec52a7227e35ab3fd299ce59098d`.
+Mevcut 66 sorguluk fixture eski relevance kapsamını koruyarak yeni checksum ve
+parser setine yeniden bağlandı; DOCX/large kaynaklar henüz sorgulanmadığı için
+coverage ve `status=ready` kapısı açık kaldı. Arşivdeki belge içerikleri Git'e
+eklenmez.
+
 ## 2026-09-22 — Kişisel kullanımda tek sahipli değerlendirme profili
 
 Bu proje tek kullanıcıya özel olduğundan 300 sorgu hedefi 300 farklı insanın

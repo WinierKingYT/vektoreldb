@@ -4,6 +4,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
+  kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
+  ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a
+  yeniden bağlandı; sorgu kapsamı ve label review kapısı bilinçli olarak açık.
 - JSONL/NDJSON ve CSV parser'ları ham dosyayı önce tam string'e kopyalamadan
   satır/row akışıyla okuyacak şekilde iyileştirildi; kanonik çıktı/provenance değişmedi.
 - Inventory kayıtlarından kaynak yolu, hash ve chunk kimliği taşımadan format bazlı
