@@ -31,6 +31,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   tekrarda `0.8800` (ortalama p95 `40.081 ms`) ve iki koşulda da hata oranı `0`
   verdi. Test split abstention threshold `0.8602715` ile negative success `1.00`
   ve false acceptance `0.00` oldu.
+- Local Qdrant uzun concurrency matrisi tamamlandı: `1/2/4/8/16 × 20` tekrar,
+  toplam `30.000` başarılı istek, hata `0`; throughput `28.814–35.115 req/s`,
+  p95 `40.254–647.894 ms`. Worker 1 varsayılanı korundu; server/cold-warm ve
+  Docker runtime ölçümleri ayrı final kapısı olarak kaldı.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60

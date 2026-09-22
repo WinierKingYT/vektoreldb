@@ -71,6 +71,22 @@ Test split abstention kalibrasyonu bağımsız tekrarlandı: threshold `0.860271
 positive acceptance `0.90`, negative success `1.00`, false acceptance `0.00`,
 false abstention `0.10`. Eşik varsayılan konfigürasyona otomatik yazılmadı.
 
+Runbook'taki uzun local concurrency matrisi tamamlandı: `1,2,4,8,16` worker,
+seviye başına 20 tekrar ve 3 warm-up; toplam `30.000` başarılı istek, tüm
+seviyelerde hata `0`. Sonuçlar:
+
+| Worker | Throughput | p50 | p95 | p99 |
+|---:|---:|---:|---:|---:|
+| 1 | 28.814 req/s | 34.274 ms | 40.254 ms | 43.357 ms |
+| 2 | 32.562 req/s | 60.955 ms | 71.674 ms | 82.260 ms |
+| 4 | 34.777 req/s | 112.668 ms | 135.449 ms | 165.504 ms |
+| 8 | 35.115 req/s | 221.039 ms | 281.621 ms | 391.372 ms |
+| 16 | 32.563 req/s | 478.716 ms | 647.894 ms | 749.624 ms |
+
+Local Qdrant için ölçülen pratik varsayılan worker seviyesi `1` olarak bırakıldı;
+worker 4 ve üzeri throughput'u sınırlı artırırken tail latency'yi büyütüyor.
+Bu sonuç server Qdrant, cold-start, restore veya RAM/CPU SLO'su değildir.
+
 ## 2026-09-22 — Docker/Qdrant server runtime kapısı
 
 `docker compose config --quiet` başarılı; Compose tanımı statik olarak geçerli.
