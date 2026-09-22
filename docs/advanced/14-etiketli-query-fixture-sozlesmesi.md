@@ -117,7 +117,9 @@ uv run vdb fixture-label-template `
 ```
 
 Bu araç her biri 50 kayıt içeren altı sorgu türü ve 180/60/60 split dağılımı
-üretir; tüm label'lar `derived`/`review-required` kalır. Üretilen dosyalar
+üretir. V3 üretiminde TOC/bozuk extraction parçaları elenir, negative sorgular
+kaynak chunk kelimelerinden türetilmez ve corpus-dışı intent olarak ayrı
+üretilir; yine de tüm label'lar `derived`/`review-required` kalır. Üretilen dosyalar
 kişisel corpus içerdiği için Git'e eklenmez. Tek sahip, her sorgunun gerçekten
 ilgili chunk'ını ve negative kararını inceleyip provenance'lı `manual` veya
 `reviewed` etikete dönüştürmeden paket final kabul edilmez.

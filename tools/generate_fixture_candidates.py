@@ -12,6 +12,7 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
+from typing import Final
 
 from personal_vector_db.chunking import chunk_document
 from personal_vector_db.corpus import inventory_sources, read_corpus_manifest
@@ -27,6 +28,18 @@ _QUERY_TYPES = (
 )
 _SPLITS = ("development", "validation", "test")
 _SELECTIVITY = ("low", "medium", "high")
+_NEGATIVE_INTENTS: Final = (
+    "Mars kolonilerinde su üretim protokolü",
+    "okyanus gemileri için denizaltı biyolojisi",
+    "kuantum bilgisayarlarla canlı rüya kaydı",
+    "Ay yüzeyinde tarım gübresi reçetesi",
+    "dinozor genomu yeniden canlandırma planı",
+    "volkanik gezegenlerde yağmur tahmin sistemi",
+    "görünmezlik pelerini bakım kılavuzu",
+    "antik Roma için modern kripto para cüzdanı",
+    "yapay güneş yakıt ikmal prosedürü",
+    "kutup ayıları için uzay istasyonu tasarımı",
+)
 
 
 def _phrase(text: str, limit: int) -> str:
@@ -41,19 +54,34 @@ def _ascii_typo(text: str) -> str:
     return converted[:-1] if len(converted) > 12 else converted
 
 
-def _candidate_text(query_type: str, text: str, heading: str) -> str:
+def _candidate_text(query_type: str, text: str, heading: str, index: int) -> str:
     short = _phrase(text, 7)
     if query_type == "semantic":
         return f"{short} ne anlatıyor"
     if query_type == "exact_identifier":
-        return f"{_phrase(heading or text, 5)} başlığı"
+        identifier = _phrase(heading or text, 5)
+        return f"{identifier} belge {index + 1} başlığı"
     if query_type == "typo":
         return _ascii_typo(short)
     if query_type == "morphology":
         return f"{short} hakkında bilgi"
     if query_type == "long_context":
         return f"{_phrase(text, 11)} ile ilgili ayrıntılı açıklama ve bağlam"
-    return f"Bu corpus dışında kalan {short} konusu var mı"
+    return f"Bu corpus'ta {_NEGATIVE_INTENTS[index % len(_NEGATIVE_INTENTS)]} var mı"
+
+
+def _usable_chunk(text: str, heading: str) -> bool:
+    normalized = re.sub(r"\s+", " ", text).strip()
+    if len(normalized) < 40 or len(normalized.split()) < 7:
+        return False
+    lowered = normalized.casefold()
+    if "içindekiler" in lowered or "table of contents" in lowered:
+        return False
+    if normalized.count("�") or re.search(r"(?:Ã.|Â.|â.){2,}", normalized):
+        return False
+    if heading.casefold().startswith(("içindekiler", "table of contents")):
+        return False
+    return True
 
 
 def build_candidates(
@@ -72,8 +100,11 @@ def build_candidates(
         chunks = chunk_document(document)
         bucket = str(record["size_bucket"])
         for chunk in chunks:
+            heading = "/".join(chunk.heading_path)
+            if not _usable_chunk(chunk.text, heading):
+                continue
             chunks_by_source[relative_path].append(
-                (chunk.chunk_id, chunk.text, "/".join(chunk.heading_path), bucket)
+                (chunk.chunk_id, chunk.text, heading, bucket)
             )
 
     selected: list[tuple[str, str, str, str]] = []
@@ -98,16 +129,19 @@ def build_candidates(
         split = _SPLITS[0 if index < 30 else 1 if index < 40 else 2]
         for type_index, query_type in enumerate(_QUERY_TYPES):
             query_number = index * len(_QUERY_TYPES) + type_index + 1
-            candidate_text = _candidate_text(query_type, text, heading)
+            candidate_text = _candidate_text(query_type, text, heading, index)
             if candidate_text in seen_texts:
-                suffix = _phrase(heading, 3) if heading else f"bölüm {index + 1}"
-                candidate_text = f"{candidate_text} {suffix}"
+                if query_type == "negative":
+                    candidate_text = f"{candidate_text} negative test {query_number}"
+                else:
+                    suffix = _phrase(heading, 3) if heading else f"bölüm {index + 1}"
+                    candidate_text = f"{candidate_text} {suffix} {index + 1}"
             if candidate_text in seen_texts:
                 candidate_text = f"{candidate_text} aday {query_number}"
             seen_texts.add(candidate_text)
             cases.append(
                 {
-                    "query_id": f"personal-v2-q{query_number:03d}",
+                    "query_id": f"personal-v3-q{query_number:03d}",
                     "text": candidate_text,
                     "relevant_chunk_ids": [] if query_type == "negative" else [chunk_id],
                     "query_type": query_type,
@@ -142,7 +176,7 @@ def write_outputs(root: Path, corpus_manifest: Path, fixture: Path, manifest_pat
         "chunking_version": corpus["chunking_version"],
         "embedding_manifest_id": None,
         "privacy_classification": "private-local",
-        "notes": "Corpus-derived candidate fixture; every label requires single-owner review.",
+        "notes": "Corpus-derived v3 candidate fixture; every label requires single-owner review.",
     }
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(

@@ -11,6 +11,13 @@ Bu nedenle bu çıktı hazırlık kanıtıdır; tek sahipli manuel inceleme tama
 ve manifest `ready` olmadan benchmark sonucu değildir. Aday dosyaları kişisel
 corpus içerdiği için Git'e eklenmez.
 
+İlk v2 aday paketi incelendiğinde 50 negative sorgunun chunk metninden türediği,
+TOC/bozuk extraction ve collision suffix artifaktları taşıdığı görüldü. Bu
+nedenle generator v3'e yükseltildi: kullanılabilir chunk filtresi, corpus-dışı
+negative intent'leri, daha güvenli identifier üretimi ve `personal-v3-qNNN`
+kimlikleri eklendi. V3 coverage sayısal/provenance kapılarını geçiyor; label'lar
+bilinçli olarak hâlâ review-required.
+
 ## 2026-09-22 — Kargo Gemisi DOCX corpus entegrasyonu
 
 Kullanıcının sağladığı `Kargo_Gemisi_Canonical_Documentation_Set_V1.0.zip`

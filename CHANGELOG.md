@@ -9,6 +9,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   split, small/medium/large boyut kovaları ve duplicate kontrolüyle doğrulanıyor;
   aday label'lar bilinçli olarak `derived`/`review-required`, manifest
   `contract-only` kalıyor.
+- V2 aday incelemesinde görülen sahte-negative, TOC, mojibake ve collision suffix
+  sorunları için generator v3 düzeltildi; kullanılabilir chunk filtresi ve
+  corpus'tan bağımsız negative intent üretimi eklendi. V3 fixture coverage
+  sayısal/provenance kapılarını geçiyor, ancak final label kabulü hâlâ açık.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
   kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
   ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a
