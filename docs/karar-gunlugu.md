@@ -1,5 +1,24 @@
 # Karar günlüğü
 
+## 2026-09-22 — V5 gerçek corpus dense baseline ve abstention kalibrasyonu
+
+V5 fixture, local corpus ingest edildikten sonra gerçek Qdrant indeksine karşı
+çalıştırıldı. Ingest öncesi boş indeksle alınan ilk çıktı kalite sonucu olarak
+kullanılmadı. Geçerli koşulda 300 sorgu, `repeat=1`, dense retrieval ve hata
+oranı `0` verdi: genel `Recall@k=0.8360`, `MRR@k=0.7931`, `nDCG@k=0.8038`;
+latency p50 `33.337 ms`, p95 `38.441 ms`, p99 `40.617 ms`.
+
+Semantic, morphology ve long-context sorgularında recall `1.00`, typo'da `0.98`,
+exact-identifier'da `0.20` ölçüldü. Exact identifier araması ana iyileştirme
+alanıdır. Negative sorgular retrieval ranking metriğinde başarı sayılmadığı için
+benchmark `negative_success_rate=0.0` değerini verir; abstention doğruluğu ayrı
+kalibrasyonla ölçülür. Aynı validation split skorlarından dense eşik `0.8560128`
+seçildi: positive acceptance `0.90`, negative success `1.00`, false acceptance
+`0.00`, false abstention `0.10`.
+
+Bu ilk baseline'dır; uzun süreli tekrar, concurrency/capacity, RAG cevap/citation,
+provider karşılaştırması ve Docker/Qdrant server smoke testi henüz tamamlanmadı.
+
 ## 2026-09-22 — V5 strict readiness ve local runtime ön kontrolü
 
 V5 corpus/fixture paketi `final-readiness --strict` ile başarıyla geçti:

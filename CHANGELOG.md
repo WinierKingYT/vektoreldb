@@ -4,6 +4,14 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- V5 fixture gerçek local corpus ingest edildikten sonra dense benchmark ile ölçüldü:
+  300 sorguda Recall@k `0.8360`, MRR `0.7931`, nDCG `0.8038`, p95 `38.441 ms`
+  ve error rate `0`; exact-identifier recall `0.20` ana takip alanı olarak kaydedildi.
+- Validation skorlarından dense abstention eşiği `0.8560128` kalibre edildi;
+  positive acceptance `0.90`, negative success `1.00`, false acceptance `0.00`.
+  Bu ilk baseline'dır; uzun süreli tekrar, kapasite, RAG ve Docker server ölçümleri
+  henüz tamamlanmamıştır.
+
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60
   split, small/medium/large boyut kovaları ve duplicate kontrolüyle doğrulanıyor;
