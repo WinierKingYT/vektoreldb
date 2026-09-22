@@ -29,6 +29,29 @@ class LexicalOverlapReranker:
             scores.append(len(query_tokens & tokens) / len(union) if union else 0.0)
         return scores
 
+    def score_results(self, query: str, results: Sequence[object]) -> list[float]:
+        """Score text plus safe document identity metadata for local reranking.
+
+        Exact-identifier queries often name a heading or source file rather than
+        repeating the chunk body. Metadata is already returned by retrieval and
+        is therefore useful for this opt-in local control reranker without
+        changing the stored embedding or the RAG evidence text.
+        """
+        enriched = []
+        for result in results:
+            heading_path = getattr(result, "heading_path", ()) or ()
+            enriched.append(
+                "\n".join(
+                    (
+                        str(getattr(result, "text", "")),
+                        str(getattr(result, "title", "")),
+                        str(getattr(result, "source_uri", "")),
+                        " ".join(str(item) for item in heading_path),
+                    )
+                )
+            )
+        return self.score(query, enriched)
+
 
 class LocalCrossEncoderReranker:
     """Lazy local Sentence Transformers CrossEncoder adapter."""

@@ -19,6 +19,33 @@ seçildi: positive acceptance `0.90`, negative success `1.00`, false acceptance
 Bu ilk baseline'dır; uzun süreli tekrar, concurrency/capacity, RAG cevap/citation,
 provider karşılaştırması ve Docker/Qdrant server smoke testi henüz tamamlanmadı.
 
+## 2026-09-22 — V5 opt-in retrieval karşılaştırması
+
+Dense baseline'a karşı iki mevcut opt-in yol aynı 300 sorguluk V5 fixture ile
+kısa, tek tekrarlı koşuda karşılaştırıldı. Bu koşular uzun süreli final benchmark
+değildir; varsayılanı değiştirmek için karar kanıtı olarak kullanıldı.
+
+| Koşul | Recall@k | MRR@k | Exact-identifier recall | p95 | Hata |
+|---|---:|---:|---:|---:|---:|
+| Dense | 0.8360 | 0.7931 | 0.20 | 38.441 ms | 0 |
+| Dense + lexical rerank | 0.8520 | 0.7731 | 0.30 | 40.242 ms | 0 |
+| Hybrid dense+sparse RRF | 0.8440 | 0.8047 | 0.24 | 61.983 ms | 0 |
+
+Lexical rerank recall'ı artırsa da MRR/nDCG'yi düşürdü; hybrid ise küçük kalite
+kazanımı karşılığında belirgin tail latency ekledi. Exact identifier darboğazı
+devam ettiği için bu iki yol varsayılan yapılmadı. Sonraki iyileştirme, başlık ve
+kaynak kimliklerini aday reranking'e güvenli şekilde dahil eden identifier-aware
+kontrollü bir deney olmalı; sonucu tekrar V5 fixture üzerinde ölçmeden varsayılan
+değiştirilmeyecek.
+
+Identifier-aware yerel lexical reranker uygulandı ve aynı kısa koşu tekrarlandı:
+genel recall `0.8800`, MRR `0.8352`, nDCG `0.8463`, p95 `41.018 ms`, hata oranı
+`0`; exact-identifier recall `0.42` oldu. Başlık, kaynak URI ve heading path yalnızca
+opt-in yerel reranking skoruna giriyor; saklanan embedding, RAG context metni,
+provenance veya dense varsayılan değişmiyor. Bu nedenle özellik kontrollü bir
+iyileştirme olarak kabul edildi, fakat uzun süreli ölçüm tamamlanana kadar
+`VDB_RERANKER_MODE=off` varsayılanı korunuyor.
+
 ## 2026-09-22 — V5 strict readiness ve local runtime ön kontrolü
 
 V5 corpus/fixture paketi `final-readiness --strict` ile başarıyla geçti:

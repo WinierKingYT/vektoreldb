@@ -190,7 +190,12 @@ class RetrievalService:
         rerank_fallback = False
         if rerank and results:
             try:
-                scores = self.reranker.score(query, [result.text for result in results])
+                score_results = getattr(self.reranker, "score_results", None)
+                scores = (
+                    score_results(query, results)
+                    if callable(score_results)
+                    else self.reranker.score(query, [result.text for result in results])
+                )
                 if len(scores) != len(results) or not all(isfinite(score) for score in scores):
                     raise ValueError("reranker returned invalid scores")
                 results = [

@@ -11,6 +11,14 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   positive acceptance `0.90`, negative success `1.00`, false acceptance `0.00`.
   Bu ilk baseline'dır; uzun süreli tekrar, kapasite, RAG ve Docker server ölçümleri
   henüz tamamlanmamıştır.
+- V5 üzerinde kısa opt-in karşılaştırmada lexical rerank Recall@k'yı `0.8520`'ye
+  çıkardı ancak MRR'yi `0.7731`'e düşürdü; hybrid dense+sparse RRF `0.8440` recall
+  ve `61.983 ms` p95 verdi. Varsayılan dense yol korunarak identifier-aware deney
+  sonraki iyileştirme olarak kaydedildi.
+- Identifier-aware local lexical reranker, adayların title/source URI/heading
+  metadata'sını yalnızca opt-in skorlamaya dahil edecek şekilde eklendi. V5 kısa
+  koşusunda Recall@k `0.8800`, MRR `0.8352`, exact-identifier recall `0.42` ve
+  p95 `41.018 ms` verdi; dense default ve RAG evidence sözleşmesi değişmedi.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60

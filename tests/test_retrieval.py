@@ -190,6 +190,21 @@ def test_opt_in_reranker_rescores_only_candidates_and_preserves_provenance() -> 
     assert results[0].source_uri == "file:///notes.md"
 
 
+def test_lexical_reranker_uses_identifier_metadata_for_opt_in_reranking() -> None:
+    store = ExactVectorStore()
+    first = point("first", [1.0, 0.0, 0.0], "doc_first", "genel içerik")
+    second = point("second", [1.0, 0.0, 0.0], "doc_second", "başka içerik")
+    second.payload["title"] = "Project README"
+    second.payload["source_uri"] = "file:///project/README.md"
+    store.upsert([first, second])
+
+    results = RetrievalService(
+        FakeProvider(), store, LexicalOverlapReranker()
+    ).search("README", limit=1, rerank=True)
+
+    assert [result.document_id for result in results] == ["doc_second"]
+
+
 def test_min_score_filters_retrieval_scores_before_reranking() -> None:
     class MisalignedScaleReranker:
         name = "misaligned-scale"
