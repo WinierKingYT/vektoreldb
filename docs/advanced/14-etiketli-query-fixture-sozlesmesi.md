@@ -154,9 +154,9 @@ rapor `coverage_complete=false` üretir.
 
 ```powershell
 vdb fixture-label-template `
-  --fixture data/benchmarks/queries-v1.json `
+  --fixture data/benchmarks/representative-personal-queries.json `
   --corpus-manifest data/manifests/corpus-manifest.json `
-  --output data/benchmarks/labels-v1-template.json
+  --output data/benchmarks/representative-personal-query-labels-template.json
 ```
 
 Bu çıktı bilerek `source=derived` ve `REVIEW_REQUIRED` notuyla gelir; final
