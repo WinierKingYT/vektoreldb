@@ -290,7 +290,9 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("data/benchmarks/representative-personal-query-fixture-manifest.json"),
     )
-    readiness.add_argument("--labels", type=Path)
+    readiness.add_argument(
+        "--labels", type=Path, default=Path("data/benchmarks/representative-personal-query-labels-template.json")
+    )
     readiness.add_argument(
         "--corpus-manifest", type=Path, default=Path("data/manifests/corpus-manifest.json")
     )
