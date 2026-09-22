@@ -10,9 +10,9 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 from collections import defaultdict
 from pathlib import Path
-from typing import Final
 
 from personal_vector_db.chunking import chunk_document
 from personal_vector_db.corpus import inventory_sources, read_corpus_manifest
@@ -28,20 +28,37 @@ _QUERY_TYPES = (
 )
 _SPLITS = ("development", "validation", "test")
 _SELECTIVITY = ("low", "medium", "high")
-_NEGATIVE_INTENTS: Final = (
-    "Mars kolonilerinde su üretim protokolü",
-    "okyanus gemileri için denizaltı biyolojisi",
-    "kuantum bilgisayarlarla canlı rüya kaydı",
-    "Ay yüzeyinde tarım gübresi reçetesi",
-    "dinozor genomu yeniden canlandırma planı",
-    "volkanik gezegenlerde yağmur tahmin sistemi",
-    "görünmezlik pelerini bakım kılavuzu",
-    "antik Roma için modern kripto para cüzdanı",
-    "yapay güneş yakıt ikmal prosedürü",
-    "kutup ayıları için uzay istasyonu tasarımı",
+_MOJIBAKE_MARKERS = ("Ã", "Ä", "Å", "Â", "â€", "�")
+_NEGATIVE_SUBJECTS = (
+    "Europa uydusundaki buz tabakası",
+    "Amazon havzasındaki pembe nehir yunusları",
+    "Antarktika buz çekirdeklerindeki volkanik kül",
+    "Göbeklitepe taşlarındaki hayvan kabartmaları",
+    "Japon raku seramiğindeki sır çatlakları",
+    "Barok keman yapımındaki reçine verniği",
+    "Mercan resiflerindeki gece yumurtlaması",
+    "Kepler 452b dışgezegeninin atmosferi",
+    "Hidrotermal bacalardaki dev tüp solucanları",
+    "İnka düğüm kayıt sistemi quipu",
+)
+_NEGATIVE_ASPECTS = (
+    "ölçüm yöntemi",
+    "tarihsel değişim",
+    "temel bilimsel açıklama",
+    "saha araştırması bulguları",
+    "güncel sınıflandırma yaklaşımı",
 )
 
 
+def _normalize_for_scan(text: str) -> str:
+    translated = text.translate(str.maketrans({"ı": "i", "İ": "I"}))
+    decomposed = unicodedata.normalize("NFKD", translated)
+    ascii_like = "".join(char for char in decomposed if not unicodedata.combining(char))
+    return re.sub(r"[^\w]+", " ", ascii_like.casefold()).strip()
+
+
+def _looks_mojibake(text: str) -> bool:
+    return any(marker in text for marker in _MOJIBAKE_MARKERS)
 def _phrase(text: str, limit: int) -> str:
     cleaned = re.sub(r"\s+", " ", text.replace("#", " ").replace("`", " ")).strip()
     words = cleaned.split()
@@ -67,7 +84,9 @@ def _candidate_text(query_type: str, text: str, heading: str, index: int) -> str
         return f"{short} hakkında bilgi"
     if query_type == "long_context":
         return f"{_phrase(text, 11)} ile ilgili ayrıntılı açıklama ve bağlam"
-    return f"Bu corpus'ta {_NEGATIVE_INTENTS[index % len(_NEGATIVE_INTENTS)]} var mı"
+    subject = _NEGATIVE_SUBJECTS[index % len(_NEGATIVE_SUBJECTS)]
+    aspect = _NEGATIVE_ASPECTS[index // len(_NEGATIVE_SUBJECTS)]
+    return f"Bu corpus'ta {subject} için {aspect} var mı"
 
 
 def _usable_chunk(text: str, heading: str) -> bool:
@@ -77,7 +96,7 @@ def _usable_chunk(text: str, heading: str) -> bool:
     lowered = normalized.casefold()
     if "içindekiler" in lowered or "table of contents" in lowered:
         return False
-    if normalized.count("�") or re.search(r"(?:Ã.|Â.|â.){2,}", normalized):
+    if _looks_mojibake(normalized):
         return False
     if heading.casefold().startswith(("içindekiler", "table of contents")):
         return False
