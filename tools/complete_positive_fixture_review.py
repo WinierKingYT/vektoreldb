@@ -70,16 +70,24 @@ def main() -> None:
         ):
             issue_class = "synthetic_identifier_suffix_artifact"
             recommendation = "Replace the generated ordinal suffix with a real document identifier."
-        elif "icindekiler" in normalized_target or "table of contents" in normalized_target:
+        elif query["query_type"] != "exact_identifier" and (
+            "icindekiler" in normalized_target or "table of contents" in normalized_target
+        ):
             issue_class = "table_of_contents_fragment_query_type_mismatch"
             recommendation = "Use a substantive section instead of a contents-list fragment."
-        elif "|" in query_text or query_text.count(",") >= 2:
+        elif query["query_type"] != "exact_identifier" and (
+            "|" in query_text or query_text.count(",") >= 2
+        ):
             issue_class = "structured_syntax_query_type_mismatch"
             recommendation = "Rewrite as a natural query before final relevance review."
-        elif query_id in {f"{query_prefix}{number:03d}" for number in range(199, 204)}:
+        elif query["query_type"] != "exact_identifier" and query_id in {
+            f"{query_prefix}{number:03d}" for number in range(199, 204)
+        }:
             issue_class = "insufficient_query_and_chunk_context"
             recommendation = "Rewrite the query around substantive sibling content."
-        elif len(_tokens(query_text) & _tokens(target_text)) < 2:
+        elif query["query_type"] != "exact_identifier" and len(
+            _tokens(query_text) & _tokens(target_text)
+        ) < 2:
             issue_class = "insufficient_chunk_token_evidence"
             recommendation = "Review the target chunk manually before accepting relevance."
 
@@ -112,7 +120,11 @@ def main() -> None:
         and labels_by_id[query["query_id"]]["source"] == "reviewed"
         for query in queries
     )
-    report["issues"] = list(issues.values())
+    report["issues"] = [
+        issue
+        for issue in issues.values()
+        if labels_by_id[issue["query_id"]]["source"] not in {"manual", "reviewed"}
+    ]
     report["progress"].update(
         {
             "processed_query_count": 300,

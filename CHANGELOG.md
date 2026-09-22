@@ -17,7 +17,7 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   ASCII/Unicode TOC filtresi ve structured-list chunk dışlama eklendi; V4 aday
   coverage 300 sorgu ve tüm provenance kapılarını sağlıyor.
 - V5 inceleme turunda source-grounded exact identifier'lar artık gereksiz yere
-  reddedilmiyor; V5 yerel review sonucu 261 reviewed, 39 review-required ve
+  reddedilmiyor; V5 yerel review sonucu 291 reviewed, 9 review-required ve
   50/50 doğrulanmış negative kaydı gösteriyor. Final manifest hâlâ bilinçli
   olarak `contract-only`.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
