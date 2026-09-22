@@ -1,5 +1,13 @@
 # Karar günlüğü
 
+## 2026-09-22 — V5 strict readiness ve local runtime ön kontrolü
+
+V5 corpus/fixture paketi `final-readiness --strict` ile başarıyla geçti:
+corpus `23/633`, fixture `300/300 reviewed`, manifest `ready` ve tüm provenance
+binding'leri geçerli. `vdb doctor` varsayılan local embedding modelini yükleyip
+`ok` döndürdü. Bu yalnızca runtime/acceptance ön kontrolüdür; uzun süreli
+retrieval, latency, abstention ve Qdrant server ölçümü henüz başlatılmadı.
+
 ## 2026-09-22 — 300 sorguluk corpus-türetilmiş aday fixture
 
 Yeni corpus üzerinden `tools/generate_fixture_candidates.py` ile 300 aday

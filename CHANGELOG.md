@@ -21,6 +21,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   50/50 doğrulanmış negative kaydı gösteriyor. Manifest, varsayılan local
   embedding manifest kimliğine bağlanarak `ready` yapıldı; uzun süreli
   embedding/Qdrant benchmark ölçümü bilinçli olarak sonraki kapıda.
+- V5 için `vdb doctor` ve `final-readiness --strict` ön kontrolü başarıyla
+  çalıştı; local embedding modeli yüklenebiliyor ve acceptance paketi ölçüm
+  başlatmaya hazır. Uzun süreli ölçüm sonuçları bu değişikliğe dahil değildir.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
   kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
   ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a
