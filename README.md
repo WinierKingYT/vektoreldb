@@ -32,6 +32,9 @@ uv run vdb final-readiness `
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --labels data\benchmarks\labels-v1.json
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --output data\benchmarks\results\fixture-coverage.json
 # uv run vdb fixture-label-template --fixture data\benchmarks\queries-v1.json --corpus-manifest data\benchmarks\corpus-manifest.json --output data\benchmarks\labels-v1-template.json
+# Current corpus-derived 300-case candidate fixture (all labels remain review-required):
+# uv run python tools\generate_fixture_candidates.py --root data\sources --corpus-manifest data\manifests\corpus-manifest.json --fixture data\benchmarks\representative-personal-v2-queries.json --manifest data\benchmarks\representative-personal-v2-fixture-manifest.json
+# uv run vdb fixture-label-template --fixture data\benchmarks\representative-personal-v2-queries.json --corpus-manifest data\manifests\corpus-manifest.json --output data\benchmarks\representative-personal-v2-labels-template.json
 # Shard'ları collision kontrolüyle birleştirme:
 # uv run vdb fixture-merge queries --input data\benchmarks\shards\a.json data\benchmarks\shards\b.json --output data\benchmarks\queries-v1.json
 # uv run vdb fixture-merge labels --input data\benchmarks\labels\a.json data\benchmarks\labels\b.json --output data\benchmarks\labels-v1.json

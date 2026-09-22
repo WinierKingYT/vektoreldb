@@ -1,5 +1,16 @@
 # Karar günlüğü
 
+## 2026-09-22 — 300 sorguluk corpus-türetilmiş aday fixture
+
+Yeni corpus üzerinden `tools/generate_fixture_candidates.py` ile 300 aday
+sorgu üretildi. Altı sorgu türünün her birinde 50 kayıt, development/validation/test
+split'lerinde 180/60/60 dağılımı, small/medium/large belge boyutu kapsamı ve
+duplicate'siz fixture coverage doğrulandı. Corpus ve parser binding geçerli;
+ancak 300 label'ın tamamı `derived`/`review-required`, manifest `contract-only`.
+Bu nedenle bu çıktı hazırlık kanıtıdır; tek sahipli manuel inceleme tamamlanmadan
+ve manifest `ready` olmadan benchmark sonucu değildir. Aday dosyaları kişisel
+corpus içerdiği için Git'e eklenmez.
+
 ## 2026-09-22 — Kargo Gemisi DOCX corpus entegrasyonu
 
 Kullanıcının sağladığı `Kargo_Gemisi_Canonical_Documentation_Set_V1.0.zip`

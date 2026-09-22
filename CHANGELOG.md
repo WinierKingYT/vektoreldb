@@ -4,6 +4,11 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
+  üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60
+  split, small/medium/large boyut kovaları ve duplicate kontrolüyle doğrulanıyor;
+  aday label'lar bilinçli olarak `derived`/`review-required`, manifest
+  `contract-only` kalıyor.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
   kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
   ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a

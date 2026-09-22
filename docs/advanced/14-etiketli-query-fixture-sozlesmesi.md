@@ -101,6 +101,27 @@ etiket paketinin provenance bağlantısıdır. Kaynak metni, embedding veya Qdra
 corpus kapsamını görmeye yarayan privacy-safe ön adımıdır.
 Manifest ayrıca canonical JSON Schema ile runtime'da doğrulanır.
 
+Corpus genişletildikten sonra ilk 300 sorguluk aday paketi, kaynak metninden
+otomatik türetilen ancak henüz doğrulanmamış kayıtlar olarak üretilebilir:
+
+```powershell
+uv run python tools/generate_fixture_candidates.py `
+  --root data/sources `
+  --corpus-manifest data/manifests/corpus-manifest.json `
+  --fixture data/benchmarks/representative-personal-v2-queries.json `
+  --manifest data/benchmarks/representative-personal-v2-fixture-manifest.json
+uv run vdb fixture-label-template `
+  --fixture data/benchmarks/representative-personal-v2-queries.json `
+  --corpus-manifest data/manifests/corpus-manifest.json `
+  --output data/benchmarks/representative-personal-v2-labels-template.json
+```
+
+Bu araç her biri 50 kayıt içeren altı sorgu türü ve 180/60/60 split dağılımı
+üretir; tüm label'lar `derived`/`review-required` kalır. Üretilen dosyalar
+kişisel corpus içerdiği için Git'e eklenmez. Tek sahip, her sorgunun gerçekten
+ilgili chunk'ını ve negative kararını inceleyip provenance'lı `manual` veya
+`reviewed` etikete dönüştürmeden paket final kabul edilmez.
+
 Hazırlık sırasında `vdb fixture-coverage --fixture ... --manifest ...` komutu
 final kabul kapısını çalıştırmadan sorgu sayısını, tür/split/boyut/selectivity
 dağılımını ve eksik kovaları raporlar. Bu komut embedding provider veya Qdrant
