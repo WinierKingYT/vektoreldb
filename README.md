@@ -76,7 +76,8 @@ label/coverage artifact'leri `private-local` kabul edilir; kaynak metni içermes
 bile yol, hash, kimlik ve içerikten türetilmiş sorgu metadata'sı açığa çıkarabilirler.
 Bu yüzden bu tür dosyalar `.gitignore` kapsamındadır ve kişisel corpus'la birlikte
 yerelde üretilmelidir; public fixture veya test verisi olarak kullanılmamalıdır.
-Bunlar 300+ final benchmark yerine geçmez. `data/sources/temsilî-formatlar/`
+Bunlar 300+ final benchmark yerine geçmez; 300 sorgu tek kullanıcı tarafından
+incelenebilir, 300 farklı insan gerektirmez. `data/sources/temsilî-formatlar/`
 altındaki dosyalar yalnızca parser/inventory smoke kapsamını genişleten sentetik
 örneklerdir; gerçek kişisel kayıt olarak değerlendirilmemelidir.
 

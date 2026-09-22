@@ -1,5 +1,16 @@
 # Karar günlüğü
 
+## 2026-09-22 — Kişisel kullanımda tek sahipli değerlendirme profili
+
+Bu proje tek kullanıcıya özel olduğundan 300 sorgu hedefi 300 farklı insanın
+incelemesini gerektirmez. `manual`/`reviewed` etiketleri tek sahip tarafından,
+corpus checksum'ı, karar notu ve zaman bilgisi korunarak verilebilir. İkinci
+annotator ve kurumlar arası anlaşma yalnızca ihtiyaç olursa ek doğrulama olarak
+kalır; V1.7'nin zorunlu kapısı değildir. Temsilî corpus mühendislik ve parser
+geliştirme için geçerli çalışma corpus'udur. Gerçek kişisel corpus ve kullanıcıya
+özel PDF'ler geldiğinde aynı provenance sözleşmesiyle yeniden ölçülür; mevcut
+temsilî sonuçlar kişisel kalite iddiası olarak sunulmaz.
+
 ## 2026-09-22 — Final readiness preflight
 
 Corpus kalite raporu ile fixture kabul kapılarının runtime başlatmadan birlikte
