@@ -17,9 +17,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   ASCII/Unicode TOC filtresi ve structured-list chunk dışlama eklendi; V4 aday
   coverage 300 sorgu ve tüm provenance kapılarını sağlıyor.
 - V5 inceleme turunda source-grounded exact identifier'lar artık gereksiz yere
-  reddedilmiyor; V5 yerel review sonucu 291 reviewed, 9 review-required ve
-  50/50 doğrulanmış negative kaydı gösteriyor. Final manifest hâlâ bilinçli
-  olarak `contract-only`.
+  reddedilmiyor; V5 yerel review sonucu 300/300 reviewed, 0 review-required ve
+  50/50 doğrulanmış negative kaydı gösteriyor. Manifest, varsayılan local
+  embedding manifest kimliğine bağlanarak `ready` yapıldı; uzun süreli
+  embedding/Qdrant benchmark ölçümü bilinçli olarak sonraki kapıda.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
   kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
   ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a

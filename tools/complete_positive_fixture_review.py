@@ -76,15 +76,10 @@ def main() -> None:
             issue_class = "table_of_contents_fragment_query_type_mismatch"
             recommendation = "Use a substantive section instead of a contents-list fragment."
         elif query["query_type"] != "exact_identifier" and (
-            "|" in query_text or query_text.count(",") >= 2
+            "|" in query_text
         ):
             issue_class = "structured_syntax_query_type_mismatch"
             recommendation = "Rewrite as a natural query before final relevance review."
-        elif query["query_type"] != "exact_identifier" and query_id in {
-            f"{query_prefix}{number:03d}" for number in range(199, 204)
-        }:
-            issue_class = "insufficient_query_and_chunk_context"
-            recommendation = "Rewrite the query around substantive sibling content."
         elif query["query_type"] != "exact_identifier" and len(
             _tokens(query_text) & _tokens(target_text)
         ) < 2:

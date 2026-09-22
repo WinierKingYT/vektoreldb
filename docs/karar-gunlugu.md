@@ -11,6 +11,13 @@ Bu nedenle bu çıktı hazırlık kanıtıdır; tek sahipli manuel inceleme tama
 ve manifest `ready` olmadan benchmark sonucu değildir. Aday dosyaları kişisel
 corpus içerdiği için Git'e eklenmez.
 
+V5 incelemesinde source-grounded exact identifier'lar ve doğrudan chunk kanıtı
+geçen son kayıtlar kabul edildi. 300 label'ın tamamı `reviewed`, 50 negative
+label full-corpus normalize taramasıyla doğrulandı; fixture coverage ve final
+readiness `ready` oldu. Embedding manifesti varsayılan local
+`multilingual-e5-base` revision kimliğine bağlandı; gerçek retrieval/latency
+ölçümü sonraki uzun süreli benchmark kapısında yapılacak.
+
 İlk v2 aday paketi incelendiğinde 50 negative sorgunun chunk metninden türediği,
 TOC/bozuk extraction ve collision suffix artifaktları taşıdığı görüldü. Bu
 nedenle generator v3'e yükseltildi: kullanılabilir chunk filtresi, corpus-dışı
