@@ -33,10 +33,9 @@ değildir; varsayılanı değiştirmek için karar kanıtı olarak kullanıldı.
 
 Lexical rerank recall'ı artırsa da MRR/nDCG'yi düşürdü; hybrid ise küçük kalite
 kazanımı karşılığında belirgin tail latency ekledi. Exact identifier darboğazı
-devam ettiği için bu iki yol varsayılan yapılmadı. Sonraki iyileştirme, başlık ve
-kaynak kimliklerini aday reranking'e güvenli şekilde dahil eden identifier-aware
-kontrollü bir deney olmalı; sonucu tekrar V5 fixture üzerinde ölçmeden varsayılan
-değiştirilmeyecek.
+devam ettiği için bu iki yol varsayılan yapılmadı. Başlık ve kaynak kimliklerini
+aday reranking'e güvenli şekilde dahil eden identifier-aware kontrollü deney
+sonraki adım olarak uygulandı ve aşağıda ayrıca ölçüldü.
 
 Identifier-aware yerel lexical reranker uygulandı ve aynı kısa koşu tekrarlandı:
 genel recall `0.8800`, MRR `0.8352`, nDCG `0.8463`, p95 `41.018 ms`, hata oranı
@@ -45,6 +44,22 @@ opt-in yerel reranking skoruna giriyor; saklanan embedding, RAG context metni,
 provenance veya dense varsayılan değişmiyor. Bu nedenle özellik kontrollü bir
 iyileştirme olarak kabul edildi, fakat uzun süreli ölçüm tamamlanana kadar
 `VDB_RERANKER_MODE=off` varsayılanı korunuyor.
+
+## 2026-09-22 — V5 bounded concurrency smoke
+
+Gerçek local dense indeksinde V5 fixture ile `concurrency=1,2,4,8`, her seviyede
+300 istek ve 1 warm-up tekrarı çalıştırıldı. Tüm seviyelerde hata sayısı `0`:
+
+| Worker | Throughput | p50 | p95 | p99 |
+|---:|---:|---:|---:|---:|
+| 1 | 29.107 req/s | 34.149 ms | 39.345 ms | 43.572 ms |
+| 2 | 32.675 req/s | 60.410 ms | 70.019 ms | 76.807 ms |
+| 4 | 35.134 req/s | 110.359 ms | 132.863 ms | 257.513 ms |
+| 8 | 29.682 req/s | 255.354 ms | 366.775 ms | 444.915 ms |
+
+Bu bounded smoke, local process'in hata vermeden paralel sorgu kabul ettiğini
+gösterir; kapasite SLO'su veya uzun süreli dayanıklılık kanıtı değildir. Worker 4
+sonrasında tail latency belirgin büyüdüğü için varsayılan concurrency artırılmadı.
 
 ## 2026-09-22 — V5 strict readiness ve local runtime ön kontrolü
 

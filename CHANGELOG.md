@@ -19,6 +19,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   metadata'sını yalnızca opt-in skorlamaya dahil edecek şekilde eklendi. V5 kısa
   koşusunda Recall@k `0.8800`, MRR `0.8352`, exact-identifier recall `0.42` ve
   p95 `41.018 ms` verdi; dense default ve RAG evidence sözleşmesi değişmedi.
+- V5 local dense indeksinde bounded concurrency smoke çalıştı: worker `1/2/4/8`,
+  seviye başına 300 istek ve warm-up ile tüm koşullarda hata `0`; throughput
+  `29.107/32.675/35.134/29.682 req/s`. Worker 4 sonrası p99 `257.513/444.915 ms`
+  seviyesine çıktığı için bu sonuç kapasite SLO'su sayılmadı ve varsayılan artırılmadı.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60
