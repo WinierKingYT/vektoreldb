@@ -26,6 +26,11 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 - `docker compose config --quiet` başarılı; Docker Desktop engine pipe'ı mevcut
   olmadığından Docker/Qdrant server smoke testi çalıştırılamadı. Local Qdrant
   storage ile server storage ayrımı korunarak runtime kapısı açık bırakıldı.
+- Dense default ve identifier-aware reranker için 3x300 sorguluk tekrar alındı.
+  Dense her tekrarda Recall@k `0.8360` (ortalama p95 `38.561 ms`), reranker her
+  tekrarda `0.8800` (ortalama p95 `40.081 ms`) ve iki koşulda da hata oranı `0`
+  verdi. Test split abstention threshold `0.8602715` ile negative success `1.00`
+  ve false acceptance `0.00` oldu.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60

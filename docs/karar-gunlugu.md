@@ -61,6 +61,16 @@ Bu bounded smoke, local process'in hata vermeden paralel sorgu kabul ettiğini
 gösterir; kapasite SLO'su veya uzun süreli dayanıklılık kanıtı değildir. Worker 4
 sonrasında tail latency belirgin büyüdüğü için varsayılan concurrency artırılmadı.
 
+Dense default için 3 tekrarlı 300 sorguluk koşu tamamlandı: her koşuda recall
+`0.8360`, MRR `0.7931`, nDCG `0.8038`, hata `0`; ortalama p95 `38.561 ms`.
+Identifier-aware opt-in lexical reranker için 3 tekrarın her birinde recall
+`0.8800`, MRR `0.8352`, nDCG `0.8463`, hata `0`; ortalama p95 `40.081 ms` oldu.
+Kısa koşudaki kazanım tekrarlı ölçümde de korundu.
+
+Test split abstention kalibrasyonu bağımsız tekrarlandı: threshold `0.8602715`,
+positive acceptance `0.90`, negative success `1.00`, false acceptance `0.00`,
+false abstention `0.10`. Eşik varsayılan konfigürasyona otomatik yazılmadı.
+
 ## 2026-09-22 — Docker/Qdrant server runtime kapısı
 
 `docker compose config --quiet` başarılı; Compose tanımı statik olarak geçerli.
