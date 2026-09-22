@@ -108,7 +108,10 @@ def _usable_chunk(text: str, heading: str) -> bool:
     if len(normalized) < 40 or len(normalized.split()) < 7:
         return False
     lowered = normalized.casefold()
-    if "içindekiler" in lowered or "table of contents" in lowered:
+    scan_text = _normalize_for_scan(normalized)
+    if "içindekiler" in lowered or "icindekiler" in scan_text:
+        return False
+    if "table of contents" in lowered or "table of contents" in scan_text:
         return False
     if _looks_mojibake(normalized):
         return False
