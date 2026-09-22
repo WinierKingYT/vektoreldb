@@ -87,6 +87,17 @@ Local Qdrant için ölçülen pratik varsayılan worker seviyesi `1` olarak bır
 worker 4 ve üzeri throughput'u sınırlı artırırken tail latency'yi büyütüyor.
 Bu sonuç server Qdrant, cold-start, restore veya RAM/CPU SLO'su değildir.
 
+Harici embedding adapter'ı için `test_openai_embedding.py` ve factory testleri
+`34 passed`, RAG sözleşme testleri `15 passed` verdi. Bu kanıt loopback/mock
+provider sözleşmesini, retry/batch/cache ve fail-closed kontrollerini doğrular;
+gerçek dış provider kalite karşılaştırması değildir. Dış API anahtarı ve veri
+paylaşımı kararı olmadan kişisel corpus'u harici servise göndermedim.
+
+RAG cevap kalitesi için retrieval/context sınırı ve privacy-safe değerlendirme
+şeması hazır, ancak gerçek generation cevapları veya tek sahipli cevap etiketleri
+oluşturulmadı. Bu nedenle citation/faithfulness/factuality sonucu uydurulmadı;
+bu kapı goal'un açık kalan ölçüm maddesidir.
+
 ## 2026-09-22 — Docker/Qdrant server runtime kapısı
 
 `docker compose config --quiet` başarılı; Compose tanımı statik olarak geçerli.

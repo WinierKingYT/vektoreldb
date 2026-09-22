@@ -35,6 +35,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   toplam `30.000` başarılı istek, hata `0`; throughput `28.814–35.115 req/s`,
   p95 `40.254–647.894 ms`. Worker 1 varsayılanı korundu; server/cold-warm ve
   Docker runtime ölçümleri ayrı final kapısı olarak kaldı.
+- Harici embedding adapter sözleşmesi `34` test, RAG sınır/sözleşme paketi `15`
+  test ile doğrulandı. Gerçek dış provider kalite karşılaştırması ve generation
+  cevap değerlendirmesi veri/erişim olmadığı için açık kapı olarak tutuldu;
+  sonuç uydurulmadı.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60
