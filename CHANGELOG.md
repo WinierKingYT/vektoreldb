@@ -13,6 +13,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   sorunları için generator v3 düzeltildi; kullanılabilir chunk filtresi ve
   corpus'tan bağımsız negative intent üretimi eklendi. V3 fixture coverage
   sayısal/provenance kapılarını geçiyor, ancak final label kabulü hâlâ açık.
+- V4 generator turunda source-grounded identifier üretimi, normalize edilmiş
+  ASCII/Unicode TOC filtresi ve structured-list chunk dışlama eklendi; V4 aday
+  coverage 300 sorgu ve tüm provenance kapılarını sağlıyor.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
   kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
   ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a
