@@ -16,6 +16,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 - V4 generator turunda source-grounded identifier üretimi, normalize edilmiş
   ASCII/Unicode TOC filtresi ve structured-list chunk dışlama eklendi; V4 aday
   coverage 300 sorgu ve tüm provenance kapılarını sağlıyor.
+- V5 inceleme turunda source-grounded exact identifier'lar artık gereksiz yere
+  reddedilmiyor; V5 yerel review sonucu 261 reviewed, 39 review-required ve
+  50/50 doğrulanmış negative kaydı gösteriyor. Final manifest hâlâ bilinçli
+  olarak `contract-only`.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
   kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
   ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a

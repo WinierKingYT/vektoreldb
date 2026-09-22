@@ -17,7 +17,18 @@ def main() -> None:
 
     queries = json.loads(args.fixture.read_text(encoding="utf-8"))
     labels = json.loads(args.labels.read_text(encoding="utf-8"))
-    report = json.loads(args.report.read_text(encoding="utf-8"))
+    if args.report.exists():
+        report = json.loads(args.report.read_text(encoding="utf-8"))
+    else:
+        report = {
+            "schema_version": "personal-query-label-review-v1",
+            "privacy_classification": "private-local",
+            "fixture_path": str(args.fixture),
+            "labels_path": str(args.labels),
+            "review_method": ["full_corpus_normalized_lexical_scan"],
+            "progress": {},
+            "issues": [],
+        }
     query_by_id = {query["query_id"]: query for query in queries}
     now = datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 

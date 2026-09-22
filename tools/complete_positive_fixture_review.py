@@ -41,6 +41,8 @@ def main() -> None:
     parser.add_argument("--fixture", type=Path, required=True)
     parser.add_argument("--labels", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--version", default="v3")
+    parser.add_argument("--start", type=int, default=181)
     args = parser.parse_args()
 
     queries = json.loads(args.fixture.read_text(encoding="utf-8"))
@@ -50,11 +52,12 @@ def main() -> None:
     labels_by_id = {label["query_id"]: label for label in labels}
     issues = {issue["query_id"]: issue for issue in report.get("issues", [])}
     now = datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    query_prefix = f"personal-{args.version}-q"
 
     reviewed_added = 0
     for query in queries:
         query_id = query["query_id"]
-        if query_id <= "personal-v3-q180" or query["query_type"] == "negative":
+        if query_id < f"{query_prefix}{args.start:03d}" or query["query_type"] == "negative":
             continue
         label = labels_by_id[query_id]
         target_text = " ".join(chunks.get(chunk_id, "") for chunk_id in query["relevant_chunk_ids"])
@@ -62,7 +65,9 @@ def main() -> None:
         query_text = query["text"]
         issue_class = None
         recommendation = None
-        if query["query_type"] == "exact_identifier":
+        if query["query_type"] == "exact_identifier" and re.search(
+            r"\b(?:belge|bolum)\s+\d+\b", _normalize(query_text)
+        ):
             issue_class = "synthetic_identifier_suffix_artifact"
             recommendation = "Replace the generated ordinal suffix with a real document identifier."
         elif "icindekiler" in normalized_target or "table of contents" in normalized_target:
@@ -71,7 +76,7 @@ def main() -> None:
         elif "|" in query_text or query_text.count(",") >= 2:
             issue_class = "structured_syntax_query_type_mismatch"
             recommendation = "Rewrite as a natural query before final relevance review."
-        elif query_id in {f"personal-v3-q{number:03d}" for number in range(199, 204)}:
+        elif query_id in {f"{query_prefix}{number:03d}" for number in range(199, 204)}:
             issue_class = "insufficient_query_and_chunk_context"
             recommendation = "Rewrite the query around substantive sibling content."
         elif len(_tokens(query_text) & _tokens(target_text)) < 2:
@@ -115,7 +120,7 @@ def main() -> None:
             "review_required_label_count": review_required,
             "verified_negative_count": verified_negative,
             "remaining_query_count": 0,
-            "last_processed_query_id": "personal-v3-q300",
+            "last_processed_query_id": f"{query_prefix}300",
             "ambiguous_or_invalid_positive_count": review_required,
         }
     )

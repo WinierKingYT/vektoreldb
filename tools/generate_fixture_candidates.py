@@ -120,7 +120,8 @@ def _usable_chunk(text: str, heading: str) -> bool:
         return False
     if _looks_mojibake(normalized):
         return False
-    if heading.casefold().startswith(("içindekiler", "table of contents")):
+    normalized_heading = _normalize_for_scan(heading)
+    if normalized_heading.startswith(("icindekiler", "table of contents")):
         return False
     return True
 
