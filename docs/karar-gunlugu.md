@@ -109,6 +109,15 @@ Ek kontrolde `wsl -l -v` ile `docker-desktop` dağıtımının durmuş olduğu g
 API pipe'ı hazır olmadan dağıtım yeniden durdu. Bu, test sonucundan ayrı bir host
 runtime sorunu olarak kaydedildi.
 
+Docker Desktop loglarında kesin backend hatası bulundu: `sailor-ingest.sock` ve
+ardından `docker-secrets-engine/engine.sock` Windows'ta erişilemeyen reparse
+linkleri olarak kalıyor; backend bu socket'i kaldırmaya çalışırken çöküyor.
+Docker süreçleri durdurulup runtime klasörleri silinmeden geri alınabilir
+`.stale-20260922` adlarına taşındı, ancak temiz başlatmada `sailor-ingest.sock`
+yeniden üretildi ve aynı hata tekrarlandı. Bu nedenle Docker server smoke testi
+host onarımı olmadan çalıştırılmayacak; proje veya local Qdrant storage'ı
+değiştirecek factory reset/kurulum işlemi yapılmadı.
+
 ## 2026-09-22 — Docker/Qdrant server runtime kapısı
 
 `docker compose config --quiet` başarılı; Compose tanımı statik olarak geçerli.

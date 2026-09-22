@@ -45,6 +45,11 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 - `docker-desktop` WSL dağıtımının durmuş olduğu doğrulandı; geçici başlatma
   sonrasında daemon API pipe'ı yine hazır olmadı. Bu sonuç host runtime sorunu
   olarak tutuldu, local storage'a müdahale edilmedi.
+- Docker backend loglarında `sailor-ingest.sock` ve secrets engine socket'inin
+  erişilemeyen Windows reparse linkleri nedeniyle backend çökmesi doğrulandı.
+  Runtime klasörleri geri alınabilir `.stale-20260922` adlarına taşındı; temiz
+  başlangıçta link yeniden üretildiği için factory reset/kurulum yapılmadan
+  smoke testi kapalı bırakıldı.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60
