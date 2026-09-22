@@ -42,6 +42,9 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 - Docker Desktop kurulumunun mevcut olduğu görüldü ve arka plan başlatma isteği
   verildi; backend süreçleri oluşsa da Linux engine pipe'ı hazır olmadığı için
   server smoke testi tekrar çalıştırılmadı.
+- `docker-desktop` WSL dağıtımının durmuş olduğu doğrulandı; geçici başlatma
+  sonrasında daemon API pipe'ı yine hazır olmadı. Bu sonuç host runtime sorunu
+  olarak tutuldu, local storage'a müdahale edilmedi.
 
 - Güncel corpus'tan altı türde 50'şer olmak üzere 300 sorguluk aday fixture
   üreten `tools/generate_fixture_candidates.py` eklendi. Coverage; 180/60/60

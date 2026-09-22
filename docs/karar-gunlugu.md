@@ -104,6 +104,11 @@ bekleme kontrollerinde hazır olmadı. Docker server smoke testi bu nedenle yeni
 çalıştırılmadı. Docker Desktop'ın kendi runtime/WSL başlatma durumu düzelmeden
 aynı testi tekrarlamak veri veya sonuç üretmeyecektir.
 
+Ek kontrolde `wsl -l -v` ile `docker-desktop` dağıtımının durmuş olduğu görüldü;
+`wsl -d docker-desktop -- echo ready` ile geçici olarak başlatıldı, fakat daemon
+API pipe'ı hazır olmadan dağıtım yeniden durdu. Bu, test sonucundan ayrı bir host
+runtime sorunu olarak kaydedildi.
+
 ## 2026-09-22 — Docker/Qdrant server runtime kapısı
 
 `docker compose config --quiet` başarılı; Compose tanımı statik olarak geçerli.
