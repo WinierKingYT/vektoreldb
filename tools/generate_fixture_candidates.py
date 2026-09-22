@@ -59,6 +59,22 @@ def _normalize_for_scan(text: str) -> str:
 
 def _looks_mojibake(text: str) -> bool:
     return any(marker in text for marker in _MOJIBAKE_MARKERS)
+
+
+def _negative_text(index: int) -> str:
+    subject = _NEGATIVE_SUBJECTS[index % len(_NEGATIVE_SUBJECTS)]
+    aspect = _NEGATIVE_ASPECTS[index // len(_NEGATIVE_SUBJECTS)]
+    return f"Bu corpus'ta {subject} için {aspect} var mı"
+
+
+def _validate_negative_bank(texts: list[str]) -> None:
+    corpus_text = _normalize_for_scan(" ".join(texts))
+    for index in range(len(_NEGATIVE_SUBJECTS) * len(_NEGATIVE_ASPECTS)):
+        candidate = _normalize_for_scan(_negative_text(index))
+        if candidate and candidate in corpus_text:
+            raise ValueError("negative intent bank overlaps the current corpus")
+
+
 def _phrase(text: str, limit: int) -> str:
     cleaned = re.sub(r"\s+", " ", text.replace("#", " ").replace("`", " ")).strip()
     words = cleaned.split()
@@ -84,9 +100,7 @@ def _candidate_text(query_type: str, text: str, heading: str, index: int) -> str
         return f"{short} hakkında bilgi"
     if query_type == "long_context":
         return f"{_phrase(text, 11)} ile ilgili ayrıntılı açıklama ve bağlam"
-    subject = _NEGATIVE_SUBJECTS[index % len(_NEGATIVE_SUBJECTS)]
-    aspect = _NEGATIVE_ASPECTS[index // len(_NEGATIVE_SUBJECTS)]
-    return f"Bu corpus'ta {subject} için {aspect} var mı"
+    return _negative_text(index)
 
 
 def _usable_chunk(text: str, heading: str) -> bool:
@@ -141,6 +155,10 @@ def build_candidates(
         depth += 1
     if len(selected) != count // len(_QUERY_TYPES):
         raise ValueError("corpus does not contain enough parsed chunks")
+    corpus_texts = [
+        text for chunks in chunks_by_source.values() for _, text, _, _ in chunks
+    ]
+    _validate_negative_bank(corpus_texts)
 
     cases: list[dict[str, object]] = []
     seen_texts: set[str] = set()
