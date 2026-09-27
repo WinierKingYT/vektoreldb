@@ -4,13 +4,22 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 
 ## [Unreleased]
 
+- Docker Desktop host runtime blokajı, `sailor-ingest.sock` crash kök nedeni
+  doğrulanıp Docker Desktop `4.92.0` / Engine `29.8.0` güncellenerek kapatıldı;
+  Qdrant server health/ready ve üç entegrasyon testi `3 passed` verdi.
+- README, V1.7 runbook'u ve fixture sözleşmesi güncel reviewed V5 artifact
+  adlarına hizalandı; `final-readiness --strict` sonucu `ready` olarak kaydedildi.
+- Temiz ortam doğrulaması `348 passed, 3 skipped, 3 warnings`; Ruff, `uv lock
+  --check`, Compose config ve GitHub Actions CI workflow'u hazırlandı. Üç skip,
+  URL verilmediğinde atlanan opt-in Qdrant server testleridir.
 - V5 fixture gerçek local corpus ingest edildikten sonra dense benchmark ile ölçüldü:
   300 sorguda Recall@k `0.8360`, MRR `0.7931`, nDCG `0.8038`, p95 `38.441 ms`
   ve error rate `0`; exact-identifier recall `0.20` ana takip alanı olarak kaydedildi.
 - Validation skorlarından dense abstention eşiği `0.8560128` kalibre edildi;
   positive acceptance `0.90`, negative success `1.00`, false acceptance `0.00`.
-  Bu ilk baseline'dır; uzun süreli tekrar, kapasite, RAG ve Docker server ölçümleri
-  henüz tamamlanmamıştır.
+  Bu ilk baseline'dır; uzun süreli local kapasite ölçümü tamamlandı, RAG cevap
+  değerlendirmesi ve gerçek harici provider karşılaştırması ise bilinçli olarak
+  kullanıcı/erişim gerektiren sonraki kapılar olarak tutuldu.
 - V5 üzerinde kısa opt-in karşılaştırmada lexical rerank Recall@k'yı `0.8520`'ye
   çıkardı ancak MRR'yi `0.7731`'e düşürdü; hybrid dense+sparse RRF `0.8440` recall
   ve `61.983 ms` p95 verdi. Varsayılan dense yol korunarak identifier-aware deney
@@ -23,9 +32,10 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   seviye başına 300 istek ve warm-up ile tüm koşullarda hata `0`; throughput
   `29.107/32.675/35.134/29.682 req/s`. Worker 4 sonrası p99 `257.513/444.915 ms`
   seviyesine çıktığı için bu sonuç kapasite SLO'su sayılmadı ve varsayılan artırılmadı.
-- `docker compose config --quiet` başarılı; Docker Desktop engine pipe'ı mevcut
-  olmadığından Docker/Qdrant server smoke testi çalıştırılamadı. Local Qdrant
-  storage ile server storage ayrımı korunarak runtime kapısı açık bırakıldı.
+- Tarihsel ilk host denemesinde `docker compose config --quiet` başarılı olsa da
+  Docker Desktop engine pipe'ı mevcut değildi; sonraki runtime güncellemesiyle
+  Docker/Qdrant server smoke kapısı kapatıldı. Local Qdrant storage ile server
+  storage ayrımı korunmuştur.
 - Dense default ve identifier-aware reranker için 3x300 sorguluk tekrar alındı.
   Dense her tekrarda Recall@k `0.8360` (ortalama p95 `38.561 ms`), reranker her
   tekrarda `0.8800` (ortalama p95 `40.081 ms`) ve iki koşulda da hata oranı `0`
@@ -33,12 +43,15 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
   ve false acceptance `0.00` oldu.
 - Local Qdrant uzun concurrency matrisi tamamlandı: `1/2/4/8/16 × 20` tekrar,
   toplam `30.000` başarılı istek, hata `0`; throughput `28.814–35.115 req/s`,
-  p95 `40.254–647.894 ms`. Worker 1 varsayılanı korundu; server/cold-warm ve
-  Docker runtime ölçümleri ayrı final kapısı olarak kaldı.
+  p95 `40.254–647.894 ms`. Worker 1 varsayılanı korundu; server cold/warm,
+  restore sonrası dayanıklılık ve RAM/CPU SLO ölçümleri ayrı operasyonel kapılar
+  olarak kaldı.
 - Harici embedding adapter sözleşmesi `34` test, RAG sınır/sözleşme paketi `15`
   test ile doğrulandı. Gerçek dış provider kalite karşılaştırması ve generation
   cevap değerlendirmesi veri/erişim olmadığı için açık kapı olarak tutuldu;
   sonuç uydurulmadı.
+Tarihsel Docker host tanıları (güncel runtime güncellemesiyle kapatıldı):
+
 - Docker Desktop kurulumunun mevcut olduğu görüldü ve arka plan başlatma isteği
   verildi; backend süreçleri oluşsa da Linux engine pipe'ı hazır olmadığı için
   server smoke testi tekrar çalıştırılmadı.
@@ -66,15 +79,15 @@ Bu dosya kullanıcıya görünür değişiklikleri ve release kararlarını kıs
 - V5 inceleme turunda source-grounded exact identifier'lar artık gereksiz yere
   reddedilmiyor; V5 yerel review sonucu 300/300 reviewed, 0 review-required ve
   50/50 doğrulanmış negative kaydı gösteriyor. Manifest, varsayılan local
-  embedding manifest kimliğine bağlanarak `ready` yapıldı; uzun süreli
-  embedding/Qdrant benchmark ölçümü bilinçli olarak sonraki kapıda.
+  embedding manifest kimliğine bağlanarak `ready` yapıldı; uzun süreli local
+  embedding/Qdrant benchmark ölçümü de tamamlandı ve karar günlüğüne işlendi.
 - V5 için `vdb doctor` ve `final-readiness --strict` ön kontrolü başarıyla
   çalıştı; local embedding modeli yüklenebiliyor ve acceptance paketi ölçüm
   başlatmaya hazır. Uzun süreli ölçüm sonuçları bu değişikliğe dahil değildir.
 - Kullanıcının sağladığı Kargo Gemisi canonical DOCX corpus'u private-local
   kaynak olarak işlendi: 9 DOCX, `docx-v4`, sıfır parse hatası, 23 toplam kaynak
-  ve 633 chunk. Mevcut fixture checksum/parser provenance'ı yeni corpus'a
-  yeniden bağlandı; sorgu kapsamı ve label review kapısı bilinçli olarak açık.
+  ve 633 chunk. Mevcut V5 fixture checksum/parser provenance'ı yeni corpus'a
+  yeniden bağlandı; 300/300 label reviewed ve manifest `ready` durumundadır.
 - JSONL/NDJSON ve CSV parser'ları ham dosyayı önce tam string'e kopyalamadan
   satır/row akışıyla okuyacak şekilde iyileştirildi; kanonik çıktı/provenance değişmedi.
 - Inventory kayıtlarından kaynak yolu, hash ve chunk kimliği taşımadan format bazlı

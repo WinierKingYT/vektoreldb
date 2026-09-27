@@ -47,16 +47,18 @@ goal'unun güncel kabul durumu aşağıdaki ayrı bölümde tutulur.
 ## İleri seviye goal güncel durumu
 
 - [x] Geniş format parser dispatch'i, privacy-safe corpus inventory ve provenance manifesti.
-- [x] 300+ sorguya uygun fixture, label ve corpus-binding sözleşmesi.
-- [x] Bounded concurrency/capacity probe altyapısı.
-- [x] Negative sorgu abstention ve opt-in skor eşiği telemetrisi.
+- [x] V5 üzerinde 300 reviewed sorgu, label ve corpus-binding kabulü (`final-readiness --strict=ready`).
+- [x] Bounded concurrency/capacity probe altyapısı ve V5 uzun local ölçümü.
+- [x] Negative sorgu abstention ve opt-in skor eşiği telemetrisi; validation/test eşikleri kaydedildi.
 - [x] RAG context, citation/provenance ve generation handoff sınırı.
 - [x] Opt-in harici embedding adapter'ı, retry/backoff ve bounded cache.
-- [ ] Gerçek kişisel corpus üzerinde 300+ manuel etiketli sorgu fixture'ı.
-- [ ] Uzun süreli benchmark, kapasite matrisi ve eşik kalibrasyonu.
-- [ ] Ölçülmüş ihtiyaç olmadan multimodal/Graph-RAG/çoklu kullanıcı kapsamı açılmayacak.
+- [x] Docker Desktop `4.92.0` / Engine `29.8.0` üzerinde Qdrant server smoke (`3 passed`).
+- [ ] Kullanıcının gelecekteki gerçek kişisel corpus'u üzerinde yeniden extraction/kalite incelemesi (release'i bloke etmez; mevcut V5 corpus private-local temsilî kabul paketidir).
+- [ ] Gerçek generation answer/human RAG değerlendirmesi ve harici embedding provider karşılaştırması (erişim/mahremiyet kararı gerektirir; retrieval çekirdeğini bloke etmez).
+- [x] Ölçülmüş ihtiyaç olmadan multimodal/Graph-RAG/çoklu kullanıcı kapsamını açmama kararı.
 
-İleri seviye goal'un son tam paket kanıtı `276 passed, 3 skipped, 3 warnings`;
-bu sonuç gerçek kişisel corpus ve uzun süreli ölçüm koşullarının yerine geçmez.
+İleri seviye goal'un güncel temiz ortam kanıtı `348 passed, 3 skipped, 3 warnings`;
+Qdrant server entegrasyonu ayrıca `3 passed` verdi. Kullanıcının gerçek kişisel
+corpus'u ve generation katmanı için yukarıdaki non-blocking kapılar korunur.
 Ardından eklenen HTML `html-v4` hardening için hedefli HTML testleri `3 passed`;
 güncel tam regresyon final toplu turunda alınacaktır.

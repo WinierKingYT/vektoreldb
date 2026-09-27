@@ -108,12 +108,12 @@ otomatik türetilen ancak henüz doğrulanmamış kayıtlar olarak üretilebilir
 uv run python tools/generate_fixture_candidates.py `
   --root data/sources `
   --corpus-manifest data/manifests/corpus-manifest.json `
-  --fixture data/benchmarks/representative-personal-v2-queries.json `
-  --manifest data/benchmarks/representative-personal-v2-fixture-manifest.json
+  --fixture data/benchmarks/representative-personal-v6-candidate-queries.json `
+  --manifest data/benchmarks/representative-personal-v6-candidate-fixture-manifest.json
 uv run vdb fixture-label-template `
-  --fixture data/benchmarks/representative-personal-v2-queries.json `
+  --fixture data/benchmarks/representative-personal-v6-candidate-queries.json `
   --corpus-manifest data/manifests/corpus-manifest.json `
-  --output data/benchmarks/representative-personal-v2-labels-template.json
+  --output data/benchmarks/representative-personal-v6-candidate-labels-template.json
 ```
 
 Bu araç her biri 50 kayıt içeren altı sorgu türü ve 180/60/60 split dağılımı
@@ -177,9 +177,9 @@ rapor `coverage_complete=false` üretir.
 
 ```powershell
 vdb fixture-label-template `
-  --fixture data/benchmarks/representative-personal-queries.json `
+  --fixture data/benchmarks/representative-personal-v6-candidate-queries.json `
   --corpus-manifest data/manifests/corpus-manifest.json `
-  --output data/benchmarks/representative-personal-query-labels-template.json
+  --output data/benchmarks/representative-personal-v6-candidate-labels-template.json
 ```
 
 Bu çıktı bilerek `source=derived` ve `REVIEW_REQUIRED` notuyla gelir; final

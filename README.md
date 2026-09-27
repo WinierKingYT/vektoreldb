@@ -23,16 +23,16 @@ uv run vdb corpus-inventory `
   --manifest data\manifests\corpus-manifest.json
 uv run vdb final-readiness `
   --inventory data\derived\corpus-inventory.json `
-  --fixture data\benchmarks\representative-personal-queries.json `
-  --fixture-manifest data\benchmarks\representative-personal-query-fixture-manifest.json `
-  --labels data\benchmarks\representative-personal-query-labels-template.json `
+  --fixture data\benchmarks\representative-personal-v5-queries.json `
+  --fixture-manifest data\benchmarks\representative-personal-v5-fixture-manifest.json `
+  --labels data\benchmarks\representative-personal-v5-labels-template.json `
   --corpus-manifest data\manifests\corpus-manifest.json `
-  --output data\derived\final-readiness.json
+  --output data\derived\representative-personal-v5-final-readiness.json
 # Preparation report; it does not start Qdrant or embeddings:
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --labels data\benchmarks\labels-v1.json
 # uv run vdb fixture-coverage --fixture data\benchmarks\queries-v1.json --manifest data\benchmarks\query-fixture-manifest.json --output data\benchmarks\results\fixture-coverage.json
 # uv run vdb fixture-label-template --fixture data\benchmarks\queries-v1.json --corpus-manifest data\benchmarks\corpus-manifest.json --output data\benchmarks\labels-v1-template.json
-# Current corpus-derived 300-case candidate fixture (all labels remain review-required):
+# Historical candidate-generation example; the current reviewed V5 fixture is already available locally:
 # uv run python tools\generate_fixture_candidates.py --root data\sources --corpus-manifest data\manifests\corpus-manifest.json --fixture data\benchmarks\representative-personal-v2-queries.json --manifest data\benchmarks\representative-personal-v2-fixture-manifest.json
 # uv run vdb fixture-label-template --fixture data\benchmarks\representative-personal-v2-queries.json --corpus-manifest data\manifests\corpus-manifest.json --output data\benchmarks\representative-personal-v2-labels-template.json
 # Shard'ları collision kontrolüyle birleştirme:

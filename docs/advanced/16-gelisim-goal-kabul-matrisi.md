@@ -4,6 +4,21 @@ Bu belge aktif gelişim goal'unun mevcut durumunu ve tamamlanma kanıtını ayı
 Bir özellik için kodun bulunması tek başına final kabul anlamına gelmez;
 ölçüm gerektiren maddeler ilgili final koşusu tamamlanana kadar açık kalır.
 
+## Güncel V5 kapanış durumu — 27 Eylül 2026
+
+V5 private-local corpus/fixture kabul kapısı tamamdır: 23 kaynak, 633 chunk,
+300/300 reviewed label, altı sorgu türünde 50'şer kayıt, `180/60/60` split ve
+`final-readiness --strict` sonucu `overall_status=ready`. Local dense baseline, identifier-aware
+rerank, abstention ve uzun concurrency ölçümleri de kaydedilmiştir. Docker
+server smoke, Docker Desktop `4.92.0` / Engine `29.8.0` üzerinde health/ready
+ve üç Qdrant entegrasyon testiyle `3 passed` vermiştir.
+
+Release'i bloke etmeyen, erişim veya kullanıcı kararı isteyen kapılar ayrı
+tutulur: gerçek generation answer/human RAG değerlendirmesi, harici embedding
+provider kalite/maliyet karşılaştırması ve server cold/warm RAM/CPU SLO ölçümü.
+Bunlar yapılmadan sonuç uydurulmayacak; local-first V1 retrieval çekirdeği
+tamamlanmış kabul edilecektir.
+
 | Alan | Mevcut durum | Final kanıtı |
 |---|---|---|
 | Geniş corpus | Parser registry, yapılandırılabilir güvenlik sınırlı inventory/manifest, root bağımsız boyut korumalı `ingest-dir`, ingest ve inventory için 5.000 desteklenen dosya/1 GB batch kabul kapısı ve preflight tamamlanmadan embed/store/parse/yazım yapılmaması, PDF/DOCX/HTML/RTF/EML/JSON/JSONL/NDJSON/YAML/YML/TOML/CSV/XML format desteği, format/hata ve unsupported suffix özeti, extraction hacmi metrikleri, privacy-safe parse elapsed sinyalleri ve ham-byte duplicate inceleme sinyali, inventory’den kaynak metni taşımayan format kalite özeti (`corpus-quality`) hazır | Temsilî corpus envanteri ve format kalite raporu; duplicate kararları gözden geçirilmiş olmalı; parse elapsed değerleri peak-RAM/process timeout hedefi sayılmamalı |

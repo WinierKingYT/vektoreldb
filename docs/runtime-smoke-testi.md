@@ -54,6 +54,18 @@ uv run uvicorn personal_vector_db.server:app --host 127.0.0.1 --port 8000
 
 13 Eylül 2026 tarihinde Docker Desktop `29.7.2` ve Qdrant `v1.19.0` ile healthcheck geçti; payload-index/lifecycle ve collection snapshot/restore testleri `2 passed` oldu. Restore senaryosu Qdrant node içindeki `file:///qdrant/snapshots/<collection>/<snapshot>` URI'sını kullanır ve hedef collection'ı restore öncesi kaldırır.
 
+23 Eylül 2026 tarihinde host runtime socket sorunu geri alınabilir biçimde
+giderildikten sonra doğrulama tekrarlandı. Docker Desktop `4.88.1`, Engine
+`29.7.2`, `desktop-linux` context ve `qdrant/qdrant:v1.19.0` container'ı
+çalışır durumdaydı; `/healthz` ve `/readyz` endpoint'leri HTTP `200` döndürdü.
+PowerShell'de `$env:VDB_QDRANT_URL="http://localhost:6333"; uv run pytest -q
+tests/test_qdrant_server_integration.py` sonucu `3 passed in 11.09s` oldu.
+
+27 Eylül 2026'da Docker Desktop `4.92.0` / Engine `29.8.0` güncellemesi sonrası
+aynı doğrulama tekrarlandı. `desktop-linux` context, `/healthz`, `/readyz` ve
+üç Qdrant server entegrasyon testi yeniden başarılı oldu: `3 passed in
+24.88s`.
+
 ## Local ve server storage izolasyonu
 
 Local Qdrant (`path:qdrant_storage`) ile Docker Qdrant aynı storage klasörünü aynı anda açmamalıdır. Qdrant storage dosyaları üzerinde eşzamanlı local/server erişimi kilitlenme veya veri bütünlüğü riski doğurabilir. Server smoke testinden önce local CLI/API süreçlerini durdur; iki çalışma biçimini kalıcı olarak paralel kullanmak gerekiyorsa server için ayrı bir volume/klasör tanımla.

@@ -185,6 +185,20 @@ process CPU/RSS ölçümü ve prompt-injection karantina/red-team kontrolleriyle
 tamamlandı. Qdrant toplam RAM'i, disk kullanımı, concurrency, tazelik ve restore
 süreleri V2 geçiş kartı için hâlâ ayrı host/server ölçümü gerektiriyor.
 
+### V1.7 kapanış durumu — 27 Eylül 2026
+
+V5 private-local corpus kabulü `23 kaynak / 633 chunk / 300 reviewed sorgu` ile
+`final-readiness --strict` ile `overall_status=ready` durumundadır. Dense baseline, identifier-aware
+reranking, abstention ve uzun local concurrency ölçümleri tamamlandı. Docker
+Desktop `4.92.0` / Engine `29.8.0` üzerinde Qdrant `v1.19.0` server smoke
+health/ready ve üç entegrasyon testiyle `3 passed` verdi.
+
+Bu nedenle local-first V1 retrieval çekirdeği release'e hazırdır. RAG cevap
+kalitesi için gerçek generation cevapları/human review, harici embedding için
+gerçek provider kalite-maliyet ölçümü ve server cold/warm kaynak SLO'ları
+release'i bloke etmeyen sonraki operasyonel ölçümlerdir; bunlar mevcut kanıt
+olmadan tamamlanmış gibi raporlanmaz.
+
 ### Faz 8 — Ölçek ve ileri araştırma seçenekleri
 
 **Amaç:** Kişisel sürümün sınırları ölçüldükten sonra mimariyi büyütmek.

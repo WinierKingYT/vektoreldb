@@ -1,5 +1,49 @@
 # Karar günlüğü
 
+## 2026-09-27 — Docker runtime güncellemesiyle blokajın kalıcı çözümü
+
+23 Eylül'de tek oturumluk smoke geçişi sağlayan runtime klasörü workaround'ı
+sonrasında Docker Desktop yeniden başlatmada aynı `sailor-ingest.sock` hatasıyla
+tekrar çöküyordu. Docker Desktop'ın indirilen imzalı güncellemesi uygulandı;
+Docker Desktop `4.92.0` / Engine `29.8.0` çalışır duruma geldi. Mevcut
+Docker/Qdrant verisi sıfırlanmadı, factory reset veya reinstall yapılmadı.
+
+Güncel doğrulama:
+
+- `desktop-linux` context erişilebilir ve `qdrant/qdrant:v1.19.0` container'ı `Up`.
+- `http://localhost:6333/healthz`: HTTP `200`; `readyz`: HTTP `200`.
+- PowerShell'de `$env:VDB_QDRANT_URL="http://localhost:6333"; uv run pytest -q
+  tests/test_qdrant_server_integration.py`: `3 passed in 24.88s`.
+
+Bu tekrar ile Docker/Qdrant server smoke kapısı güncel runtime üzerinde
+yeniden üretildi. Docker V1 local-first akışının zorunlu ön koşulu değildir;
+ancak server entegrasyon kapısı artık host sürüm güncellemesiyle kapanmıştır.
+
+## 2026-09-23 — Docker/Qdrant server blocker çözüldü
+
+Docker Desktop Linux engine'in başlamasını engelleyen kök neden host loglarında
+`sailor-ingest.sock` için görülen `The file cannot be accessed by the system`
+hatası ve buna bağlı backend crash'i olarak doğrulandı. Lovelace alt ajanı,
+Docker süreçleri kapalıyken eski runtime klasörünü silmeden
+`C:\Users\faruk\AppData\Local\Docker\run.stale-20260923-132112` adına taşıdı.
+Factory reset, reinstall, geniş kapsamlı silme ve proje `qdrant_storage`
+değişikliği yapılmadı.
+
+Ana çalışma alanında yapılan doğrulama:
+
+- Docker Desktop `4.88.1`, Engine `29.7.2`, context `desktop-linux`, Linux engine
+  erişilebilir.
+- `docker compose ps`: `qdrant/qdrant:v1.19.0` container'ı `Up`.
+- `http://localhost:6333/healthz`: HTTP `200`; `readyz`: HTTP `200`.
+- PowerShell'de `$env:VDB_QDRANT_URL="http://localhost:6333"; uv run pytest -q
+  tests/test_qdrant_server_integration.py`: `3 passed in 11.09s`.
+
+Böylece Docker/Qdrant server runtime ve smoke-test blokajı kapanmıştır. Docker
+V1 local-first akışının ön koşulu değildir; server smoke, payload index,
+snapshot/restore ve quantization entegrasyonunu doğrulayan ayrı kapıdır. RAG
+cevap kalitesi kapısı ise gerçek generation cevapları ve reviewed answer
+etiketleri olmadığı için hâlâ açıktır.
+
 ## 2026-09-22 — V5 gerçek corpus dense baseline ve abstention kalibrasyonu
 
 V5 fixture, local corpus ingest edildikten sonra gerçek Qdrant indeksine karşı
